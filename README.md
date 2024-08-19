@@ -13,7 +13,7 @@
 
 <a href="https://youtu.be/fBBJoU1uV-w"><img src="https://static.wikia.nocookie.net/logopedia/images/9/90/YouTube_logo_2005.svg/revision/latest/scale-to-width-down/340?cb=20160807125041"></a>
 
-**Android üçün:** Termuxu açın bu kodu yapışdırın: `bash <(curl -L https://raw.githubusercontent.com/Silgimusicbot/Qurulum/master/up.sh)`
+**Android üçün:** Termuxu açın bu kodu yapışdırın: `bash <(curl -L https://raw.githubusercontent.com/Silgimusicbot/SilgiUbInstaller/main/silgi.sh)`
 
 
 
