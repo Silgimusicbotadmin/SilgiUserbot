@@ -19,8 +19,9 @@
 
 ### Heroku ilə deploy / Deploying To Heroku
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Silgimusicbot/SilgiUserbot)
-
+<a href="https://www.heroku.com/deploy?template=https://github.com/Silgimusicbot/SilgiUserbot">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
 ## Məlumat / Info
 <h5 align="center">Botun yanlış istifadəsi halında məsuliyyət tamamilə istifadəçiyə
 aiddir.Userator idarəçiləri olaraq heç bir məsuliyyət qəbul etmirik.
