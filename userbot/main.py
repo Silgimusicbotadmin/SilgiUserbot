@@ -231,7 +231,7 @@ for module_name in ALL_MODULES:
 
 LOGS.info("Botunuz işleyir! Her hansi bir söhbete .alive yazaraq Test edin."
           " Yardıma ehtiyacınız varsa, Dəstək qrupumuza buyurun t.me/silgiuserbot")
-LOGS.info(f"Bot versiyası: ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ {SILGI_VERSION}")
+LOGS.info(f"Bot versiyası: ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ {DTO_VERSION}")
 
 """
 if len(argv) not in (1, 3, 4):
