@@ -122,22 +122,9 @@ async def pipcheck(pip):
 @register(outgoing=True, pattern="^.alive$")
 async def amialive(e):
     me = await e.client.get_me()
-    if type(PLUGIN_MESAJLAR['alive']) == str:
-        await e.edit(PLUGIN_MESAJLAR['alive'].format(
-            telethon=version.__version__,
-            python=python_version(),
-            dto=DTO_VERSION,
-            plugin=len(CMD_HELP),
-            id=me.id,
-            username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
-            first_name=me.first_name,
-            last_name=me.last_name if me.last_name else '',
-            mention=f'[{me.first_name}](tg://user?id={me.id})'
-        ))
-    else:
-        await e.delete()
-        if not PLUGIN_MESAJLAR['alive'].text == '':
-            PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
+    try:
+        if isinstance(PLUGIN_MESAJLAR['alive'], str):
+            await e.edit(PLUGIN_MESAJLAR['alive'].format(
                 telethon=version.__version__,
                 python=python_version(),
                 dto=DTO_VERSION,
@@ -147,12 +134,27 @@ async def amialive(e):
                 first_name=me.first_name,
                 last_name=me.last_name if me.last_name else '',
                 mention=f'[{me.first_name}](tg://user?id={me.id})'
-            )
-        if e.is_reply:
-            await e.respond(PLUGIN_MESAJLAR['alive'], reply_to=e.message.reply_to_msg_id)
+            ))
         else:
-            await e.respond(PLUGIN_MESAJLAR['alive'])
-
+            await e.delete()
+            if not PLUGIN_MESAJLAR['alive'].text == '':
+                PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
+                    telethon=version.__version__,
+                    python=python_version(),
+                    dto=DTO_VERSION,
+                    plugin=len(CMD_HELP),
+                    id=me.id,
+                    username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
+                    first_name=me.first_name,
+                    last_name=me.last_name if me.last_name else '',
+                    mention=f'[{me.first_name}](tg://user?id={me.id})'
+                )
+            if e.is_reply:
+                await e.respond(PLUGIN_MESAJLAR['alive'].text, reply_to=e.message.reply_to_msg_id)
+            else:
+                await e.respond(PLUGIN_MESAJLAR['alive'].text)
+    except Exception as ex:
+        await e.respond(f"**Xəta baş verdi:** `{str(ex)}`")
 
 CmdHelp('system_stats').add_command(
     'sysd', None, (LANG['SS1'])
