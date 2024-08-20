@@ -172,7 +172,7 @@
             "ALREADY": "`Hazırda %s onsuzda avtomatik olaraq dəyişir.`",
             "SETTING": "`%s hazırlanır...`",
             "BIO": "⌚️ Saat: {saat} | ",
-            "NICK": "@UseratorOT",
+            "NICK": "@silgiuserbot",
             "SETTED": "`%s hazırlandı :)`",
             "NAME": " | %s",
             "AUTO1": "ad ya da bio",
