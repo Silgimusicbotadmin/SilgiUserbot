@@ -1,4 +1,3 @@
-
 from asyncio import create_subprocess_shell as asyncrunapp
 from asyncio.subprocess import PIPE as asyncPIPE
 from platform import uname
@@ -36,7 +35,7 @@ async def sysdetails(sysd):
         result = str(stdout.decode().strip()) \
             + str(stderr.decode().strip())
 
-        await sysd.edit("`" + result + "`")
+        await sysd.edit("" + result + "")
     except FileNotFoundError:
         await sysd.edit(LANG['NO_NEOFETCH'])
 
@@ -65,12 +64,12 @@ async def bot_ver(event):
         revout = str(stdout.decode().strip()) \
             + str(stderr.decode().strip())
 
-        await event.edit(f"`{LANG['VERSION']}: "
+        await event.edit(f"{LANG['VERSION']}: "
                          f"{verout}"
-                         "` \n"
-                         f"`{LANG['REVOUT']}: "
+                         " \n"
+                         f"{LANG['REVOUT']}: "
                          f"{revout}"
-                         "`")
+                         "")
     else:
         await event.edit(
             "Allah Azərbaycanlıları qorusun 🇦🇿"
@@ -82,7 +81,7 @@ async def pipcheck(pip):
     """ .pip"""
     pipmodule = pip.pattern_match.group(1)
     if pipmodule:
-        await pip.edit(f"`{LANG['SEARCHING']} . . .`")
+        await pip.edit(f"{LANG['SEARCHING']} . . .")
         invokepip = f"pip3 search {pipmodule}"
         pipc = await asyncrunapp(
             invokepip,
@@ -107,24 +106,37 @@ async def pipcheck(pip):
                 )
                 remove("output.txt")
                 return
-            await pip.edit(f"**{LANG['QUERY']}: **\n`"
+            await pip.edit(f"**{LANG['QUERY']}: **\n"
                            f"{invokepip}"
-                           f"`\n**{LANG['RESULT']}: **\n`"
+                           f"\n**{LANG['RESULT']}: **\n"
                            f"{pipout}"
-                           "`")
+                           "")
         else:
-            await pip.edit(f"**{LANG['QUERY']}: **\n`"
+            await pip.edit(f"**{LANG['QUERY']}: **\n"
                            f"{invokepip}"
-                           f"`\n**{LANG['RESULT']}: **\n`{LANG['NOT_FOUND']}.`")
+                           f"\n**{LANG['RESULT']}: **\n{LANG['NOT_FOUND']}.")
     else:
         await pip.edit(LANG['EXAMPLE'])
 
 @register(outgoing=True, pattern="^.alive$")
 async def amialive(e):
     me = await e.client.get_me()
-    try:
-        if isinstance(PLUGIN_MESAJLAR['alive'], str):
-            await e.edit(PLUGIN_MESAJLAR['alive'].format(
+    if type(PLUGIN_MESAJLAR['alive']) == str:
+        await e.edit(PLUGIN_MESAJLAR['alive'].format(
+            telethon=version.__version__,
+            python=python_version(),
+            dto=DTO_VERSION,
+            plugin=len(CMD_HELP),
+            id=me.id,
+            username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
+            first_name=me.first_name,
+            last_name=me.last_name if me.last_name else '',
+            mention=f'[{me.first_name}](tg://user?id={me.id})'
+        ))
+    else:
+        await e.delete()
+        if not PLUGIN_MESAJLAR['alive'].text == '':
+            PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
                 telethon=version.__version__,
                 python=python_version(),
                 dto=DTO_VERSION,
@@ -134,27 +146,12 @@ async def amialive(e):
                 first_name=me.first_name,
                 last_name=me.last_name if me.last_name else '',
                 mention=f'[{me.first_name}](tg://user?id={me.id})'
-            ))
+            )
+        if e.is_reply:
+            await e.respond(PLUGIN_MESAJLAR['alive'], reply_to=e.message.reply_to_msg_id)
         else:
-            await e.delete()
-            if not PLUGIN_MESAJLAR['alive'].text == '':
-                PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
-                    telethon=version.__version__,
-                    python=python_version(),
-                    dto=DTO_VERSION,
-                    plugin=len(CMD_HELP),
-                    id=me.id,
-                    username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
-                    first_name=me.first_name,
-                    last_name=me.last_name if me.last_name else '',
-                    mention=f'[{me.first_name}](tg://user?id={me.id})'
-                )
-            if e.is_reply:
-                await e.respond(PLUGIN_MESAJLAR['alive'].text, reply_to=e.message.reply_to_msg_id)
-            else:
-                await e.respond(PLUGIN_MESAJLAR['alive'].text)
-    except Exception as ex:
-        await e.respond(f"**Xəta baş verdi:** `{str(ex)}`")
+            await e.respond(PLUGIN_MESAJLAR['alive'])
+
 
 CmdHelp('system_stats').add_command(
     'sysd', None, (LANG['SS1'])
