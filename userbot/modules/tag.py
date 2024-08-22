@@ -1,24 +1,22 @@
 import time
 import requests
-
-from collections import deque
 from telethon import events
 from telethon.tl.types import ChannelParticipantsAdmins
 from asyncio import sleep
-from random import choice, getrandbits, randint
-from re import sub
 from userbot import CMD_HELP, bot
 from userbot.events import register
-from userbot.modules.admin import get_user_from_event
 from userbot.cmdhelp import CmdHelp
-import base64, codecs
+
+# Durum değişkeni modül seviyesinde tanımlandı
 tag_active = True
 
 @register(outgoing=True, pattern="^.tagall$")
 async def tag_all(event):
+    global tag_active
     if event.fwd_from:
         return
     if not tag_active:
+        await event.respond("Tagging dayandı.")
         return
     mentions = "@tag"
     chat = await event.get_input_chat()
@@ -29,9 +27,11 @@ async def tag_all(event):
 
 @register(outgoing=True, pattern="^.tagadmin (.*)")
 async def tag_admins(event):
+    global tag_active
     if event.fwd_from:
         return
     if not tag_active:
+        await event.respond("Tagging dayandı.")
         return
     text = event.pattern_match.group(1)
     chat = await event.get_input_chat()
@@ -43,16 +43,21 @@ async def tag_admins(event):
 
 @register(outgoing=True, pattern="^.tag(?: |$)(.*)")
 async def tag_one_by_one(tag):
+    global tag_active
     if not tag_active:
+        await tag.respond("Tagging dayandı.")
         return
     if tag.pattern_match.group(1):
         seasons = tag.pattern_match.group(1)
     else:
         seasons = ""
-    
+
     chat = await tag.get_input_chat()
     await tag.delete()
     async for i in bot.iter_participants(chat):
+        if not tag_active:
+            await tag.respond("Tagging dayandı.")
+            break
         await tag.client.send_message(tag.chat_id, "[{}](tg://user?id={}) {}".format(i.first_name, i.id, seasons))
         await sleep(1.9)
 
@@ -60,7 +65,7 @@ async def tag_one_by_one(tag):
 async def stop_tag(event):
     global tag_active
     tag_active = False
-    await event.reply("Tag işlemi durduruldu.")
+    await event.respond("Tagging dayandı.")
     await event.delete()
 
 CmdHelp('tag').add_command(
@@ -68,7 +73,7 @@ CmdHelp('tag').add_command(
 ).add_command(
     'tag', None, 'Hərkəsi bir-bir tağ edər.'
 ).add_command(
-    'tagadmin', None, 'Bu əmr adminləri tağ edər.'
+    'tagadmin', None, 'Bu əmri hər hansısa sohbətdə işlədəndə adminləri tağ edər.'
 ).add_command(
     'stoptag', None, 'Tag əməliyyatını dayandırır.'
 ).add_info(
@@ -76,3 +81,4 @@ CmdHelp('tag').add_command(
 ).add_info(
     '[SİLGİ](@atondusalamde) tərəfindən hazırlanmışdır.'
 ).add()
+    
