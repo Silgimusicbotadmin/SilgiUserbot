@@ -14,12 +14,12 @@ LANG = get_value("status")
 
 def durum(s):
     if s == None:
-        return "🔴"
+        return "⛔"
     else:
         if s == False:
-            return "🔴"
+            return "⛔"
         else:
-            return "🐍"
+            return "✅"
 
 @register(outgoing=True, pattern="^.durum|^.status")
 async def durums(event):
