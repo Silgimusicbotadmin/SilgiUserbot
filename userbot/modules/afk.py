@@ -274,7 +274,7 @@ async def go_afk(afk):
             AFKREASON = None
         ISAFK = True
         SON_GORULME = time()
-        await afk.reply(LANG['AFK_ON'].format(
+        await afk.reply(LANG['IM_AFK'].format(
             reason=AFKREASON
         ))
         raise StopPropagation
@@ -287,7 +287,7 @@ async def go_afk_off(afk):
     if ISAFK:
         ISAFK = False
         AFKREASON = None
-        await afk.reply(LANG['AFK_OFF'])
+        await afk.reply(LANG['IM_NOT_AFK'])
         raise StopPropagation
 
 
