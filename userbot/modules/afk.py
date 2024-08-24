@@ -295,10 +295,9 @@ async def type_afk_is_not_true(notafk):
     global COUNT_MSG
     global USERS
     global AFKREASON
-
-    # Reaksiyon mesajlarını hariç tut
-    if not notafk.is_reply and not notafk.message.is_service:
-        if ISAFK:
+    if ISAFK:
+        
+        if not notafk.is_reply and not notafk.message.action:
             ISAFK = False
             await notafk.respond(LANG['IM_NOT_AFK'])
             await sleep(2)
@@ -319,6 +318,5 @@ async def type_afk_is_not_true(notafk):
             COUNT_MSG = 0
             USERS = {}
             AFKREASON = None
-
 
 CmdHelp('afk').add_command('afk', (LANG['AFK1']), (LANG['AFK2'])).add()
