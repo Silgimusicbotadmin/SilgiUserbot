@@ -295,26 +295,30 @@ async def type_afk_is_not_true(notafk):
     global COUNT_MSG
     global USERS
     global AFKREASON
-    if ISAFK:
-        ISAFK = False
-        await notafk.respond(LANG['IM_NOT_AFK'])
-        await sleep(2)
-        if BOTLOG:
-            await notafk.client.send_message(
-                BOTLOG_CHATID,
-                "Siz AFK olan vaxt " + str(len(USERS)) + " istifadəçi sizə " +
-                str(COUNT_MSG) + " mesaj göndərdi.",
-            )
-            for i in USERS:
-                name = await notafk.client.get_entity(i)
-                name0 = str(name.first_name)
+
+    # Reaksiyon mesajlarını hariç tut
+    if not notafk.is_reply and not notafk.message.is_service:
+        if ISAFK:
+            ISAFK = False
+            await notafk.respond(LANG['IM_NOT_AFK'])
+            await sleep(2)
+            if BOTLOG:
                 await notafk.client.send_message(
                     BOTLOG_CHATID,
-                    "[" + name0 + "](tg://user?id=" + str(i) + ")" +
-                    " sizə " + "`" + str(USERS[i]) + " mesaj göndərdi`",
+                    "Siz AFK olan vaxt " + str(len(USERS)) + " istifadəçi sizə " +
+                    str(COUNT_MSG) + " mesaj göndərdi.",
                 )
-        COUNT_MSG = 0
-        USERS = {}
-        AFKREASON = None
+                for i in USERS:
+                    name = await notafk.client.get_entity(i)
+                    name0 = str(name.first_name)
+                    await notafk.client.send_message(
+                        BOTLOG_CHATID,
+                        "[" + name0 + "](tg://user?id=" + str(i) + ")" +
+                        " sizə " + "`" + str(USERS[i]) + " mesaj göndərdi`",
+                    )
+            COUNT_MSG = 0
+            USERS = {}
+            AFKREASON = None
+
 
 CmdHelp('afk').add_command('afk', (LANG['AFK1']), (LANG['AFK2'])).add()
