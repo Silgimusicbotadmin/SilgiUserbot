@@ -298,25 +298,228 @@ async def type_afk_is_not_true(notafk):
     if ISAFK:
         
         if not notafk.is_reply and not notafk.message.action:
-            ISAFK = False
-            await notafk.respond(LANG['IM_NOT_AFK'])
-            await sleep(2)
-            if BOTLOG:
-                await notafk.client.send_message(
-                    BOTLOG_CHATID,
-                    "Siz AFK olan vaxt " + str(len(USERS)) + " istifadəçi sizə " +
-                    str(COUNT_MSG) + " mesaj göndərdi.",
-                )
-                for i in USERS:
-                    name = await notafk.client.get_entity(i)
-                    name0 = str(name.first_name)
-                    await notafk.client.send_message(
-                        BOTLOG_CHATID,
-                        "[" + name0 + "](tg://user?id=" + str(i) + ")" +
-                        " sizə " + "`" + str(USERS[i]) + " mesaj göndərdi`",
-                    )
-            COUNT_MSG = 0
-            USERS = {}
-            AFKREASON = None
+            ISAFK = Falsefrom random import randint
+from asyncio import sleep
+from telethon.tl.types import Message
+from telethon.events import StopPropagation
 
-CmdHelp('afk').add_command('afk', (LANG['AFK1']), (LANG['AFK2'])).add()
+from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
+                     BOTLOG_CHATID, USERS, PM_AUTO_BAN, SON_GORULME)
+from userbot.events import register
+from userbot.main import PLUGIN_MESAJLAR
+from time import time
+from userbot.cmdhelp import CmdHelp
+
+# ██████ LANGUAGE CONSTANTS ██████ #
+
+from userbot.language import get_value
+LANG = get_value("afk")
+
+# ████████████████████████████████ #
+
+def time_formatter(seconds, short=True):
+    minutes, seconds = divmod(int(seconds), 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    tmp = ((str(days) + (" gün, " if not short else "g, ")) if days else "") + \
+        ((str(hours) + (" saat, " if not short else "s, ")) if hours else "") + \
+        ((str(minutes) + (" dəqiqə, " if not short else "d, ")) if minutes else "") + \
+        ((str(seconds) + (" saniyə, " if not short else "s, ")) if seconds else "")
+    return tmp[:-2] + " əvvəl"
+
+@register(incoming=True, disable_edited=True)
+async def mention_afk(mention):
+    global COUNT_MSG
+    global USERS
+    global ISAFK
+    if mention.message.mentioned and not (await mention.get_sender()).bot:
+        if ISAFK:
+            from_user = await mention.get_sender()
+            username = '@' + from_user.username if from_user.username else f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
+            mention_format = f'[{from_user.first_name}](tg://user?id={from_user.id})'
+            first_name = from_user.first_name
+            last_name = from_user.last_name if from_user.last_name else ''
+
+            last_seen_seconds = round(time() - SON_GORULME)
+            last_seen = time_formatter(last_seen_seconds)
+            last_seen_long = time_formatter(last_seen_seconds, False)
+
+            if mention.sender_id not in USERS:
+                if AFKREASON:
+                    await mention.reply(PLUGIN_MESAJLAR['afk'].format(
+                        username=username,
+                        mention=mention_format,
+                        first_name=first_name,
+                        last_name=last_name,
+                        last_seen_seconds=last_seen_seconds,
+                        last_seen=last_seen,
+                        last_seen_long=last_seen_long
+                    ) + f"\n{LANG['REASON']}: `{AFKREASON}`")
+                else:
+                    await mention.reply(PLUGIN_MESAJLAR['afk'].format(
+                        username=username,
+                        mention=mention_format,
+                        first_name=first_name,
+                        last_name=last_name,
+                        last_seen_seconds=last_seen_seconds,
+                        last_seen=last_seen,
+                        last_seen_long=last_seen_long
+                    ))
+                USERS.update({mention.sender_id: 1})
+                COUNT_MSG += 1
+            else:
+                if USERS[mention.sender_id] % randint(2, 4) == 0:
+                    if AFKREASON:
+                        await mention.reply(PLUGIN_MESAJLAR['afk'].format(
+                            username=username,
+                            mention=mention_format,
+                            first_name=first_name,
+                            last_name=last_name,
+                            last_seen_seconds=last_seen_seconds,
+                            last_seen=last_seen,
+                            last_seen_long=last_seen_long
+                        ) + f"\n{LANG['REASON']}: `{AFKREASON}`")
+                    else:
+                        await mention.reply(PLUGIN_MESAJLAR['afk'].format(
+                            username=username,
+                            mention=mention_format,
+                            first_name=first_name,
+                            last_name=last_name,
+                            last_seen_seconds=last_seen_seconds,
+                            last_seen=last_seen,
+                            last_seen_long=last_seen_long
+                        ))
+                    USERS[mention.sender_id] += 1
+                    COUNT_MSG += 1
+                else:
+                    USERS[mention.sender_id] += 1
+                    COUNT_MSG += 1
+
+@register(incoming=True, disable_errors=True)
+async def afk_on_pm(sender):
+    global ISAFK
+    global USERS
+    global COUNT_MSG
+    if sender.is_private and sender.sender_id != 777000 and not (await sender.get_sender()).bot:
+        if PM_AUTO_BAN:
+            try:
+                from userbot.modules.sql_helper.pm_permit_sql import is_approved
+                apprv = is_approved(sender.sender_id)
+            except AttributeError:
+                apprv = True
+        else:
+            apprv = True
+        
+        from_user = await sender.get_sender()
+        username = '@' + from_user.username if from_user.username else f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
+        mention = f'[{from_user.first_name}](tg://user?id={from_user.id})'
+        first_name = from_user.first_name
+        last_name = from_user.last_name if from_user.last_name else ''
+
+        last_seen_seconds = round(time() - SON_GORULME)
+        last_seen = time_formatter(last_seen_seconds)
+        last_seen_long = time_formatter(last_seen_seconds, False)
+
+        if apprv and ISAFK:
+            if sender.sender_id not in USERS:
+                if AFKREASON:
+                    await sender.reply(LANG['AFK'].format(
+                        username=username,
+                        mention=mention,
+                        first_name=first_name,
+                        last_name=last_name,
+                        last_seen_seconds=last_seen_seconds,
+                        last_seen=last_seen,
+                        last_seen_long=last_seen_long
+                    ) + f"\n{LANG['REASON']}: `{AFKREASON}`")
+                else:
+                    await sender.reply(PLUGIN_MESAJLAR['afk'].format(
+                        username=username,
+                        mention=mention,
+                        first_name=first_name,
+                        last_name=last_name,
+                        last_seen_seconds=last_seen_seconds,
+                        last_seen=last_seen,
+                        last_seen_long=last_seen_long
+                    ))
+                USERS.update({sender.sender_id: 1})
+                COUNT_MSG += 1
+            else:
+                if USERS[sender.sender_id] % randint(2, 4) == 0:
+                    if AFKREASON:
+                        await sender.reply(PLUGIN_MESAJLAR['afk'].format(
+                            username=username,
+                            mention=mention,
+                            first_name=first_name,
+                            last_name=last_name,
+                            last_seen_seconds=last_seen_seconds,
+                            last_seen=last_seen,
+                            last_seen_long=last_seen_long
+                        ) + f"\n{LANG['REASON']}: `{AFKREASON}`")
+                    else:
+                        await sender.reply(PLUGIN_MESAJLAR['afk'].format(
+                            username=username,
+                            mention=mention,
+                            first_name=first_name,
+                            last_name=last_name,
+                            last_seen_seconds=last_seen_seconds,
+                            last_seen=last_seen,
+                            last_seen_long=last_seen_long
+                        ))
+                    USERS[sender.sender_id] += 1
+                    COUNT_MSG += 1
+                else:
+                    USERS[sender.sender_id] += 1
+                    COUNT_MSG += 1
+
+@register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
+async def set_afk(afk_e):
+    message = afk_e.text
+    string = afk_e.pattern_match.group(1)
+    global ISAFK
+    global AFKREASON
+    global SON_GORULME
+
+    if string:
+        AFKREASON = string
+        await afk_e.edit(f"{LANG['IM_AFK']}\
+        \n{LANG['REASON']}: `{string}`")
+    else:
+        await afk_e.edit(LANG['IM_AFK'])
+
+    SON_GORULME = time()
+    if BOTLOG:
+        await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nAFK oldum.")
+    ISAFK = True
+    raise StopPropagation
+
+@register(outgoing=True, pattern="^.noafk$", disable_errors=True)
+async def set_noafk(noafk_e):
+    global ISAFK
+    global COUNT_MSG
+    global USERS
+    global AFKREASON
+
+    if ISAFK:
+        ISAFK = False
+        await noafk_e.edit(LANG['IM_NOT_AFK'])
+        await sleep(2)
+        if BOTLOG:
+            log_message = f"Siz AFK olduğunuz zaman {len(USERS)} istifadəçi sizə {COUNT_MSG} mesaj göndərdi."
+            await noafk_e.client.send_message(BOTLOG_CHATID, log_message)
+            for user_id, msg_count in USERS.items():
+                user = await noafk_e.client.get_entity(user_id)
+                user_name = user.first_name
+                user_msg = f"[{user_name}](tg://user?id={user_id}) sizə `{msg_count}` mesaj göndərdi."
+                await noafk_e.client.send_message(BOTLOG_CHATID, user_msg)
+        COUNT_MSG = 0
+        USERS = {}
+        AFKREASON = None
+    else:
+        await noafk_e.edit(LANG['NOT_AFK'])
+
+    raise StopPropagation
+
+
+
+CmdHelp('afk').add_command('afk', (LANG['AFK1']), (LANG['AFK2'])).add_command('noafk',None, 'Afk modundan çıxarır').add()
