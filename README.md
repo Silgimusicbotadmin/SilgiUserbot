@@ -1,4 +1,4 @@
-<p align="center"><a href="https://t.me/silgiuserbot"><img src="https://telegra.ph/file/2269e1ed5b9a3b0444361.jpg" width="5000"></a></p> 
+<p align="center"><a href="https://t.me/silgiuserbot"><img src="https://telegra.ph/file/6a08aa72f3afc41084c06.jpg" width="5000"></a></p> 
 <h1 align="center"><b>⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝</b></h1>
 <h3 align="center">SilgiUserbot, Telegram işlətməyinizi asandlaşdıran bir botdur. Tamamilə açıq qaynağlı və ödənişsizdir.</h3>
 <h3 align="center">SilgiUserbot is a bot that makes it easy to use Telegram. Completely open source and free.</h3>
