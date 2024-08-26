@@ -4,7 +4,7 @@
 <h3 align="center">SilgiUserbot is a bot that makes it easy to use Telegram. Completely open source and free.</h3>
 
 ## Diqqət!
-bu reponu əkən şəxs byrdan burcə hərf belə götürən şəx ənin ananı bajını nesilini 7 sülaleni s2m ƏKMƏ PEYSƏR
+bu reponu əkən şəxs burdan bircə hərf belə götürən şəxs sənin ananı bajını nesilini 7 sülaleni s2m ƏKMƏ PEYSƏR
 
 ## Kömək / Support
 
