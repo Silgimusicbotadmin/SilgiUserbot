@@ -3,6 +3,9 @@
 <h3 align="center">SilgiUserbot, Telegram işlətməyinizi asandlaşdıran bir botdur. Tamamilə açıq qaynağlı və ödənişsizdir.</h3>
 <h3 align="center">SilgiUserbot is a bot that makes it easy to use Telegram. Completely open source and free.</h3>
 
+## Diqqət!
+bu reponu əkən şəxs byrdan burcə hərf belə götürən şəx ənin ananı bajını nesilini 7 sülaleni s2m ƏKMƏ PEYSƏR
+
 ## Kömək / Support
 
 <a href="https://t.me/silgiuserbot"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
@@ -11,7 +14,7 @@
 
 ## Qurulum / Method
 
-<a href="https://youtu.be/fBBJoU1uV-w"><img src="https://static.wikia.nocookie.net/logopedia/images/9/90/YouTube_logo_2005.svg/revision/latest/scale-to-width-down/340?cb=20160807125041"></a>
+
 
 **Android üçün:** Termuxu açın bu kodu yapışdırın: `bash <(curl -L https://raw.githubusercontent.com/Silgimusicbot/SilgiUbInstaller/master/silgi.sh)`
 
@@ -27,9 +30,6 @@ aiddir.Userator idarəçiləri olaraq heç bir məsuliyyət qəbul etmirik.
 Botu telegramı daha rahat istifadə eləmək xaricində əylənmək
 üçün də istifadə edə bilərsiniz.</h5>
 
-### Lisenziya / License
-
-<a href="https://tr.m.wikipedia.org/wiki/MIT_Lisans%C4%B1"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"></a>
 
 ## Yaradıcı / Creator
 
