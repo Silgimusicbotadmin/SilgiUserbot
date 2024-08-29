@@ -7,12 +7,13 @@ from userbot import CMD_HELP, bot
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 
-# Durum değişkeni modül seviyesinde tanımlandı
+
 tag_active = True
 
 @register(outgoing=True, pattern="^.tagall$")
 async def tag_all(event):
     global tag_active
+    tag_active = True  
     if event.fwd_from:
         return
     if not tag_active:
@@ -28,6 +29,7 @@ async def tag_all(event):
 @register(outgoing=True, pattern="^.tagadmin (.*)")
 async def tag_admins(event):
     global tag_active
+    tag_active = True  
     if event.fwd_from:
         return
     if not tag_active:
@@ -44,6 +46,7 @@ async def tag_admins(event):
 @register(outgoing=True, pattern="^.tag(?: |$)(.*)")
 async def tag_one_by_one(tag):
     global tag_active
+    tag_active = True  
     if not tag_active:
         await tag.respond("Tagging dayandı.")
         return
@@ -67,6 +70,7 @@ async def stop_tag(event):
     tag_active = False
     await event.respond("Tagging dayandı.")
     await event.delete()
+
 
 CmdHelp('tag').add_command(
     'tagall', None, 'Hərkəsi bir mesajda tağ edər.'
