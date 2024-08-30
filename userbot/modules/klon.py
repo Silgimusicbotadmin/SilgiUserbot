@@ -18,7 +18,7 @@ async def clone(event):
     replied_user = await get_user(event)
     if replied_user.id in BRAIN_CHECKER or replied_user.id in WHITELIST:
         await event.edit(
-                "`𝙰 𝙿 Σ 𝚇 -  səlahiyyətli birini klonlamayacağam.`"
+                "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ adminini/sahibini klonlamayacağam.`"
             )
         return
     if not replied_user:
