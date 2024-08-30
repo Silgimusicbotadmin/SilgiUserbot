@@ -24,14 +24,14 @@ async def magaza(event):
     split = plugin.split()
     if plugin == '':
         plugin = 'Son yüklənən'
-        plugins = await event.client.get_messages('@dtoplugin', limit=15, filter=InputMessagesFilterDocument)
+        plugins = await event.client.get_messages('@silgiubplugin', limit=15, filter=InputMessagesFilterDocument)
     elif len(split) >= 1 and (split[0] == 'random' or split[0] == 'rastgele'):
         plugin = 'Təsadufi'
-        plugins = await event.client.get_messages('@dtoplugin', limit=None, filter=InputMessagesFilterDocument)
+        plugins = await event.client.get_messages('@silgiubplugin', limit=None, filter=InputMessagesFilterDocument)
         plugins = sample(plugins, int(split[1]) if len(split) == 2 else 5)
     else:
-        plugins = await event.client.get_messages('@dtoplugin', limit=None, search=plugin, filter=InputMessagesFilterDocument)
-        random = await event.client.get_messages('@dtoplugin', limit=None, filter=InputMessagesFilterDocument)
+        plugins = await event.client.get_messages('@silgiubplugin', limit=None, search=plugin, filter=InputMessagesFilterDocument)
+        random = await event.client.get_messages('@silgiubplugin', limit=None, filter=InputMessagesFilterDocument)
         random = choice(random)
         random_file = random.file.name
 
@@ -58,10 +58,10 @@ async def sinstall(event):
     try:
         plugin = int(plugin)
     except:
-        return await event.edit('**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n__Versiya 1.0__\n\n**⚠️ Xəta:** `Xaiş sadəcə rəqəm yazın. Əgəe Plugin axtarmaq istəyirsizsə .store əmrini işlədin.`')
+        return await event.edit('**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n__Versiya 1.4__\n\n**⚠️ Xəta:** `Xaiş sadəcə rəqəm yazın. Əgəe Plugin axtarmaq istəyirsizsə .store əmrini işlədin.`')
     
     await event.edit('**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n\n`🔎 Plugin\'i gətirirəm... Xaiş biraz gözlə.`')
-    plugin = await event.client.get_messages('@dtoplugin', ids=plugin)
+    plugin = await event.client.get_messages('@silgiubplugin', ids=plugin)
     await event.edit(f'**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n\n`✅ {plugin.file.name} plugini gətirildi!`\n`⬇️ Plugini yükləyirəm... Xaiş gözləyin.`')
     dosya = await plugin.download_media('./userbot/modules/')
     await event.edit(f'**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n\n`✅ {plugin.file.name} yüklənmə uğurlu oldu!`\n`⬇️ Plugini yükləyirəm... Xaiş gözləyin.`')
@@ -138,7 +138,7 @@ async def sinstall(event):
                     CmdHelp.add_command(Komut, None, 'Bu plugin qırağdan yüklənib. Hər hansı bir açıqlama edilməyib.')
                 CmdHelp.add()
                 await plugin.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n\n**✅ Modül uğurla yükləndi!**\n__ℹ️ Modulun əmrləri və işlədilişi haqqında məlumat almaq üçün` `.up {dosyaAdi}` `yazın.__')
+                return await event.edit(f'**[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) Plugin Mağazası**\n\n**✅ Modül uğurla yükləndi!**\n__ℹ️ Modulun əmrləri və işlədilişi haqqında məlumat almaq üçün` `.silgi {dosyaAdi}` `yazın.__')
 
 userbot.cmdhelp.CmdHelp('store').add_command(
     'store', '<söz>', 'Plugin kanalına son atılan Pluginləri gətirər. Əgər söz yazarsanız axtarış edər.'
