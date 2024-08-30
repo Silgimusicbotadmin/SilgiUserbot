@@ -42,12 +42,16 @@ async def magaza(event):
     else:
         for plugin in plugins:
             plugin_lines = plugin.raw_text.splitlines()
-            result += f'**⬇️ {plugin_lines[0]}** `({plugin.file.name})`**:** '
-            if len(plugin_lines[2]) < 50:
-                result += f'__{plugin_lines[2]}__'
+            if len(plugin_lines) > 0:  # Check if there are any lines
+                result += f'⬇️ {plugin_lines[0]} ({plugin.file.name}): '
+                if len(plugin_lines[2]) < 50:
+                    result += f'{plugin_lines[2]}'
+                else:
+                    result += f'{plugin_lines[2][:50]}...'
+                    result += f'\nℹ️ Yükləmək üçün: {PATTERNS[:1]}sinstall {plugin.id}\n➖➖➖➖➖\n'
             else:
-                result += f'__{plugin_lines[2][:50]}...__'
-            result += f'\n**ℹ️ Yükləmək üçün:** `{PATTERNS[:1]}sinstall {plugin.id}`\n➖➖➖➖➖\n'
+                result += f'⚠️ Plugin mətnində səhv var və ya plugin boşdur. `{plugin.file.name}`\n'
+                
     return await event.edit(result)
 
 # Plugin Mağazası
