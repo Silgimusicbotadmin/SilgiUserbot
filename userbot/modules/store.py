@@ -48,7 +48,7 @@ async def magaza(event):
                     result += f'{plugin_lines[2]}'
                 else:
                     result += f'{plugin_lines[2][:50]}...'
-                    result += f'\nℹ️ Yükləmək üçün: {PATTERNS[:1]}sinstall {plugin.id}\n➖➖➖➖➖\n'
+                result += f'\nℹ️ Yükləmək üçün: {PATTERNS[:1]}sinstall {plugin.id}\n➖➖➖➖➖\n'
             else:
                 result += f'⚠️ Plugin mətnində səhv var və ya plugin boşdur. `{plugin.file.name}`\n'
                 
