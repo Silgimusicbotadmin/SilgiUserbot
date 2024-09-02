@@ -1,4 +1,3 @@
-
 from asyncio import sleep
 import re
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
@@ -75,7 +74,7 @@ async def filter_incoming_handler(handler):
                     return
 
             for trigger in filters:
-                pro = re.fullmatch(trigger.keyword, name, flags=re.IGNORECASE)
+                pro = re.search(trigger.keyword, name, flags=re.IGNORECASE)
                 if pro and trigger.f_mesg_id:
                     msg_o = await handler.client.get_messages(
                         entity=BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
@@ -237,16 +236,17 @@ async def genelfilters_active(event):
     filters = get_filters("GENEL")
     for filt in filters:
         if transact == LANG['GENELFILTERS']:
-            transact = f"{LANG['GENEL_FILTERS']}\n"
-            transact += "`{}`\n".format(filt.keyword)
+            transact = " **{}** `{}`\n".format(filt.keyword, filt.reply)
         else:
-            transact += "`{}`\n".format(filt.keyword)
-
-    await event.edit(transact)
+            transact += " **{}** `{}`\n".format(filt.keyword, filt.reply)
+    if transact == LANG['GENELFILTERS']:
+        await event.edit(LANG['GENEL_FILTERS'])
+    else:
+        await event.edit(transact)
 
 @register(outgoing=True, pattern="^.filters$")
 async def filters_active(event):
-    """ .filters  """
+    """  .filters """
     try:
         from userbot.modules.sql_helper.filter_sql import get_filters
     except AttributeError:
@@ -256,13 +256,14 @@ async def filters_active(event):
     filters = get_filters(event.chat_id)
     for filt in filters:
         if transact == LANG['FILTERS']:
-            transact = f"{LANG['_FILTERS']}\n"
-            transact += "`{}`\n".format(filt.keyword)
+            transact = " **{}** `{}`\n".format(filt.keyword, filt.reply)
         else:
-            transact += "`{}`\n".format(filt.keyword)
-
-    await event.edit(transact)
-
+            transact += " **{}** `{}`\n".format(filt.keyword, filt.reply)
+    if transact == LANG['FILTERS']:
+        await event.edit(LANG['_FILTERS'])
+    else:
+        await event.edit(transact)
+    
 CmdHelp('filter').add_command(
     'filters', None, (LANG['FR'])
 ).add_command(
