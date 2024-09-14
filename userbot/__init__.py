@@ -110,6 +110,7 @@ REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 AUTO_PP = os.environ.get("AUTO_PP", None)
 
 # Alive Name
+me = bot.get_me()
 ALIVE_NAME = f"{me.first_name}"
 DEFAULT_NAME = f"{me.first_name}"
 SAHIB = me.id
