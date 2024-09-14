@@ -110,7 +110,9 @@ REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 AUTO_PP = os.environ.get("AUTO_PP", None)
 
 # Alive Name
-
+ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
+DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
+BREND_MENTION = f"SilgiUserbot"
 
 # Warn modül
 WARN_LIMIT = int(os.environ.get("WARN_LIMIT", 3))
@@ -232,11 +234,6 @@ if STRING_SESSION:
 else:
     # pylint: devre dışı=geçersiz ad
     bot = TelegramClient("userbot", API_KEY, API_HASH)
-me = bot.get_me()
-ALIVE_NAME = f"{me.first_name}"
-DEFAULT_NAME = f"{me.first_name}"
-SAHIB = me.id
-BREND_MENTION = f"[{DEFAULT_NAME}](tg://user?id={SAHIB})"
 
 if os.path.exists("dtobrain.check"):
     os.remove("dtobrain.check")
