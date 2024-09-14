@@ -110,7 +110,10 @@ REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 AUTO_PP = os.environ.get("AUTO_PP", None)
 
 # Alive Name
-ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
+ALIVE_NAME = f"{me.first_name}"
+DEFAULT_NAME = f"{me.first_name}"
+SAHIB = me.id
+BREND_MENTION = f"[{DEFAULT_NAME}](tg://user?id={SAHIB})"
 
 # Warn modül
 WARN_LIMIT = int(os.environ.get("WARN_LIMIT", 3))
@@ -183,7 +186,7 @@ G_DRIVE_AUTH_TOKEN_DATA = os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
 GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", None)
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY",
                                          "./downloads")
-DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
+
 # Inline bot
 BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
 BOT_USERNAME = os.environ.get("BOT_USERNAME", None)
