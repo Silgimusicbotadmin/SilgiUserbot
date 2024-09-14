@@ -1,5 +1,5 @@
-FROM fusuf/asenauserbot:latest
-RUN git clone https://github.com/Silgimusicbot/SilgiUserbot /root/Userator
-WORKDIR /root/Userator/
+FROM Silgimusicbot/SilgiUserbot:latest
+RUN git clone https://github.com/Silgimusicbot/SilgiUserbot /root/SilgiUserbot
+WORKDIR /root/SilgiUserbot/
 RUN pip3 install -r requirements.txt
 CMD ["python3", "main.py"]
