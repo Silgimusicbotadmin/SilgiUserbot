@@ -281,7 +281,7 @@ else:
 
 def butonlastir(sayfa, moduller):
     Satir = 5
-    Kolon = 2
+    Kolon = 3
     
     moduller = sorted([modul for modul in moduller if not modul.startswith("_")])
     pairs = list(map(list, zip(moduller[::2], moduller[1::2])))
@@ -324,7 +324,7 @@ with bot:
             builder = event.builder
             result = None
             query = event.text
-            if event.query.user_id == uid and query == "@silgihelpbot":
+            if event.query.user_id == uid and query == "kömek":
                 rev_text = query[::-1]
                 veriler = (butonlastir(0, sorted(CMD_HELP)))
                 result = await builder.article(
