@@ -324,7 +324,7 @@ with bot:
             builder = event.builder
             result = None
             query = event.text
-            if event.query.user_id == uid and query == "@silgiuserbot":
+            if event.query.user_id == uid and query == "@silgihelpbot":
                 rev_text = query[::-1]
                 veriler = (butonlastir(0, sorted(CMD_HELP)))
                 result = await builder.article(
@@ -345,7 +345,7 @@ with bot:
                 )
             else:
                 result = builder.article(
-                    "@silgiuserbot",
+                    "@silgihelpbot",
                     text="""@silgiuserbot'u işlətməyi yoxlayın!
 Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmayın, siz başqasının botunu idarə edə bilmərsiz! Altdakı GitHub adresindən bütün qurulum haqda məlumat var.""",
                     buttons=[
