@@ -352,7 +352,9 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                         [custom.Button.url("Dəstək qrupuna Qatıl", "https://t.me/silgiuserbot"), custom.Button.url(
                             "Sahibim", "https://t.me/atondusalamde")],
                         [custom.Button.url(
-                            "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")]
+                            "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")],
+                        [custom.Button.url(
+                            "Qurulum botu", "https://t.me/silgiinstaller_bot")]
                     ],
                     link_preview=False
                 )
