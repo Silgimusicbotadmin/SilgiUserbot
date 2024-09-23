@@ -113,6 +113,7 @@ AUTO_PP = os.environ.get("AUTO_PP", None)
 ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
 DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
 BREND_MENTION = f"SilgiUserbot"
+BREND_VERSION = "4.2"
 
 # Warn modül
 WARN_LIMIT = int(os.environ.get("WARN_LIMIT", 3))
