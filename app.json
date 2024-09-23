@@ -227,7 +227,6 @@
     },
     "LANGUAGE": {
       "description": "Botun dili AZ/TR/RU/EN seçin.",
-      "value": "AZ",
       "required": true
     }
   },
