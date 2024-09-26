@@ -60,6 +60,11 @@
             "LARGE_FILE": "Dosya çok büyük, Pastebin'e yüklüyorum.",
             "FILE_ERROR": "Dosya okunurken bir hata oluştu.",
             "PASTE_URL": "Dosya çok büyük olduğundan buraya yüklendi:"
+            "UPLOAD_FAILED": "Sunucuya yükleme başarısız oldu. Durum kodu: ",
+            "CONNECTION_ERROR": "Sunucuya bağlanırken bir hata oluştu: ",
+            "INVALID_RESPONSE": "Sunucudan geçersiz bir yanıt alındı.",
+            "FILE_UPLOADED": "Dosya buraya yüklendi: ",
+            "GENERAL_ERROR": "Bir hata oluştu: "
         },
 
         "__helpme": {
