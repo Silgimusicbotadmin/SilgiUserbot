@@ -55,6 +55,10 @@
             "TT5": "<gönderilecek kanal> <cevap mesajı>",
             "TT6": "Cevap verdiğiniz mesajı istediğiniz kanal/gruba gönderir.",
             "TT7": "Sohbet hakkında detaylı bilgi alır."
+            "NO_FILE": "Lütfen Python dosyasına yanıt verin.",
+            "LARGE_FILE": "Dosya çok büyük, Pastebin'e yüklüyorum.",
+            "FILE_ERROR": "Dosya okunurken bir hata oluştu.",
+            "PASTE_URL": "Dosya çok büyük olduğundan buraya yüklendi:"
         },
 
         "__helpme": {
