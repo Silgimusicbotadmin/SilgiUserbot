@@ -54,7 +54,11 @@
             "TT4": "Cavab verdiyiniz faylı şəkilə çevirər.",
             "TT5": "<göndəriləcək kanal> <cavab mesaj>",
             "TT6": "Cavab verdiyiniz mesajı istədiyiniz kanal/qrupa göndərər.",
-            "TT7": "Söhbət haqqında ətraflı məlumat alın."
+            "TT7": "Söhbət haqqında ətraflı məlumat alın.",
+            "NO_FILE": "Python faylına cavab verin.",
+            "LARGE_FILE": "Fayl çox böyükdür, pastebin'ə yükləyirəm.",
+            "FILE_ERROR": "Fayl oxunarkən xəta baş verdi.",
+            "PASTE_URL": "Fayl çox böyük olduğundan buraya yükləndi:"
         },
 
         "__helpme": {
