@@ -44,27 +44,57 @@ async def doc2text(event):
 
 @register(pattern="^.tpy", outgoing=True)
 async def pyfile_to_text(event):
-    reply_msg = await event.get_reply_message()
-    if not reply_msg or not reply_msg.media:
-        await event.reply("Lütfen bir Python dosyasına yanıt verin.")
-        return
-    doc = await event.client.download_media(reply_msg)
     try:
-        with open(doc, "r") as file:
-            content = file.read()
+       
+        reply_msg = await event.get_reply_message()
+        
+        if not reply_msg or not reply_msg.media:
+            await event.reply(LANG['NO_FILE'])
+            return
+
+       
+        doc = await event.client.download_media(reply_msg)
+
+        if not doc:
+            await event.reply(LANG['FILE_ERROR'])
+            return
+
+        
+        try:
+            with open(doc, "r") as file:
+                content = file.read()
+        except Exception:
+            await event.reply(LANG['FILE_ERROR'])
+            return
+
+        
+        if len(content) >= 4096:
+            await event.reply(LANG['LARGE_FILE'])
+            url = "https://del.dog/documents"
+            try:
+                response = requests.post(url, data=content.encode("UTF-8"))
+                if response.status_code == 200:
+                    result = response.json()
+                    paste_url = f"https://del.dog/{result['key']}"
+                    await event.reply(f"{LANG['FILE_UPLOADED']}{paste_url}")
+                else:
+                    await event.reply(f"{LANG['UPLOAD_FAILED']}{response.status_code}")
+            except requests.exceptions.RequestException as e:
+                await event.reply(f"{LANG['CONNECTION_ERROR']}{e}")
+            except ValueError:
+                await event.reply(LANG['INVALID_RESPONSE'])
+        else:
+          
+            await event.reply(f"```{content}```")
+
     except Exception as e:
-        await event.reply("Dosya okunurken bir hata oluştu.")
-        return
-    if len(content) >= 4096:
-        await event.reply("Dosya çok büyük, içerik pastebin servisine yükleniyor...")
-        url = "https://del.dog/documents"
-        response = requests.post(url, data=content.encode("UTF-8")).json()
-        paste_url = f"https://del.dog/{response['key']}"
-        await event.reply(f"Dosya çok büyük olduğu için buraya yüklendi: {paste_url}")
-    else:
-        await event.reply(f"```{content}```")
-  
-    os.remove(doc)
+       
+        await event.reply(f"{LANG['GENERAL_ERROR']}{str(e)}")
+
+    finally:
+      
+        if os.path.exists(doc):
+            os.remove(doc)
     
 @register(outgoing=True, pattern="^.tdoc ?(.*)")
 async def text2doc(event):
