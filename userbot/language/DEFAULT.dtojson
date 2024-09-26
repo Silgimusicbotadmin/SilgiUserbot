@@ -55,6 +55,7 @@
             "TT5": "<göndəriləcək kanal> <cavab mesaj>",
             "TT6": "Cavab verdiyiniz mesajı istədiyiniz kanal/qrupa göndərər.",
             "TT7": "Söhbət haqqında ətraflı məlumat alın.",
+            "TT8": "Cavab verilən Python faylının məzmununu göstərir.",
             "NO_FILE": "Python faylına cavab verin.",
             "LARGE_FILE": "Fayl çox böyükdür, pastebin'ə yükləyirəm.",
             "FILE_ERROR": "Fayl oxunarkən xəta baş verdi.",
