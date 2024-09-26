@@ -59,7 +59,7 @@
             "NO_FILE": "Python faylına cavab verin.",
             "LARGE_FILE": "Fayl çox böyükdür, pastebin'ə yükləyirəm.",
             "FILE_ERROR": "Fayl oxunarkən xəta baş verdi.",
-            "PASTE_URL": "Fayl çox böyük olduğundan buraya yükləndi:"
+            "PASTE_URL": "Fayl çox böyük olduğundan buraya yükləndi:",
             "UPLOAD_FAILED": "Serverə yükləmə alınmadı. status kodu:",
             "CONNECTION_ERROR": "Serverə qoşularkən xəta baş verdi: ",
             "INVALID_RESPONSE": "Serverdən etibarsız cavab alındı.",
