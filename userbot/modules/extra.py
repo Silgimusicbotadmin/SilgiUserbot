@@ -41,7 +41,30 @@ async def doc2text(event):
         await fayl.delete()
         await event.delete()
     os.remove(doc)
-    
+
+@register(pattern="^.tpy", outgoing=True)
+async def pyfile_to_text(event):
+    reply_msg = await event.get_reply_message()
+    if not reply_msg or not reply_msg.media:
+        await event.reply("Lütfen bir Python dosyasına yanıt verin.")
+        return
+    doc = await event.client.download_media(reply_msg)
+    try:
+        with open(doc, "r") as file:
+            content = file.read()
+    except Exception as e:
+        await event.reply("Dosya okunurken bir hata oluştu.")
+        return
+    if len(content) >= 4096:
+        await event.reply("Dosya çok büyük, içerik pastebin servisine yükleniyor...")
+        url = "https://del.dog/documents"
+        response = requests.post(url, data=content.encode("UTF-8")).json()
+        paste_url = f"https://del.dog/{response['key']}"
+        await event.reply(f"Dosya çok büyük olduğu için buraya yüklendi: {paste_url}")
+    else:
+        await event.reply(f"```{content}```")
+  
+    os.remove(doc)
     
 @register(outgoing=True, pattern="^.tdoc ?(.*)")
 async def text2doc(event):
@@ -129,6 +152,8 @@ async def stats(e):
 
 CmdHelp('extra').add_command(
   'ttext', None, (LANG['TT1'])
+).add_command(
+  'tpy', None, (LANG['TT8'])
 ).add_command(
   'tdoc', (LANG['TT2']), (LANG['TT3'])
 ).add_command(
