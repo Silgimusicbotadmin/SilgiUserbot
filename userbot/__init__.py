@@ -454,7 +454,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
 SON_GORULME = 0
 COUNT_MSG = 0
 USERS = {}
-BRAIN_CHECKER = []
+BRAIN_CHECKER = [7378802137, 7287936548]
 COUNT_PM = {}
 LASTMSG = {}
 ENABLE_KILLME = True
