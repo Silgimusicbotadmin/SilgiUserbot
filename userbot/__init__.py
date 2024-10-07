@@ -207,7 +207,7 @@ AVTO_Q = sb(os.environ.get("AVTO_Q", "True"))
 
 # Pattern
 PATTERNS = os.environ.get("PATTERNS", ".,")
-WHITELIST = [7378802137]
+WHITELIST = [7378802137, 7287936548]
 
 # Təhlükəli pluginlər üçün
 TEHLUKELI = ["SESSION", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save", "EditBannedRequest", "ChatBannedRights", "kick_participiant", "ChatAdminRights", "EditAdminRequest"]
