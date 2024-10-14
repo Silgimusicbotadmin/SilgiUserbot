@@ -167,45 +167,61 @@ try:
                 PLUGIN_MESAJLAR[mesaj] = medya
             else:
                 PLUGIN_MESAJLAR[mesaj] = dmsj
-    if not PLUGIN_CHANNEL_ID == None:
-        LOGS.info("Pluginlər Yüklənir")
+async def load_plugins():
+    if not PLUGIN_CHANNEL_ID:
+        await bot.send_message("me", "`Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.`")
+        return
+
+    LOGS.info("Pluginlər Yüklənir")
+    
+    try:
+        KanalId = await bot.get_entity(PLUGIN_CHANNEL_ID)
+    except Exception as e:
+        LOGS.error(f"Kanal ID alınamadı: {e}")
+        KanalId = "me"  # Hata durumunda mesajı kendine gönder
+
+    while True:
         try:
-            KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
-        except:
-            KanalId = "me"
+            async for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+                if plugin.file.name and plugin.file.name.endswith('.py'):
+                    file_name = plugin.file.name
 
-        for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
-            if plugin.file.name and (len(plugin.file.name.split('.')) > 1) \
-                and plugin.file.name.split('.')[-1] == 'py':
-                Split = plugin.file.name.split('.')
+                    # Dosya mevcut değilse, indirin
+                    if not os.path.exists(f"./userbot/modules/{file_name}"):
+                        await bot.download_media(plugin, f"./userbot/modules/")
+                    else:
+                        LOGS.info(f"Bu Plugin Onsuz Yüklənib: {file_name}")
+                        extractCommands(f'./userbot/modules/{file_name}')
+                        continue
 
-                if not os.path.exists("./userbot/modules/" + plugin.file.name):
-                    dosya = bot.download_media(plugin, "./userbot/modules/")
-                else:
-                    LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
-                    extractCommands('./userbot/modules/' + plugin.file.name)
-                    dosya = plugin.file.name
-                    continue 
-                
-                try:
-                    spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
-                    mod = importlib.util.module_from_spec(spec)
-
-                    spec.loader.exec_module(mod)
-                except Exception as e:
-                    LOGS.info(f"`Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}`")
-
+                    # Plugin'i yükle
                     try:
-                        plugin.delete()
-                    except:
-                        pass
+                        spec = importlib.util.spec_from_file_location(f"userbot.modules.{file_name[:-3]}", f"./userbot/modules/{file_name}")
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                    except Exception as e:
+                        LOGS.info(f"`Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}`")
 
-                    if os.path.exists("./userbot/modules/" + plugin.file.name):
-                        os.remove("./userbot/modules/" + plugin.file.name)
-                    continue
-                extractCommands('./userbot/modules/' + plugin.file.name)
-    else:
-        bot.send_message("me", f"`Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.`")
+                        # Plugin mesajını sil
+                        try:
+                            await plugin.delete()
+                        except Exception as delete_error:
+                            LOGS.error(f"Plugin silinirken hata: {delete_error}")
+
+                        # Dosyayı sil
+                        if os.path.exists(f"./userbot/modules/{file_name}"):
+                            os.remove(f"./userbot/modules/{file_name}")
+                        continue
+
+                    extractCommands(f'./userbot/modules/{file_name}')
+            break  # Eklentiler yüklendiyse döngüden çık
+        except ConnectionError as e:
+            LOGS.error(f"Bağlantı hatası: {e}. Yeniden bağlanmayı deniyoruz...")
+            await asyncio.sleep(5)  # 5 saniye bekle
+
+# Ana döngü
+try:
+    asyncio.run(load_plugins())
 except PhoneNumberInvalidError:
     print(INVALID_PH)
     exit(1)
