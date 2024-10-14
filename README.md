@@ -1,4 +1,4 @@
-<p align="center"><a href="https://t.me/silgiuserbot"><img src="https://telegra.ph/file/6a08aa72f3afc41084c06.jpg" width="5000"></a></p> 
+<p align="center"><a href="https://t.me/silgiub"><img src="https://telegra.ph/file/6a08aa72f3afc41084c06.jpg" width="5000"></a></p> 
 <h1 align="center"><b>⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝</b></h1>
 <h3 align="center">SilgiUserbot, Telegram işlətməyinizi asandlaşdıran bir botdur. Tamamilə açıq qaynağlı və ödənişsizdir.</h3>
 <h3 align="center">SilgiUserbot is a bot that makes it easy to use Telegram. Completely open source and free.</h3>
@@ -8,9 +8,9 @@ bu reponu əkən şəxs burdan bircə hərf belə götürən şəxs sənin anan�
 
 ## Kömək / Support
 
-<a href="https://t.me/silgiuserbot"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
+<a href="https://t.me/silgiub"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
 
-<a href="https://t.me/silgiuserbot"><img src="https://img.shields.io/badge/Join-Telegram%20Group-blue.svg?logo=telegram"></a>
+<a href="https://t.me/silgiub"><img src="https://img.shields.io/badge/Join-Telegram%20Group-blue.svg?logo=telegram"></a>
 
 ## Qurulum / Method
 
@@ -33,7 +33,7 @@ Botu telegramı daha rahat istifadə eləmək xaricində əylənmək
 
 ## Yaradıcı / Creator
 
-[SILGI](https://t.me/atondusalamde)
+[SILGI](https://t.me/silgiteam)
 
 ## Credits
 Thanks for;
