@@ -58,10 +58,10 @@ AFKSTR = [
     "İndi burada deiləm....\nama burda olsaydım...\n\nbu möhtəşəm olardı eləmi qadan alım ?",
 ]
 
-UNAPPROVED_MSG = ("`Hey salam!` {mention}`! Qorxma, Bu bir botdur.\n\n`"
-                  "`Sahibim sənə PM atma icazəsi verməyib. `"
-                  "`Xaiş sahibimin aktiv olmasını gözlə, o adətən PM'ləri təsdiqləyir.\n\n`"
-                  "`Təşəkkürlər ❤️`")
+UNAPPROVED_MSG = ("Hey salam! {mention}! Qorxma, Bu bir botdur.\n\n"
+                  "Sahibim sənə PM atma icazəsi verməyib. "
+                  "Xaiş sahibimin aktiv olmasını gözlə, o adətən PM'ləri təsdiqləyir.\n\n"
+                  "Təşəkkürlər ❤️")
 
 DB = connect("upbrain.check")
 CURSOR = DB.cursor()
@@ -152,7 +152,7 @@ try:
 
     # PLUGIN MESAJLARI AYARLIYORUZ
     PLUGIN_MESAJLAR = {}
-    ORJ_PLUGIN_MESAJLAR = {"alive": "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻...`", "afk": f"`{str(choice(AFKSTR))}`", "kickme": "`Bye-bye mən qrupdan çıxdım 🥰`", "pm": UNAPPROVED_MSG, "dızcı": str(choice(DIZCILIK_STR)), "ban": "{mention}`, banlandı!`", "mute": "{mention}`, susduruldu!`", "approve": "{mention}`, mənə mesaj göndərə bilərsən!`", "disapprove": "{mention}`, artıq mənə mesaj göndərə bilmərsən!`", "block": "{mention}`, bloklandın!`", "restart": "`Bot yenidən başladılır...`"}
+    ORJ_PLUGIN_MESAJLAR = {"alive": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻...", "afk": f"{str(choice(AFKSTR))}", "kickme": "Bye-bye mən qrupdan çıxdım 🥰", "pm": UNAPPROVED_MSG, "dızcı": str(choice(DIZCILIK_STR)), "ban": "{mention}, banlandı!", "mute": "{mention}, susduruldu!", "approve": "{mention}, mənə mesaj göndərə bilərsən!", "disapprove": "{mention}, artıq mənə mesaj göndərə bilmərsən!", "block": "{mention}, bloklandın!", "restart": "Bot yenidən başladılır..."}
 
     PLUGIN_MESAJLAR_TURLER = ["alive", "afk", "kickme", "pm", "dızcı", "ban", "mute", "approve", "disapprove", "block", "restart"]
     for mesaj in PLUGIN_MESAJLAR_TURLER:
@@ -167,61 +167,45 @@ try:
                 PLUGIN_MESAJLAR[mesaj] = medya
             else:
                 PLUGIN_MESAJLAR[mesaj] = dmsj
-async def load_plugins():
-    if not PLUGIN_CHANNEL_ID:
-        await bot.send_message("me", "`Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.`")
-        return
-
-    LOGS.info("Pluginlər Yüklənir")
-    
-    try:
-        KanalId = await bot.get_entity(PLUGIN_CHANNEL_ID)
-    except Exception as e:
-        LOGS.error(f"Kanal ID alınamadı: {e}")
-        KanalId = "me"  # Hata durumunda mesajı kendine gönder
-
-    while True:
+    if not PLUGIN_CHANNEL_ID == None:
+        LOGS.info("Pluginlər Yüklənir")
         try:
-            async for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
-                if plugin.file.name and plugin.file.name.endswith('.py'):
-                    file_name = plugin.file.name
+            KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
+        except:
+            KanalId = "me"
 
-                    # Dosya mevcut değilse, indirin
-                    if not os.path.exists(f"./userbot/modules/{file_name}"):
-                        await bot.download_media(plugin, f"./userbot/modules/")
-                    else:
-                        LOGS.info(f"Bu Plugin Onsuz Yüklənib: {file_name}")
-                        extractCommands(f'./userbot/modules/{file_name}')
-                        continue
+        for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+            if plugin.file.name and (len(plugin.file.name.split('.')) > 1) \
+                and plugin.file.name.split('.')[-1] == 'py':
+                Split = plugin.file.name.split('.')
 
-                    # Plugin'i yükle
+                if not os.path.exists("./userbot/modules/" + plugin.file.name):
+                    dosya = bot.download_media(plugin, "./userbot/modules/")
+                else:
+                    LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
+                    extractCommands('./userbot/modules/' + plugin.file.name)
+                    dosya = plugin.file.name
+                    continue 
+                
+                try:
+                    spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
+                    mod = importlib.util.module_from_spec(spec)
+
+                    spec.loader.exec_module(mod)
+                except Exception as e:
+                    LOGS.info(f"Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}")
+
                     try:
-                        spec = importlib.util.spec_from_file_location(f"userbot.modules.{file_name[:-3]}", f"./userbot/modules/{file_name}")
-                        mod = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(mod)
-                    except Exception as e:
-                        LOGS.info(f"`Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}`")
+                        plugin.delete()
+                    except:
+                        pass
 
-                        # Plugin mesajını sil
-                        try:
-                            await plugin.delete()
-                        except Exception as delete_error:
-                            LOGS.error(f"Plugin silinirken hata: {delete_error}")
-
-                        # Dosyayı sil
-                        if os.path.exists(f"./userbot/modules/{file_name}"):
-                            os.remove(f"./userbot/modules/{file_name}")
-                        continue
-
-                    extractCommands(f'./userbot/modules/{file_name}')
-            break  # Eklentiler yüklendiyse döngüden çık
-        except ConnectionError as e:
-            LOGS.error(f"Bağlantı hatası: {e}. Yeniden bağlanmayı deniyoruz...")
-            await asyncio.sleep(5)  # 5 saniye bekle
-
-# Ana döngü
-try:
-    asyncio.run(load_plugins())
+                    if os.path.exists("./userbot/modules/" + plugin.file.name):
+                        os.remove("./userbot/modules/" + plugin.file.name)
+                    continue
+                extractCommands('./userbot/modules/' + plugin.file.name)
+    else:
+        bot.send_message("me", f"Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.")
 except PhoneNumberInvalidError:
     print(INVALID_PH)
     exit(1)
