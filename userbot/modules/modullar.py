@@ -454,7 +454,7 @@ async def port_snake(event):
 USTA_TEMPLATE = """
 _/﹋\_
 (҂`_´)
-<,︻╦╤─ ҉ - - @atondusalamde
+<,︻╦╤─ ҉ - - @silgiteam
 _/﹋\_
 """
 
