@@ -136,9 +136,14 @@ def extractCommands(file):
 
 try:
     bot.start()
+    if not bot.is_connected:
+        LOGS.error("Bot bağlantısı sağlanamadı. Çıkılıyor.")
+        exit(1)
+
     idim = bot.get_me().id
     dtobl = requests.get('https://raw.githubusercontent.com/silgimusicbot/silgiuserbot/master/upx.json').json()
     if idim in dtobl:
+        LOGS.info("Kullanıcı botu kapatıyor.")
         bot.disconnect()
 
     # ChromeDriver #
@@ -146,13 +151,23 @@ try:
         chromedriver_autoinstaller.install()
     except:
         pass
-    
+
     # Galeri için değerler
     GALERI = {}
 
     # PLUGIN MESAJLARI AYARLIYORUZ
     PLUGIN_MESAJLAR = {}
-    ORJ_PLUGIN_MESAJLAR = {"alive": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻...", "afk": f"{str(choice(AFKSTR))}", "kickme": "Bye-bye mən qrupdan çıxdım 🥰", "pm": UNAPPROVED_MSG, "dızcı": str(choice(DIZCILIK_STR)), "ban": "{mention}, banlandı!", "mute": "{mention}, susduruldu!", "approve": "{mention}, mənə mesaj göndərə bilərsən!", "disapprove": "{mention}, artıq mənə mesaj göndərə bilmərsən!", "block": "{mention}, bloklandın!", "restart": "Bot yenidən başladılır..."}
+    ORJ_PLUGIN_MESAJLAR = {"alive": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻...", 
+                           "afk": f"{str(choice(AFKSTR))}", 
+                           "kickme": "Bye-bye mən qrupdan çıxdım 🥰", 
+                           "pm": UNAPPROVED_MSG, 
+                           "dızcı": str(choice(DIZCILIK_STR)), 
+                           "ban": "{mention}, banlandı!", 
+                           "mute": "{mention}, susduruldu!", 
+                           "approve": "{mention}, mənə mesaj göndərə bilərsən!", 
+                           "disapprove": "{mention}, artıq mənə mesaj göndərə bilmərsən!", 
+                           "block": "{mention}, bloklandın!", 
+                           "restart": "Bot yenidən başladılır..."}
 
     PLUGIN_MESAJLAR_TURLER = ["alive", "afk", "kickme", "pm", "dızcı", "ban", "mute", "approve", "disapprove", "block", "restart"]
     for mesaj in PLUGIN_MESAJLAR_TURLER:
@@ -163,49 +178,48 @@ try:
             if dmsj.startswith("MEDYA_"):
                 medya = int(dmsj.split("MEDYA_")[1])
                 medya = bot.get_messages(PLUGIN_CHANNEL_ID, ids=medya)
-
                 PLUGIN_MESAJLAR[mesaj] = medya
             else:
                 PLUGIN_MESAJLAR[mesaj] = dmsj
-    if not PLUGIN_CHANNEL_ID == None:
+    
+    if PLUGIN_CHANNEL_ID is not None:
         LOGS.info("Pluginlər Yüklənir")
         try:
             KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
         except:
             KanalId = "me"
 
-        for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
-            if plugin.file.name and (len(plugin.file.name.split('.')) > 1) \
-                and plugin.file.name.split('.')[-1] == 'py':
-                Split = plugin.file.name.split('.')
+        try:
+            for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+                if plugin.file.name and (len(plugin.file.name.split('.')) > 1) and plugin.file.name.split('.')[-1] == 'py':
+                    Split = plugin.file.name.split('.')
 
-                if not os.path.exists("./userbot/modules/" + plugin.file.name):
-                    dosya = bot.download_media(plugin, "./userbot/modules/")
-                else:
-                    LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
-                    extractCommands('./userbot/modules/' + plugin.file.name)
-                    dosya = plugin.file.name
-                    continue 
-                
-                try:
-                    spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
-                    mod = importlib.util.module_from_spec(spec)
-
-                    spec.loader.exec_module(mod)
-                except Exception as e:
-                    LOGS.info(f"Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}")
-
+                    if not os.path.exists("./userbot/modules/" + plugin.file.name):
+                        dosya = bot.download_media(plugin, "./userbot/modules/")
+                    else:
+                        LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
+                        extractCommands('./userbot/modules/' + plugin.file.name)
+                        dosya = plugin.file.name
+                        continue 
+                    
                     try:
-                        plugin.delete()
-                    except:
-                        pass
-
-                    if os.path.exists("./userbot/modules/" + plugin.file.name):
-                        os.remove("./userbot/modules/" + plugin.file.name)
-                    continue
-                extractCommands('./userbot/modules/' + plugin.file.name)
+                        spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                    except Exception as e:
+                        LOGS.info(f"Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}")
+                        try:
+                            plugin.delete()
+                        except:
+                            pass
+                        if os.path.exists("./userbot/modules/" + plugin.file.name):
+                            os.remove("./userbot/modules/" + plugin.file.name)
+                        continue
+                    extractCommands('./userbot/modules/' + plugin.file.name)
+        except ConnectionError as e:
+            LOGS.error(f"Bağlantı hatası: {e}")
     else:
-        bot.send_message("me", f"Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.")
+        bot.send_message("me", "Xaiş pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID'i düzəldin.")
 except PhoneNumberInvalidError:
     print(INVALID_PH)
     exit(1)
