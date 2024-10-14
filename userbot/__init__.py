@@ -304,7 +304,7 @@ with bot:
     if AVTO_Q:
         try:
             bot(JoinChannelRequest("@silgiub"))
-            bot(JoinChannelRequest("@silgiub"))
+            bot(JoinChannelRequest("@silgiubplugin"))
             
         except:
             pass
@@ -356,7 +356,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                         [custom.Button.url(
                             "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")],
                         [custom.Button.url(
-                            "Qurulum botu", "https://t.me/silgiinstaller_bot")]
+                            "Qurulum botu", "https://t.me/silgiqur_bot")]
                     ],
                     link_preview=False
                 )
