@@ -152,7 +152,7 @@ try:
 
     # PLUGIN MESAJLARI AYARLIYORUZ
     PLUGIN_MESAJLAR = {}
-    ORJ_PLUGIN_MESAJLAR = {"alive": "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻!`", "afk": f"`{str(choice(AFKSTR))}`", "kickme": "`Bye-bye mən qrupdan çıxdım 🥰`", "pm": UNAPPROVED_MSG, "dızcı": str(choice(DIZCILIK_STR)), "ban": "{mention}`, banlandı!`", "mute": "{mention}`, susduruldu!`", "approve": "{mention}`, mənə mesaj göndərə bilərsən!`", "disapprove": "{mention}`, artıq mənə mesaj göndərə bilmərsən!`", "block": "{mention}`, bloklandın!`", "restart": "`𝙰 𝙿 Σ 𝚇 - yenidən başladılır...`"}
+    ORJ_PLUGIN_MESAJLAR = {"alive": "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ 𝓐𝓴𝓽𝓲𝓿𝓭𝓲𝓻...`", "afk": f"`{str(choice(AFKSTR))}`", "kickme": "`Bye-bye mən qrupdan çıxdım 🥰`", "pm": UNAPPROVED_MSG, "dızcı": str(choice(DIZCILIK_STR)), "ban": "{mention}`, banlandı!`", "mute": "{mention}`, susduruldu!`", "approve": "{mention}`, mənə mesaj göndərə bilərsən!`", "disapprove": "{mention}`, artıq mənə mesaj göndərə bilmərsən!`", "block": "{mention}`, bloklandın!`", "restart": "`Bot yenidən başladılır...`"}
 
     PLUGIN_MESAJLAR_TURLER = ["alive", "afk", "kickme", "pm", "dızcı", "ban", "mute", "approve", "disapprove", "block", "restart"]
     for mesaj in PLUGIN_MESAJLAR_TURLER:
@@ -174,7 +174,7 @@ try:
         except:
             KanalId = "me"
 
-        async for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+        for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
             if plugin.file.name and (len(plugin.file.name.split('.')) > 1) \
                 and plugin.file.name.split('.')[-1] == 'py':
                 Split = plugin.file.name.split('.')
@@ -230,7 +230,7 @@ for module_name in ALL_MODULES:
 
 LOGS.info("Botunuz işleyir! Her hansi bir söhbete .alive yazaraq Test edin."
           " Yardıma ehtiyacınız varsa, Destek qrupumuza buyurun t.me/silgiub")
-LOGS.info(f"Bot versiyası: ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ {DTO_VERSION}")
+LOGS.info(f"Bot versiyası:⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ {DTO_VERSION}")
 
 """
 if len(argv) not in (1, 3, 4):
