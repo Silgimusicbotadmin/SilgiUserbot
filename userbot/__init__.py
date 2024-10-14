@@ -28,11 +28,11 @@ ASYNC_POOL = []
 
 if CONSOLE_LOGGER_VERBOSE:
     basicConfig(
-        format="%(asctime)s - @silgiuserbot - %(levelname)s - %(message)s",
+        format="%(asctime)s - @silgiub - %(levelname)s - %(message)s",
         level=DEBUG,
     )
 else:
-    basicConfig(format="%(asctime)s - @silgiuserbot - %(levelname)s - %(message)s",
+    basicConfig(format="%(asctime)s - @silgiub - %(levelname)s - %(message)s",
                 level=INFO)
 LOGS = getLogger(__name__)
 
@@ -200,7 +200,7 @@ PM_AUTO_BAN_LIMIT = int(os.environ.get("PM_AUTO_BAN_LIMIT", 4))
 SPOTIFY_DC = os.environ.get("SPOTIFY_DC", None)
 SPOTIFY_KEY = os.environ.get("SPOTIFY_KEY", None)
 
-PAKET_ISMI = os.environ.get("PAKET_ISMI", "@silgiuserbot Paketi")
+PAKET_ISMI = os.environ.get("PAKET_ISMI", "@silgiub Paketi")
 
 # Avto
 AVTO_Q = sb(os.environ.get("AVTO_Q", "True"))
@@ -303,7 +303,8 @@ def butonlastir(sayfa, moduller):
 with bot:
     if AVTO_Q:
         try:
-            bot(JoinChannelRequest("@silgiuserbot"))
+            bot(JoinChannelRequest("@silgiub"))
+            bot(JoinChannelRequest("@silgiub"))
             
         except:
             pass
@@ -316,11 +317,11 @@ with bot:
         @tgbot.on(NewMessage(pattern='/start'))
         async def start_bot_handler(event):
             if not event.message.from_id == uid:
-                await event.reply(f'`Salam mən `⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ `! Mən sahibimə (`@{me.username}`) kömək olmaq üçün varam, yəni sənə köməkçi ola bilmərəm :/ Ama sən da bir ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ quraşdıra bilərsən; Qrupa bax` @silgiuserbot')
+                await event.reply(f'`Salam mən `⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ `! Mən sahibimə (`@{me.username}`) kömək olmaq üçün varam, yəni sənə köməkçi ola bilmərəm :/ Ama sən da bir ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ quraşdıra bilərsən; Qrupa bax` @silgiub')
             else:
                 await event.reply(f'`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝`')
 
-        @tgbot.on(InlineQuery)  # pylint:disable=E0602
+        @tgbot.on(InlineQuery)  
         async def inline_handler(event):
             builder = event.builder
             result = None
@@ -330,7 +331,7 @@ with bot:
                 veriler = (butonlastir(0, sorted(CMD_HELP)))
                 result = await builder.article(
                     f"Xaiş sadəcə .kömek əmri ilə işladin",
-                    text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiuserbot) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
+                    text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
                     buttons=veriler[1],
                     link_preview=False
                 )
@@ -350,8 +351,8 @@ with bot:
                     text="""@silgiuserbot'u işlətməyi yoxlayın!
 Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmayın, siz başqasının botunu idarə edə bilmərsiz! Altdakı GitHub adresindən bütün qurulum haqda məlumat var.""",
                     buttons=[
-                        [custom.Button.url("Dəstək qrupuna Qatıl", "https://t.me/silgiuserbot"), custom.Button.url(
-                            "Sahibim", "https://t.me/atondusalamde")],
+                        [custom.Button.url("Dəstək qrupuna Qatıl", "https://t.me/silgiub"), custom.Button.url(
+                            "Sahibim", "https://t.me/silgiub")],
                         [custom.Button.url(
                             "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")],
                         [custom.Button.url(
@@ -364,11 +365,11 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"sayfa\((.+?)\)")))
         async def sayfa(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiuserbot qur.", cache_time=0, alert=True)
+                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
             sayfa = int(event.data_match.group(1).decode("UTF-8"))
             veriler = butonlastir(sayfa, CMD_HELP)
             await event.edit(
-                f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiuserbot) __işləyir__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** {sayfa + 1}/{veriler[0]}",
+                f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** {sayfa + 1}/{veriler[0]}",
                 buttons=veriler[1],
                 link_preview=False
             )
@@ -376,7 +377,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌  Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiuserbot qur.", cache_time=0, alert=True)
+                return await event.answer("❌  Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
 
             sayfa = int(event.data_match.group(1).decode("UTF-8"))
             komut = event.data_match.group(2).decode("UTF-8")
@@ -396,7 +397,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"komut\[(.*)\[(\d*)\]\]\((.*)\)")))
         async def komut(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiuserbot qur.", cache_time=0, alert=True)
+                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
 
             cmd = event.data_match.group(1).decode("UTF-8")
             sayfa = int(event.data_match.group(2).decode("UTF-8"))
@@ -454,7 +455,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
 SON_GORULME = 0
 COUNT_MSG = 0
 USERS = {}
-BRAIN_CHECKER = [7378802137, 7287936548]
+BRAIN_CHECKER = [7589331363, 7287936548]
 COUNT_PM = {}
 LASTMSG = {}
 ENABLE_KILLME = True
