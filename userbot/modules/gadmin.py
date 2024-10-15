@@ -32,7 +32,7 @@ async def get_full_user(event):
             user_obj = await event.client.get_entity(user)
         except Exception as err:
             return await event.edit(
-                "Bir xəta baş verdi:\nBunu @silgiuserbot’a bildirin", str(err)
+                "Bir xəta baş verdi:\nBunu @silgiub’a bildirin", str(err)
             )
     return user_obj, extra
 
