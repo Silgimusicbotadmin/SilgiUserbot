@@ -59,7 +59,7 @@ async def lyrics(lyric):
         )
         os.remove("lyrics.txt")
     else:
-        await lyric.edit(f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot)\n{LANG['LYRICS']} \n`{artist} - {song}`\n\n```{songs.lyrics}```")
+        await lyric.edit(f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)\n{LANG['LYRICS']} \n`{artist} - {song}`\n\n```{songs.lyrics}```")
     return
 
 @register(outgoing=True, pattern="^.singer(?: |$)(.*)")
