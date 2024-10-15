@@ -111,8 +111,8 @@ async def reddit(event):
 @register(outgoing=True, pattern="^.karbon ?(.*)")
 async def karbon(e):
     cmd = e.pattern_match.group(1)
-    if os.path.exists("@silgiuserbot-Karbon.jpg"):
-        os.remove("@silgiuserbot-Karbon.jpg")
+    if os.path.exists("@silgiub-Karbon.jpg"):
+        os.remove("@silgiub-Karbon.jpg")
 
     if len(cmd) < 1:
         await e.edit("İşlədilişi: .karbon mesaj")    
@@ -123,10 +123,10 @@ async def karbon(e):
 
     r = get(f"https://carbonnowsh.herokuapp.com/?code={cmd}")
 
-    with open("@silgiuserbot-Karbon.jpg", 'wb') as f:
+    with open("@silgiub-Karbon.jpg", 'wb') as f:
         f.write(r.content)    
 
-    await e.client.send_file(e.chat_id, file="@Userator-Karbon.jpg", force_document=True, caption="[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot) ilə yaradıldı.")
+    await e.client.send_file(e.chat_id, file="@Userator-Karbon.jpg", force_document=True, caption="[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub) ilə yaradıldı.")
     await e.delete()
 
 @register(outgoing=True, pattern="^.crblang (.*)")
