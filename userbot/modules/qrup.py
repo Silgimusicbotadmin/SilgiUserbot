@@ -79,7 +79,7 @@ async def banall(event):
         except Exception as e:
             await event.reply(str(e))
         await asyncio.sleep(0.3)
-    await event.edit(f"[[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot)]:\n`BANALL prosesi tamamlandı`")
+    await event.edit(f"[[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)]:\n`BANALL prosesi tamamlandı`")
 
 
 @register(outgoing=True, pattern="^.addmember ?(.*)", groups_only=True, disable_errors=True)
@@ -99,12 +99,12 @@ async def addmember(event):
     f = 0
     error = "None"
 
-    await event.edit("[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot):\n\n`İstifadəçilər toplanılır...`")
+    await event.edit("[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub):\n\n`İstifadəçilər toplanılır...`")
     async for user in bot.iter_participants(usrtr.full_chat.id):
         try:
             if error.startswith("Too"):
                 await event.edit(
-                    f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot)\nXəta baş verdi və proses dayandırıldı(`Telethon limiti keçildi, daha sonra yenidən cəhd edin`)\n**Xəta** : \n`{error}`\n\n✔️ `{s}` nəfər dəvət olundu\n❌ `{f}`  nəfər dəvət edilə bilmədi")
+                    f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)\nXəta baş verdi və proses dayandırıldı(`Telethon limiti keçildi, daha sonra yenidən cəhd edin`)\n**Xəta** : \n`{error}`\n\n✔️ `{s}` nəfər dəvət olundu\n❌ `{f}`  nəfər dəvət edilə bilmədi")
                 if BOTLOG_CHATID is not None:
                     await bot.send_message(BOTLOG_CHATID, "#ADDMEMBER\n"
             f"UĞURLU**{s}** hesab(lar) !!\
@@ -116,14 +116,14 @@ async def addmember(event):
             s = s + 1
             await sleep(1.5)
             await event.edit(
-                f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot):\n\n•İstifadəçilər dəvət olunur...\n•  **Uğursuz:** `{f}` nəfər\n\n**×Son Uğursuz:** `{error}`"
+                f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub):\n\n•İstifadəçilər dəvət olunur...\n•  **Uğursuz:** `{f}` nəfər\n\n**×Son Uğursuz:** `{error}`"
             )
             asyncio.sleep(2.5)
         except Exception as e:
             error = str(e)
             f = f + 1
     return await event.edit(
-        f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot): \n\n✔️ `{s}` nəfər {event.chat.title} qrupuna dəvət olundu\n❌ {f} nəfər dəvət edilə bilmədi "
+        f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub): \n\n✔️ `{s}` nəfər {event.chat.title} qrupuna dəvət olundu\n❌ {f} nəfər dəvət edilə bilmədi "
     )
 
 @register(outgoing=True, pattern="^.qrup(?: |$)(.*)")
@@ -365,7 +365,7 @@ async def _(event):
                         f"__İstifadəçilər bandan çıxardılır...__\n\nHazırda `{succ}` hesab bandan çıxardılıb")
             except MessageNotModifiedError:
                 pass
-    await event.edit(f"[[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiuserbot)]:\nUNBANALL prosesi tamamlandı\n`{chat.title}` **qrupunda** `{succ}/{total}` **istifadəçi bandan çıxardıldı**")
+    await event.edit(f"[[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)]:\nUNBANALL prosesi tamamlandı\n`{chat.title}` **qrupunda** `{succ}/{total}` **istifadəçi bandan çıxardıldı**")
 
 
 Help = CmdHelp('qrup')
