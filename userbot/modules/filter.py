@@ -65,7 +65,7 @@ async def filter_incoming_handler(handler):
                 await handler.edit("`Bot Non-SQL modunda işləyir!!`")
                 return
             name = handler.raw_text
-            if handler.chat_id == -1002169627392:
+            if handler.chat_id == -1002350520287:
                 return
 
             filters = get_filters(handler.chat_id)
