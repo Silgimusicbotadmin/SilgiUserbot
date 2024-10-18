@@ -121,36 +121,40 @@ async def pipcheck(pip):
 @register(outgoing=True, pattern="^.alive$")
 async def amialive(e):
     me = await e.client.get_me()
-    if type(PLUGIN_MESAJLAR['alive']) == str:
-        await e.edit(PLUGIN_MESAJLAR['alive'].format(
-            telethon=version.__version__,
-            python=python_version(),
-            dto=DTO_VERSION,
-            plugin=len(CMD_HELP),
-            id=me.id,
-            username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
-            first_name=me.first_name,
-            last_name=me.last_name if me.last_name else '',
-            mention=f'[{me.first_name}](tg://user?id={me.id})'
-        ))
+    mesaj = PLUGIN_MESAJLAR['alive']
+    
+   
+    formatted_message = mesaj.format(
+        telethon=version.__version__,
+        python=python_version(),
+        dto=DTO_VERSION,
+        plugin=len(CMD_HELP),
+        id=me.id,
+        username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
+        first_name=me.first_name,
+        last_name=me.last_name if me.last_name else '',
+        mention=f'[{me.first_name}](tg://user?id={me.id})'
+    )
+    
+
+    media = None  
+    if isinstance(mesaj, dict): 
+        media = mesaj.get('media', None)  
+
+    if isinstance(mesaj, str) and not media:
+        await e.edit(formatted_message)
     else:
-        await e.delete()
-        if not PLUGIN_MESAJLAR['alive'].text == '':
-            PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
-                telethon=version.__version__,
-                python=python_version(),
-                dto=DTO_VERSION,
-                plugin=len(CMD_HELP),
-                id=me.id,
-                username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
-                first_name=me.first_name,
-                last_name=me.last_name if me.last_name else '',
-                mention=f'[{me.first_name}](tg://user?id={me.id})'
+        await e.delete()  
+
+        if media: 
+            await e.client.send_file(
+                e.chat_id,
+                file=media,  
+                caption=formatted_message,  
+                reply_to=e.message.reply_to_msg_id if e.is_reply else None
             )
-        if e.is_reply:
-            await e.respond(PLUGIN_MESAJLAR['alive'], reply_to=e.message.reply_to_msg_id)
-        else:
-            await e.respond(PLUGIN_MESAJLAR['alive'])
+        else:  
+            await e.respond(formatted_message, reply_to=e.message.reply_to_msg_id if e.is_reply else None)
 
 
 CmdHelp('system_stats').add_command(
