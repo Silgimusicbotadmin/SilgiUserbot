@@ -4,6 +4,7 @@ from platform import uname
 from shutil import which
 from os import remove
 from userbot import CMD_HELP, DTO_VERSION
+from telethon.tl.patched import Message
 from userbot.events import register
 from userbot.main import PLUGIN_MESAJLAR
 from telethon import version
