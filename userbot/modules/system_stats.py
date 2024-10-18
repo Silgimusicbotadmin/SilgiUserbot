@@ -122,8 +122,10 @@ async def pipcheck(pip):
 async def amialive(e):
     me = await e.client.get_me()
     mesaj = PLUGIN_MESAJLAR['alive']
+
+    if isinstance(mesaj, Message):
+        mesaj = mesaj.text
     
-   
     formatted_message = mesaj.format(
         telethon=version.__version__,
         python=python_version(),
@@ -135,25 +137,24 @@ async def amialive(e):
         last_name=me.last_name if me.last_name else '',
         mention=f'[{me.first_name}](tg://user?id={me.id})'
     )
-    
 
-    media = None  
-    if isinstance(mesaj, dict): 
-        media = mesaj.get('media', None)  
+    media = None
+    if isinstance(PLUGIN_MESAJLAR['alive'], dict):
+        media = PLUGIN_MESAJLAR['alive'].get('media', None)
 
-    if isinstance(mesaj, str) and not media:
+    if not media:
         await e.edit(formatted_message)
     else:
-        await e.delete()  
+        await e.delete()
 
-        if media: 
+        if media:
             await e.client.send_file(
                 e.chat_id,
-                file=media,  
-                caption=formatted_message,  
+                file=media,
+                caption=formatted_message,
                 reply_to=e.message.reply_to_msg_id if e.is_reply else None
             )
-        else:  
+        else:
             await e.respond(formatted_message, reply_to=e.message.reply_to_msg_id if e.is_reply else None)
 
 
