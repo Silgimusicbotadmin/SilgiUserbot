@@ -167,7 +167,7 @@ try:
                            "approve": "{mention}, mənə mesaj göndərə bilərsən!", 
                            "disapprove": "{mention}, artıq mənə mesaj göndərə bilmərsən!", 
                            "block": "{mention}, bloklandın!", 
-                           "restart": "Bot yenidən başladılır..."}
+                           "restart": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝💻 𝚢𝚎𝚗𝚒𝚍ə𝚗 𝚋𝚊ş𝚕𝚊𝚍ı𝚕ı𝚛. . ."}
 
     PLUGIN_MESAJLAR_TURLER = ["alive", "afk", "kickme", "pm", "dızcı", "ban", "mute", "approve", "disapprove", "block", "restart"]
     for mesaj in PLUGIN_MESAJLAR_TURLER:
