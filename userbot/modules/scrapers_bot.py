@@ -175,56 +175,61 @@ async def memeyap(event):
     else:
         await event.edit(LANG['REPLY_TO_MEME'])
 
-@register(outgoing=True, pattern="^.scan")
+
+@register(outgoing=True, pattern="^.drweb")
 async def scan(event):
     if event.fwd_from:
         return 
     if not event.reply_to_msg_id:
-       await event.edit(LANG['REPLY_TO_MESSAGE'])
-       return
+        await event.edit(LANG['REPLY_TO_MESSAGE'])
+        return
+    
     reply_message = await event.get_reply_message() 
     if not reply_message.media:
-       await event.edit(LANG['REPLY_TO_FILE'])
-       return
+        await event.edit(LANG['REPLY_TO_FILE'])
+        return
+    
     chat = "@DrWebBot"
     sender = reply_message.sender
     if reply_message.sender.bot:
-       await event.edit(LANG['REPLY_USER_ERR'])
-       return
+        await event.edit(LANG['REPLY_USER_ERR'])
+        return
+    
     await event.edit(LANG['MIZAH_EXE'])
+    
     async with event.client.conversation(chat) as conv:
-      try:     
-         response = conv.wait_event(events.NewMessage(incoming=True,from_users=161163358))
-         await event.client.forward_messages(chat, reply_message)
-         response = await response 
-      except YouBlockedUserError:
-         await event.reply(LANG['BLOCKED_CHAT'])
-         return
+        try:     
+            response = conv.wait_event(events.NewMessage(incoming=True, from_users=161163358))
+            await event.client.forward_messages(chat, reply_message)
+            response = await response 
+        except YouBlockedUserError:
+            await event.reply(LANG['BLOCKED_CHAT'])
+            return
 
-      if response.text.startswith("Forward"):
-         await event.edit(LANG['USER_PRIVACY'])
-      elif response.text.startswith("Select"):
-         await event.client.send_message(chat, "English")
-         await event.edit(LANG['WAIT_EDIT'])
+        if response.text.startswith("Forward"):
+            await event.edit(LANG['USER_PRIVACY'])
+        
+        elif response.text.startswith("Select"):
+            await event.client.send_message(chat, "English")
+            await event.edit(LANG['WAIT_EDIT'])
 
-         response = conv.wait_event(events.NewMessage(incoming=True,from_users=161163358))
-         await event.client.forward_messages(chat, reply_message)
-         response = conv.wait_event(events.NewMessage(incoming=True,from_users=161163358))
-         response = await response
-         
-         await event.edit(f"**{LANG['SCAN_RESULT']}:**\n {response.message.message}")
+            response = await conv.wait_event(events.NewMessage(incoming=True, from_users=161163358))
+            await event.client.forward_messages(chat, reply_message)
+            response = await conv.wait_event(events.NewMessage(incoming=True, from_users=161163358))
+            response = await response
+            
+            await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.message.message}")
 
-
-      elif response.text.startswith("Still"):
-         await event.edit(LANG['SCANNING'])
-
-         response = conv.wait_event(events.NewMessage(incoming=True,from_users=161163358))
-         response = await response 
-         if response.text.startswith("No threats"):
-            await event.edit(LANG['CLEAN'])
-         else:
-            await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.message.message}")
-
+        elif response.text.startswith("Still"):
+            await event.edit(LANG['SCANNING'])
+            
+            response = await conv.wait_event(events.NewMessage(incoming=True, from_users=161163358))
+            response = await response
+            if response.text.startswith("No threats"):
+                await event.edit(LANG['CLEAN'])
+            else:
+                await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.message.message}")
+            
 @register(outgoing=True, pattern="^.creation")
 async def creation(event):
     if not event.reply_to_msg_id:
