@@ -348,11 +348,11 @@ with bot:
             else:
                 result = builder.article(
                     "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
-                    text="""@silgiub'u işlətməyi yoxlayın!
+                    text="""[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](https://t.me/silgiub)'u işlətməyi yoxlayın!
 Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmayın, siz başqasının botunu idarə edə bilmərsiz! Altdakı GitHub adresindən bütün qurulum haqda məlumat var.""",
                     buttons=[
                         [custom.Button.url("Dəstək qrupuna Qatıl", "https://t.me/silgiub"), custom.Button.url(
-                            "Sahibim", "https://t.me/silgiub")],
+                            "Sahibim", "https://t.me/silgiteam")],
                         [custom.Button.url(
                             "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")],
                         [custom.Button.url(
