@@ -177,6 +177,7 @@ async def memeyap(event):
 
 
 
+
 @register(outgoing=True, pattern="^.drweb")
 async def scan(event):
     if event.fwd_from:
@@ -215,6 +216,7 @@ async def scan(event):
             await event.client.send_message(chat, "English")
             await event.edit(LANG['WAIT_EDIT'])
 
+            
             await event.client.forward_messages(chat, reply_message)
             response = await conv.get_response()
             
@@ -228,7 +230,7 @@ async def scan(event):
                 await event.edit(LANG['CLEAN'])
             else:
                 await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.text}")
-            
+        
 @register(outgoing=True, pattern="^.creation")
 async def creation(event):
     if not event.reply_to_msg_id:
