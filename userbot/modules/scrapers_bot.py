@@ -176,31 +176,49 @@ async def memeyap(event):
         await event.edit(LANG['REPLY_TO_MEME'])
 
 
+from telethon import events
+from telethon.errors.rpcerrorlist import YouBlockedUserError
+from userbot.events import register
 
-@register(outgoing=True, pattern="^.drweb")
+LANG = {
+    'REPLY_TO_MESSAGE': "⚠️ **Zəhmət olmasa bir fayla cavab verin!**",
+    'REPLY_TO_FILE': "⚠️ **Fayla cavab verməlisiniz. Bu bir fayl deyil!**",
+    'REPLY_USER_ERR': "⚠️ **Botlar üçün bu əmri istifadə edə bilməzsiniz.**",
+    'BLOCKED_CHAT': "❌ **Dr.Web botunu bloklamısınız. Lütfən blokdan çıxarın və yenidən cəhd edin.**",
+    'USER_PRIVACY': "⚠️ **Bu istifadəçi öz məxfiliyini qoruyur, fayl Dr.Web botuna göndərilə bilmədi.**",
+    'WAIT_EDIT': "⏳ **Skan edilməsi üçün bir az gözləyin...**",
+    'MIZAH_EXE': "🔍 **Fayl skan ediləcək, gözləyin...**",
+    'SCAN_RESULT': "🛡 **Skan nəticəsi**",
+    'SCANNING': "🔄 **Skan davam edir, gözləyin...**",
+    'CLEAN': "✅ **Təhlükə aşkar edilmədi! Fayl təmizdir.**",
+    'VIRUS_DETECTED': "⚠️ **Virus aşkar edildi! Təhlükəsiz olmaq üçün faylı silin.**"
+}
+
+@register(outgoing=True, pattern="^.scan$")
 async def scan(event):
     if event.fwd_from:
         return 
+
     if not event.reply_to_msg_id:
         await event.edit(LANG['REPLY_TO_MESSAGE'])
         return
-    
+
     reply_message = await event.get_reply_message() 
+
     if not reply_message.media:
         await event.edit(LANG['REPLY_TO_FILE'])
         return
     
     chat = "@DrWebBot"
-    sender = reply_message.sender
+
     if reply_message.sender.bot:
         await event.edit(LANG['REPLY_USER_ERR'])
         return
-    
+
     await event.edit(LANG['MIZAH_EXE'])
     
     async with event.client.conversation(chat) as conv:
         try:
-            
             await event.client.forward_messages(chat, reply_message)
             response = await conv.get_response()
         except YouBlockedUserError:
@@ -210,13 +228,11 @@ async def scan(event):
             await event.edit("❌ **Mesaj Dr.Web botuna çatdırıla bilmədi. Yenidən cəhd edin.**")
             return
 
-        
         if response.text.startswith("Forward"):
             await event.edit(LANG['USER_PRIVACY'])
             return
 
         elif response.text.startswith("Select"):
-            
             await event.client.send_message(chat, "English")
             await event.edit(LANG['WAIT_EDIT'])
 
@@ -238,9 +254,9 @@ async def scan(event):
             else:
                 await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.text}")
         else:
-            
             await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.text}")
-            
+    
+
 
 @register(outgoing=True, pattern="^.creation")
 async def creation(event):
@@ -395,7 +411,7 @@ async def quotly(event):
 CmdHelp('scrapers_bot').add_command(
     'sangmata', (LANG['SANG1']), (LANG['SANG2'])
 ).add_command(
-    'drweb', (LANG['DR1']), (LANG['DR2'])
+    'scan', (LANG['DR1']), (LANG['DR2'])
 ).add_command(
     'meme', (LANG['MEME1']), (LANG['MEME2']), (LANG['MEME3'])
 ).add_command(
