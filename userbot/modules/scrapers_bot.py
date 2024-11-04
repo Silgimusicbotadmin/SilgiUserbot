@@ -177,9 +177,6 @@ async def memeyap(event):
 
 
 
-
-
-
 @register(outgoing=True, pattern="^.drweb")
 async def scan(event):
     if event.fwd_from:
@@ -210,15 +207,16 @@ async def scan(event):
             await event.reply(LANG['BLOCKED_CHAT'])
             return
         except ValueError:
-            
             await event.edit("❌ **Mesaj Dr.Web botuna çatdırıla bilmədi. Yenidən cəhd edin.**")
             return
 
-
+        
         if response.text.startswith("Forward"):
             await event.edit(LANG['USER_PRIVACY'])
-        
+            return
+
         elif response.text.startswith("Select"):
+            
             await event.client.send_message(chat, "English")
             await event.edit(LANG['WAIT_EDIT'])
 
@@ -226,20 +224,24 @@ async def scan(event):
                 await event.client.forward_messages(chat, reply_message)
                 response = await conv.get_response()
             except ValueError:
-                await event.edit("❌ **Mesajı Dr.Web botuna geri ötürmək mümkün olmadı.**")
+                await event.edit("❌ **Mesajı Dr.Web botuna yönləndirmək mümkün olmadı.**")
                 return
             
             await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.text}")
 
         elif response.text.startswith("Still"):
             await event.edit(LANG['SCANNING'])
-            
+
             response = await conv.get_response()
             if response.text.startswith("No threats"):
                 await event.edit(LANG['CLEAN'])
             else:
                 await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.text}")
-                
+        else:
+            
+            await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.text}")
+            
+
 @register(outgoing=True, pattern="^.creation")
 async def creation(event):
     if not event.reply_to_msg_id:
