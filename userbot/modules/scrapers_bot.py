@@ -180,7 +180,7 @@ from telethon import events
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from userbot.events import register
 
-LANG = {
+LANG1 = {
     'REPLY_TO_MESSAGE': "⚠️ **Zəhmət olmasa bir fayla cavab verin!**",
     'REPLY_TO_FILE': "⚠️ **Fayla cavab verməlisiniz. Bu bir fayl deyil!**",
     'REPLY_USER_ERR': "⚠️ **Botlar üçün bu əmri istifadə edə bilməzsiniz.**",
@@ -200,41 +200,41 @@ async def scan(event):
         return 
 
     if not event.reply_to_msg_id:
-        await event.edit(LANG['REPLY_TO_MESSAGE'])
+        await event.edit(LANG1['REPLY_TO_MESSAGE'])
         return
 
     reply_message = await event.get_reply_message() 
 
     if not reply_message.media:
-        await event.edit(LANG['REPLY_TO_FILE'])
+        await event.edit(LANG1['REPLY_TO_FILE'])
         return
     
     chat = "@DrWebBot"
 
     if reply_message.sender.bot:
-        await event.edit(LANG['REPLY_USER_ERR'])
+        await event.edit(LANG1['REPLY_USER_ERR'])
         return
 
-    await event.edit(LANG['MIZAH_EXE'])
+    await event.edit(LANG1['MIZAH_EXE'])
     
     async with event.client.conversation(chat) as conv:
         try:
             await event.client.forward_messages(chat, reply_message)
             response = await conv.get_response()
         except YouBlockedUserError:
-            await event.reply(LANG['BLOCKED_CHAT'])
+            await event.reply(LANG1['BLOCKED_CHAT'])
             return
         except ValueError:
             await event.edit("❌ **Mesaj Dr.Web botuna çatdırıla bilmədi. Yenidən cəhd edin.**")
             return
 
         if response.text.startswith("Forward"):
-            await event.edit(LANG['USER_PRIVACY'])
+            await event.edit(LANG1['USER_PRIVACY'])
             return
 
         elif response.text.startswith("Select"):
             await event.client.send_message(chat, "English")
-            await event.edit(LANG['WAIT_EDIT'])
+            await event.edit(LANG1['WAIT_EDIT'])
 
             try:
                 await event.client.forward_messages(chat, reply_message)
@@ -243,18 +243,18 @@ async def scan(event):
                 await event.edit("❌ **Mesajı Dr.Web botuna yönləndirmək mümkün olmadı.**")
                 return
             
-            await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.text}")
+            await event.edit(f"**{LANG1['SCAN_RESULT']}:**\n{response.text}")
 
         elif response.text.startswith("Still"):
-            await event.edit(LANG['SCANNING'])
+            await event.edit(LANG1['SCANNING'])
 
             response = await conv.get_response()
             if response.text.startswith("No threats"):
-                await event.edit(LANG['CLEAN'])
+                await event.edit(LANG1['CLEAN'])
             else:
-                await event.edit(f"**{LANG['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.text}")
+                await event.edit(f"**{LANG1['VIRUS_DETECTED']}**\n\nƏtraflı məlumat: {response.text}")
         else:
-            await event.edit(f"**{LANG['SCAN_RESULT']}:**\n{response.text}")
+            await event.edit(f"**{LANG1['SCAN_RESULT']}:**\n{response.text}")
     
 
 
