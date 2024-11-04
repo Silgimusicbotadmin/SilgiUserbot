@@ -225,7 +225,7 @@ async def scan(event):
             await event.reply(LANG1['BLOCKED_CHAT'])
             return
         except ValueError:
-            await event.edit("❌ **Mesaj Dr.Web göndərildi. Zəhmət olmasa @drwebbot a baxın.**")
+            await event.edit("✅ **Mesaj Dr.Web botuna göndərildi. Zəhmət olmasa @drwebbot a baxın.**")
             return
 
         if response.text.startswith("Forward"):
@@ -240,7 +240,7 @@ async def scan(event):
                 await event.client.forward_messages(chat, reply_message)
                 response = await conv.get_response()
             except ValueError:
-                await event.edit("❌ **Mesajı Dr.Web botuna yönləndirmək mümkün olmadı.**")
+                await event.edit(" **Mesajı Dr.Web botuna yönləndirmək mümkün olmadı.**")
                 return
             
             await event.edit(f"**{LANG1['SCAN_RESULT']}:**\n{response.text}")
