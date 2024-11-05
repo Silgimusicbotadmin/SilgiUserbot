@@ -3,7 +3,8 @@ from userbot.events import register
 from userbot import (COUNT_PM, CMD_HELP, BOTLOG, BOTLOG_CHATID,
                      PM_AUTO_BAN, PM_AUTO_BAN_LIMIT, LASTMSG, LOGS, BRAIN_CHECKER, WHITELIST)
 import os
-
+from userbot.language import get_value
+LANG = get_value("userbot")
 
 old_first_name = None
 old_last_name = None
@@ -17,9 +18,8 @@ async def clone(event):
     reply_message = await event.get_reply_message()
     replied_user = await get_user(event)
     if replied_user.id in BRAIN_CHECKER or replied_user.id in WHITELIST:
-        await event.edit(
-                "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ adminini/sahibini klonlamayacağam.`"
-            )
+        await event.edit(LANG[`SILGI'])
+                
         return
     if not replied_user:
         await event.edit("User tapılmadı.User seçdiyindən əminsən?.")
