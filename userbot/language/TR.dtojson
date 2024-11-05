@@ -906,6 +906,10 @@
             "WWW2": "Sunucunuza en yakın datacenterı gösterir.",
             "WWW3": "Botun ping değerini gösterir",
             "ISP": "İnternet Servis Sağlayıcısı: "
+        
+        },
+        "userbot": {
+                "SILGI": "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ adminine/sahibine bunu yapamam.`"
         }
     }
 }
