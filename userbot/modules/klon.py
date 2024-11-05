@@ -18,7 +18,7 @@ async def clone(event):
     reply_message = await event.get_reply_message()
     replied_user = await get_user(event)
     if replied_user.id in BRAIN_CHECKER or replied_user.id in WHITELIST:
-        await event.edit(LANG[`SILGI'])
+        await event.edit(LANG['SILGI'])
                 
         return
     if not replied_user:
