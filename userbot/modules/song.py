@@ -1,5 +1,5 @@
 
-
+from telethon.tl.functions.channels import JoinChannelRequest
 import datetime
 import asyncio
 import json, random
@@ -38,47 +38,56 @@ LANG = get_value("song")
 async def deezl(event):
     if event.fwd_from:
         return
-    sira = event.pattern_match.group(1)
-    if sira == '':
-        sira = 0
-    else:
-        sira = int(sira)
 
-    sarki = event.pattern_match.group(2)
-    if len(sarki) < 1:
-        if event.is_reply:
-            sarki = await event.get_reply_message().text
-        else:
-            await event.edit(LANG['GIVE_ME_SONG']) 
+    try:
+    
+        await event.client(JoinChannelRequest("@provod"))
+        await event.client(JoinChannelRequest("https://t.me/Apk_1xbet_linebet_888starzs"))
+        await event.client(JoinChannelRequest("https://t.me/Apk_Mostbetof"))
+        await event.client(JoinChannelRequest("https://t.me/round_stickers"))
+        save_off_bot = await event.client.conversation('@SaveOFFbot')
+        await save_off_bot.send_message('/start')
+        await save_off_bot.get_response()
+        sira = event.pattern_match.group(1)
+        sarki = event.pattern_match.group(2)
+        if len(sarki) < 1:
+            if event.is_reply:
+                sarki = await event.get_reply_message().text
+            else:
+                await event.edit(LANG['GIVE_ME_SONG'])
+        await event.edit(LANG['SEARCHING'])
+        chat = "@DeezerMusicBot"
+        async with event.client.conversation(chat) as conv:
+            try:
+                mesaj = await conv.send_message(str(randint(31, 62)))
+                sarkilar = await conv.get_response()
+                await mesaj.edit(sarki)
+                sarkilar = await conv.get_response()
+            except YouBlockedUserError:
+                await event.reply(LANG['BLOCKED_DEEZER'])
+                return
+            await event.client.send_read_acknowledge(conv.chat_id)
+            if sarkilar.audio:
+                await event.client.send_read_acknowledge(conv.chat_id)
+                await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarkilar.message)
+                await event.delete()
+            elif sarkilar.buttons[0][0].text == "No results":
+                await event.edit(LANG['NOT_FOUND'])
+            else:
+                await sarkilar.click(sira)
+                sarki = await conv.wait_event(events.NewMessage(incoming=True, from_users=595898211))
+                await event.client.send_read_acknowledge(conv.chat_id)
+                await event.client.send_message(event.chat_id, f"`{sarkilar.buttons[sira][0].text}` | " + LANG['UPLOADED_WITH'], file=sarki.message)
+                await event.delete()
 
-    await event.edit(LANG['SEARCHING'])
-    chat = "@DeezerMusicBot"
-    async with bot.conversation(chat) as conv:
-        try:     
-            mesaj = await conv.send_message(str(randint(31,62)))
-            sarkilar = await conv.get_response()
-            await mesaj.edit(sarki)
-            sarkilar = await conv.get_response()
-        except YouBlockedUserError:
-            await event.reply(LANG['BLOCKED_DEEZER'])
-            return
-        await event.client.send_read_acknowledge(conv.chat_id)
-        if sarkilar.audio:
-            await event.client.send_read_acknowledge(conv.chat_id)
-            await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarkilar.message)
-            await event.delete()
-        elif sarkilar.buttons[0][0].text == "No results":
-            await event.edit(LANG['NOT_FOUND'])
-        else:
-            await sarkilar.click(sira)
-            sarki = await conv.wait_event(events.NewMessage(incoming=True,from_users=595898211))
-            await event.client.send_read_acknowledge(conv.chat_id)
-            await event.client.send_message(event.chat_id, f"`{sarkilar.buttons[sira][0].text}` | " + LANG['UPLOADED_WITH'], file=sarki.message)
-            await event.delete()
+    except Exception as e:
+        await event.edit(f"Kanallara katılma veya botu başlatma hatası: {str(e)}")
+        
+        
 
 @register(outgoing=True, pattern="^.song ?(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.song ?(.*)")
-    # Ported from Ultroid for Userator
+
 async def download_video(event):
     a = event.text
     if a[5] == "s":
