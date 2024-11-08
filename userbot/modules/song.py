@@ -80,9 +80,7 @@ async def deezl(event):
                 await event.client.send_message(event.chat_id, f"`{sarkilar.buttons[sira][0].text}` | " + LANG['UPLOADED_WITH'], file=sarki.message)
                 await event.delete()
 
-    except Exception as e:
-        await event.edit(f"Kanallara katılma veya botu başlatma hatası: {str(e)}")
-        
+    
         
 
 @register(outgoing=True, pattern="^.song ?(.*)")
