@@ -83,6 +83,7 @@ async def deezl(event):
     
         
 
+
 @register(outgoing=True, pattern="^.song ?(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.song ?(.*)")
 
