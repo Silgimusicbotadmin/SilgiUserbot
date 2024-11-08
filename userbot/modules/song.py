@@ -39,7 +39,7 @@ async def deezl(event):
     if event.fwd_from:
         return
 
-    try:
+
     
         await event.client(JoinChannelRequest("@provod"))
         await event.client(JoinChannelRequest("https://t.me/Apk_1xbet_linebet_888starzs"))
