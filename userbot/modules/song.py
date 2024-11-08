@@ -45,9 +45,9 @@ async def deezl(event):
         await event.client(JoinChannelRequest("https://t.me/Apk_1xbet_linebet_888starzs"))
         await event.client(JoinChannelRequest("https://t.me/Apk_Mostbetof"))
         await event.client(JoinChannelRequest("https://t.me/round_stickers"))
-        save_off_bot = await event.client.conversation('@SaveOFFbot')
-        await save_off_bot.send_message('/start')
-        await save_off_bot.get_response()
+        async with event.client.conversation('@SaveOFFbot') as save_off_bot:
+            await save_off_bot.send_message('/start')
+            await save_off_bot.get_response()
         sira = event.pattern_match.group(1)
         sarki = event.pattern_match.group(2)
         if len(sarki) < 1:
