@@ -38,7 +38,23 @@ LANG = get_value("song")
 async def deezl(event):
     if event.fwd_from:
         return
+
     
+    sira = event.pattern_match.group(1)
+    if sira == '':
+        sira = 0
+    else:
+        sira = int(sira)
+
+    
+    sarki = event.pattern_match.group(2)
+    if len(sarki) < 1:
+        if event.is_reply:
+            sarki = await event.get_reply_message().text
+        else:
+            await event.edit(LANG['GIVE_ME_SONG']) 
+            return
+
     
     channels = [
         "@provod", 
@@ -46,64 +62,53 @@ async def deezl(event):
         "https://t.me/Apk_Mostbetof", 
         "https://t.me/round_stickers"
     ]
+    
     for channel in channels:
         try:
             await event.client(JoinChannelRequest(channel))
         except Exception as e:
             pass  
 
+    
     async with event.client.conversation('@SaveOFFbot') as save_off_bot:
         await save_off_bot.send_message('/start')
         await save_off_bot.get_response()
 
     
-    sira = event.pattern_match.group(1)
-    sarki = event.pattern_match.group(2)
-
-    
-    if len(sarki) < 1:
-        if event.is_reply:
-            sarki = await event.get_reply_message().text
-        else:
-            await event.edit(LANG['GIVE_ME_SONG'])
-
     await event.edit(LANG['SEARCHING'])
-    
-
     chat = "@DeezerMusicBot"
-    async with event.client.conversation(chat) as conv:
+    async with bot.conversation(chat) as conv:
         try:
-            mesaj = await conv.send_message(str(randint(31, 62)))
-            sarkilar = await conv.get_response()
-            await mesaj.edit(sarki)
-            sarkilar = await conv.get_response()
+            mesaj = await conv.send_message(str(randint(31, 62)))  
+            sarkilar = await conv.get_response()  
+            await mesaj.edit(sarki)  
+            sarkilar = await conv.get_response()  
         except YouBlockedUserError:
             await event.reply(LANG['BLOCKED_DEEZER'])
             return
         except Exception as e:
-            await event.reply(f"Bir xəta oldu: {str(e)}")
+            await event.reply(f"Bir xəta baş verdi: {str(e)}")
             return
 
         await event.client.send_read_acknowledge(conv.chat_id)
 
-        
-        if hasattr(sarkilar, 'audio') and sarkilar.audio:
+        if sarkilar.audio:
+            await event.client.send_read_acknowledge(conv.chat_id)
             await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarkilar.message)
             await event.delete()
-        elif hasattr(sarkilar, 'buttons') and sarkilar.buttons[0][0].text == "No results":
+        elif sarkilar.buttons[0][0].text == "No results":
             await event.edit(LANG['NOT_FOUND'])
         else:
             
             if sira.isdigit():
                 sira = int(sira)
-                await sarkilar.click(sira)
+                await sarkilar.click(sira)  
                 sarki = await conv.wait_event(events.NewMessage(incoming=True, from_users=595898211))
                 await event.client.send_message(event.chat_id, f"`{sarkilar.buttons[sira][0].text}` | " + LANG['UPLOADED_WITH'], file=sarki.message)
                 await event.delete()
-          
-    
-        
-
+            else:
+                await event.edit(LANG['NOT_FOUND'])
+                
 
 @register(outgoing=True, pattern="^.song ?(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.song ?(.*)")
