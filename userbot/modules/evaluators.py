@@ -27,7 +27,7 @@ async def evaluate(query):
         await query.edit(LANG['NEED_CODE'])
         return
 
-    if (expression in ("userbot.session", "config.env")) or (expression is 'env'):
+    if (expression in ("userbot.session", "config.env")) or (expression == 'env'):
         await query.edit(LANG['WARNING'])
         return
 
@@ -81,7 +81,7 @@ async def run(run_q):
         await run_q.edit(LANG['NEED_CODE'])
         return
 
-    if (expression in ("userbot.session", "config.env")) or (expression == 'env'):
+    if (code in ("userbot.session", "config.env")) or (code == 'env'):
         await run_q.edit(LANG['WARNING'])
         return
 
