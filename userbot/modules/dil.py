@@ -17,13 +17,13 @@ async def dil(event):
             reply = await event.get_reply_message()
             dosya = await reply.download_media()
 
-            if ((len(reply.file.name.split(".")) >= 2) and (not reply.file.name.split(".")[1] == "dtojson")):
-                return await event.edit("`Xaiş keçərli bir` **DTOJSON** `faylı verin!`")
+            if ((len(reply.file.name.split(".")) >= 2) and (not reply.file.name.split(".")[1] == "silgijson")):
+                return await event.edit("`Xaiş keçərli bir` **SILGIJSON** `faylı verin!`")
 
             try:
                 dosya = loads(open(dosya, "r").read())
             except JSONDecodeError:
-                return await event.edit("`Xaiş keçərli bir` **DTOJSON** `faylı verin!`")
+                return await event.edit("`Xaiş keçərli bir` **SILGIJSON** `faylı verin!`")
 
             await event.edit(f"`{dosya['LANGUAGE']}` `dili yüklənir...`")
             pchannel = await event.client.get_entity(PLUGIN_CHANNEL_ID)
@@ -40,15 +40,15 @@ async def dil(event):
         await event.edit("`Dil faylı məlumatları gətirilir... Xaiş gözləyin.`")
         if event.is_reply:
             reply = await event.get_reply_message()
-            if ((len(reply.file.name.split(".")) >= 1) and (not reply.file.name.split(".")[1] == "dtojson")):
-                return await event.edit("`Xaiş keçərli bir` **DTOJSON** `faylı verin!`")
+            if ((len(reply.file.name.split(".")) >= 1) and (not reply.file.name.split(".")[1] == "silgijson")):
+                return await event.edit("`Xaiş keçərli bir` **SILGIJSON** `faylı verin!`")
 
             dosya = await reply.download_media()
 
             try:
                 dosya = loads(open(dosya, "r").read())
             except JSONDecodeError:
-                return await event.edit("`Xaiş keçərli bir` **DTOJSON** `faylı verin!`")
+                return await event.edit("`Xaiş keçərli bir` **SILGIJSON** `faylı verin!`")
 
             await event.edit(
                 f"**Dil: **`{dosya['LANGUAGE']}`\n"
