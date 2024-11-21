@@ -1,7 +1,7 @@
 
 from asyncio import sleep
 import re
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, WHITELIST
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 
@@ -56,32 +56,43 @@ def split_quotes(text: str):
 
 @register(incoming=True, disable_edited=True, disable_errors=True)
 async def filter_incoming_handler(handler):
-    """  """
+    """ Filtrelerin mesajlara yanıt verdiği ana işlev. """
     try:
-        if not (await handler.get_sender()).bot:
-            try:
-                from userbot.modules.sql_helper.filter_sql import get_filters
-            except AttributeError:
-                await handler.edit("`Bot Non-SQL modunda işləyir!!`")
-                return
-            name = handler.raw_text
-            if handler.chat_id == -1002350520287:
-                return
+        sender = await handler.get_sender()
+        
+        # Gönderen bir bot veya beyaz listedeyse işlem yapılmaz.
+        if sender.bot or sender.id in WHITELIST:
+            return
+        
+        try:
+            from userbot.modules.sql_helper.filter_sql import get_filters
+        except AttributeError:
+            await handler.edit("`Bot Non-SQL modunda işləyir!!`")
+            return
+        
 
-            filters = get_filters(handler.chat_id)
+        if handler.chat_id == -1002350520287:
+            return
+
+
+        name = handler.raw_text
+
+        filters = get_filters(handler.chat_id)
+        if not filters:
+            filters = get_filters("GENEL")
             if not filters:
-                filters = get_filters("GENEL")
-                if not filters:
-                    return
+                return
 
-            for trigger in filters:
-                pro = re.fullmatch(trigger.keyword, name, flags=re.IGNORECASE)
-                if pro and trigger.f_mesg_id:
-                    msg_o = await handler.client.get_messages(
-                        entity=BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
-                    await handler.reply(msg_o.message, file=msg_o.media)
-                elif pro and trigger.reply:
-                    await handler.reply(trigger.reply)
+
+        for trigger in filters:
+            pro = re.fullmatch(trigger.keyword, name, flags=re.IGNORECASE)
+            if pro and trigger.f_mesg_id:
+                msg_o = await handler.client.get_messages(
+                    entity=BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
+                await handler.reply(msg_o.message, file=msg_o.media)
+            elif pro and trigger.reply:
+                await handler.reply(trigger.reply)
+
     except AttributeError:
         pass
 
