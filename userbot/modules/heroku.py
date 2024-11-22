@@ -181,55 +181,34 @@ async def dyno_usage(dyno):
                            f"     •  `{gun}` (**Gün**) | [`{ayfaiz}` **%**]"
                            )
 
-import requests
-import heroku3
-import os
-import codecs
-from userbot.events import register
+
+
+def upload_log_to_hastebin(log_data):
+    url = "https://hastebin.com/documents"
+    response = requests.post(url, data=log_data.encode('utf-8')) 
+    if response.status_code == 200:
+        json_response = response.json()
+        hastebin_url = f"https://hastebin.com/{json_response['key']}"
+        return hastebin_url
+    else:
+        return "Log göndəriləb bilmədi."
 
 @register(outgoing=True, pattern=r"^\.loq$")
-async def _(dyno):
+async def get_heroku_logs(dyno):
     try:
         Heroku = heroku3.from_key(HEROKU_APIKEY)
         app = Heroku.app(HEROKU_APPNAME)
     except BaseException:
         return await dyno.reply(
-            "`Zəhmət olmasa, Heroku API Key və Heroku APP name'in düzgün olduğundan əmin olun.`"
+            "`Zəhmət olmasa, Heroku API Key və App Name-in düzgün olduğundan əmin olun.`"
         )
-
+    
     await dyno.edit("`Loqlar gətirilir....`")
-    try:
-        # Loqları fayla yazmaq
-        with open("logs.txt", "w") as log:
-            log.write(app.get_log())
+    log_data = app.get_log()  
 
-        # Faylı açıb məzmunu oxumaq
-        with open("logs.txt", "r", encoding="utf-8") as file:
-            log_content = file.read()
-
-        # Nekobin API-ya göndərmək
-        response = requests.post(
-            "https://nekobin.com/api/documents",
-            json={"content": log_content}
-        )
-
-        if response.status_code == 200:
-            # Nekobin nəticəsi
-            key = response.json().get("result", {}).get("key")
-            if key:
-                url = f"https://nekobin.com/raw/{key}"
-                await dyno.edit(f"`Heroku loqları:`\n\n[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝🔗 Loq Linki]({url})")
-            else:
-                await dyno.edit("`Nekobin API nəticə qaytarmadı.`")
-        else:
-            await dyno.edit("`Nekobin API ilə əlaqə qurulmadı. 400 səhvi.`")
-
-    except Exception as e:
-        await dyno.edit(f"`Bir xəta baş verdi: {str(e)}`")
-    finally:
-        # Faylın silinməsi
-        if os.path.exists("logs.txt"):
-            os.remove("logs.txt")
+    hastebin_url = upload_log_to_hastebin(log_data)
+    
+    await dyno.edit(f"`Heroku Loqları:`\n\n[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Log linki]({hastebin_url})")
 
 
 CmdHelp('heroku').add_command(
