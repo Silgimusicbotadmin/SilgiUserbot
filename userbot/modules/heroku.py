@@ -183,19 +183,11 @@ async def dyno_usage(dyno):
 
 
 
-def upload_log_to_hastebin(log_data):
-    url = "https://hastebin.com/documents"
-    response = requests.post(url, data=log_data.encode('utf-8')) 
-    if response.status_code == 200:
-        json_response = response.json()
-        hastebin_url = f"https://hastebin.com/{json_response['key']}"
-        return hastebin_url
-    else:
-        return "Log göndəriləb bilmədi."
 
 @register(outgoing=True, pattern=r"^\.loq$")
 async def get_heroku_logs(dyno):
     try:
+       
         Heroku = heroku3.from_key(HEROKU_APIKEY)
         app = Heroku.app(HEROKU_APPNAME)
     except BaseException:
@@ -204,11 +196,22 @@ async def get_heroku_logs(dyno):
         )
     
     await dyno.edit("`Loqlar gətirilir....`")
-    log_data = app.get_log()  
-
-    hastebin_url = upload_log_to_hastebin(log_data)
     
-    await dyno.edit(f"`Heroku Loqları:`\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Log linki\n{hastebin_url}")
+    try:
+        log_data = app.get_log()
+        log_filename = "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Logs.txt"
+        with open(log_filename, "w", encoding="utf-8") as log_file:
+            log_file.write(log_data)
+        await dyno.client.send_file(
+            dyno.chat_id, log_filename, caption="Heroku Loqları"
+        )
+
+    except Exception as e:
+        await dyno.edit(f"`Bir xəta baş verdi: {str(e)}`")
+    
+    finally:
+        if os.path.exists(log_filename):
+            os.remove(log_filename)
 
 
 CmdHelp('heroku').add_command(
