@@ -181,25 +181,50 @@ async def dyno_usage(dyno):
                            f"     •  `{gun}` (**Gün**) | [`{ayfaiz}` **%**]"
                            )
 
-@register(outgoing=True, pattern=r"^\.loq")
+@register(outgoing=True, pattern=r"^\.loq$")
 async def _(dyno):
     try:
+        
         Heroku = heroku3.from_key(HEROKU_APIKEY)
         app = Heroku.app(HEROKU_APPNAME)
     except BaseException:
         return await dyno.reply(
-            "`Zəhmət olmasa,Heroku VARS'da Heroku API Key və Heroku APP name'in düzgün olduğundan əmin olun.`"
+            "`Zəhmət olmasa, Heroku VARS'da Heroku API Key və Heroku APP name'in düzgün olduğundan əmin olun.`"
         )
-    await dyno.edit("`Loq gətirilir....`")
-    with open("logs.txt", "w") as log:
-        log.write(app.get_log())
-    fd = codecs.open("logs.txt", "r", encoding="utf-8")
-    data = fd.read()
-    key = (requests.post("https://nekobin.com/api/documents",
-                         json={"content": data}) .json() .get("result") .get("key"))
-    url = f"https://nekobin.com/raw/{key}"
-    await dyno.edit(f"`Heroku loq'u :`\n\n: [⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝]({url})")
-    return os.remove("logs.txt")
+
+    await dyno.edit("`Loqlar gətirilir....`")
+    try:
+        
+        with open("logs.txt", "w") as log:
+            log.write(app.get_log())
+
+    
+        with codecs.open("logs.txt", "r", encoding="utf-8") as fd:
+            data = fd.read()
+
+        
+        response = requests.post(
+            "https://nekobin.com/api/documents", 
+            json={"content": data}
+        )
+
+        
+        if response.status_code == 200:
+            response_json = response.json()
+            if response_json and "result" in response_json and "key" in response_json["result"]:
+                key = response_json["result"]["key"]
+                url = f"https://nekobin.com/raw/{key}"
+                await dyno.edit(f"`Heroku loqu :`\n\n[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝]({url})")
+            else:
+                await dyno.edit("`API-dən düzgün nəticə alınmadı.`")
+        else:
+            await dyno.edit(f"`Nekobin API sorğusu uğursuz oldu: {response.status_code}`")
+    except Exception as e:
+        await dyno.edit(f"`Bir xəta baş verdi: {str(e)}`")
+    finally:
+        
+        if os.path.exists("logs.txt"):
+            os.remove("logs.txt")
 
 
 CmdHelp('heroku').add_command(
