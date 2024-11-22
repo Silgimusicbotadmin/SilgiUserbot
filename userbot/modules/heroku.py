@@ -208,7 +208,7 @@ async def get_heroku_logs(dyno):
 
     hastebin_url = upload_log_to_hastebin(log_data)
     
-    await dyno.edit(f"`Heroku Loqları:`\n\n[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Log linki]({hastebin_url})")
+    await dyno.edit(f"`Heroku Loqları:`\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Log linki\n{hastebin_url}")
 
 
 CmdHelp('heroku').add_command(
