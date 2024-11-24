@@ -49,7 +49,7 @@ async def clone(event):
         await event.edit("Userin profil şəkli tapılmadı.")
 
     await event.delete()
-    await event.respond("Ahaha, səni klonladım.", reply_to=reply_message)
+    await event.respond("Axalay maxalay puf klonlandın.", reply_to=reply_message)
 
 @register(outgoing=True, pattern="^.revert$")
 async def revert(event):
@@ -71,7 +71,7 @@ async def revert(event):
         uploaded_photo = await event.client.upload_file(old_profile_photo)
         await event.client(functions.photos.UploadProfilePhotoRequest(file=uploaded_photo))
     
-    await event.edit("artıq öz profilindəsən. ⚡")
+    await event.edit("Axalay maxalay puf profil geri qayıtdı. ⚡")
 
 async def get_user(event):
     if event.reply_to_msg_id:
