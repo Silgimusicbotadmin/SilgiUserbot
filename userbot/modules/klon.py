@@ -1,95 +1,104 @@
-from telethon.tl import functions
+import os
+from telethon.tl.functions.photos import GetUserPhotosRequest, UploadProfilePhotoRequest, DeletePhotosRequest
+from telethon.tl.functions.account import UpdateProfileRequest
+from telethon.tl.types import InputPhoto
+from telethon.errors.rpcerrorlist import PhotoCropSizeSmallError
 from userbot.events import register
 from userbot import BRAIN_CHECKER, WHITELIST
 from userbot.language import get_value
-
 LANG = get_value("userbot")
+original_profile = {
+    "first_name": None,
+    "last_name": None,
+    "about": None,
+    "photo": None
+}
 
-old_first_name = None
-old_last_name = None
-old_profile_photo = None
-old_bio = None
+@register(pattern="^\.klon(?: |$)(.*)", outgoing=True)
+async def klon(event):
+    if event.reply_to_msg_id:
+        reply_message = await event.get_reply_message()
+        replied_user = await event.client.get_entity(reply_message.sender_id)
+    else:
+        args = event.pattern_match.group(1)
+        if args.isdigit():
+            replied_user = await event.client.get_entity(int(args))
+        elif args:
+            replied_user = await event.client.get_entity(args)
+        else:
+            await event.edit("🔴 İstifadəçi seçilmədi.")
+            return
 
-@register(outgoing=True, pattern="^.klon ?(.*)")
-async def clone(event):
-    global old_first_name, old_last_name, old_profile_photo, old_bio
-    if event.fwd_from:
-        return
-
-    replied_user = await get_user(event)
-    
-    if replied_user is None:
-        await event.edit("❗ User tapılmadı. User seçdiyindən əminsən?")
-        return
-    
     if replied_user.id in BRAIN_CHECKER or replied_user.id in WHITELIST:
         await event.edit(LANG['SILGI'])
         return
 
-    me = await event.client.get_me()
-    old_first_name = me.first_name
-    old_last_name = me.last_name
-    old_profile_photo = await event.client.download_profile_photo("me")
-    full_user = await event.client(functions.users.GetFullUserRequest(me.id))
-    old_bio = full_user.bio if hasattr(full_user, "bio") else None
+    global original_profile
 
-    first_name = replied_user.first_name or ""
-    last_name = replied_user.last_name or ""
-    
-    replied_full_user = await event.client(functions.users.GetFullUserRequest(replied_user.id))
-    bio = replied_full_user.bio if hasattr(replied_full_user, "bio") else None
+    if original_profile["first_name"] is None:
+        me = await event.client.get_me()
+        original_profile["first_name"] = me.first_name
+        original_profile["last_name"] = me.last_name
+        original_profile["about"] = (await event.client(functions.account.GetPrivacySettingsRequest())).bio
 
-    await event.client(functions.account.UpdateProfileRequest(
-        first_name=first_name,
-        last_name=last_name
-    ))
+        photos = await event.client(GetUserPhotosRequest(user_id='me', offset=0, max_id=0, limit=1))
+        if photos.photos:
+            original_profile["photo"] = photos.photos[0]
 
-    if bio:
-        await event.client(functions.account.UpdateProfileRequest(about=bio))
+    # Kullanıcının profil bilgilerini al ve uygula
+    await event.edit("🔄 Klonlama prosesi başladı...")
+    try:
+        await event.client(UpdateProfileRequest(
+            first_name=replied_user.first_name,
+            last_name=replied_user.last_name,
+            about=(await event.client(functions.account.GetPrivacySettingsRequest(replied_user))).bio
+        ))
 
-    profile_pic = await event.client.download_profile_photo(replied_user.id)
-    if profile_pic:
-        uploaded_photo = await event.client.upload_file(profile_pic)
-        await event.client(functions.photos.UploadProfilePhotoRequest(file=uploaded_photo))
-        await event.edit("✅ Axalay maxalay puf! Profil klonlandı.")
-    else:
-        await event.respond("⚠️ Profil şəkli tapılmadı. Sadəcə ad və bio klonlandı.", reply_to=event)
+        photos = await event.client(GetUserPhotosRequest(user_id=replied_user.id, offset=0, max_id=0, limit=1))
+        if photos.photos:
+            photo = photos.photos[0]
+            await event.client(UploadProfilePhotoRequest(photo=InputPhoto(
+                id=photo.id,
+                access_hash=photo.access_hash,
+                file_reference=photo.file_reference
+            )))
+    except PhotoCropSizeSmallError:
+        await event.edit("🔴 Foto çox kiçik olduğu üçün klonlana bilmədi.")
 
-@register(outgoing=True, pattern="^.revert$")
+    await event.edit("✅ Axalay maxalay puf! Profil klonlandı.")
+
+@register(pattern="^\.revert$", outgoing=True)
 async def revert(event):
-    global old_first_name, old_last_name, old_profile_photo, old_bio
-    if event.fwd_from:
+    global original_profile
+
+    if not original_profile["first_name"]:
+        await event.edit("🔴 Orijinal profil məlumatı tapılmadı.")
         return
 
-    if not (old_first_name or old_last_name or old_profile_photo or old_bio):
-        await event.edit("❗ Köhnə profil məlumatları tapılmadı.")
-        return
-
-    await event.client(functions.account.UpdateProfileRequest(
-        first_name=old_first_name,
-        last_name=old_last_name
+    await event.edit("🔄 Orijinal profil geri yüklənir...")
+    await event.client(UpdateProfileRequest(
+        first_name=original_profile["first_name"],
+        last_name=original_profile["last_name"],
+        about=original_profile["about"]
     ))
 
-    if old_bio:
-        await event.client(functions.account.UpdateProfileRequest(about=old_bio))
+    if original_profile["photo"]:
+        await event.client(UploadProfilePhotoRequest(
+            photo=InputPhoto(
+                id=original_profile["photo"].id,
+                access_hash=original_profile["photo"].access_hash,
+                file_reference=original_profile["photo"].file_reference
+            )
+        ))
+    else:
+        await event.client(DeletePhotosRequest(await event.client.get_profile_photos('me')))
 
-    if old_profile_photo:
-        uploaded_photo = await event.client.upload_file(old_profile_photo)
-        await event.client(functions.photos.UploadProfilePhotoRequest(file=uploaded_photo))
+    
+    original_profile = {
+        "first_name": None,
+        "last_name": None,
+        "about": None,
+        "photo": None
+    }
 
     await event.edit("✅ Axalay maxalay puf! Profil geri qayıtdı.")
-
-async def get_user(event):
-    if event.reply_to_msg_id:
-        reply_message = await event.get_reply_message()
-        return await event.client.get_entity(reply_message.sender_id)
-    elif event.pattern_match.group(1):
-        user = event.pattern_match.group(1)
-        if user.isnumeric():
-            return await event.client.get_entity(int(user))
-        else:
-            try:
-                return await event.client.get_entity(user)
-            except ValueError:
-                return None
-    return None
