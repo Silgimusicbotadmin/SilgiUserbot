@@ -47,7 +47,7 @@ async def klon(event):
 
         # Kullanıcının biyografisini al
         full_me = await event.client(GetFullUserRequest(me.id))
-        original_profile["about"] = full_me.about
+        original_profile["about"] = full_me.user.bio
 
         # Profil fotoğrafını al
         photos = await event.client(GetUserPhotosRequest(user_id="me", offset=0, max_id=0, limit=1))
@@ -62,7 +62,7 @@ async def klon(event):
         await event.client(UpdateProfileRequest(
             first_name=full_user.user.first_name,
             last_name=full_user.user.last_name,
-            about=full_user.about
+            about=full_user.user.bio
         ))
 
         # Kullanıcının profil fotoğrafını al ve ayarla
