@@ -32,26 +32,22 @@ async def clone(event):
     old_last_name = me.last_name
     old_profile_photo = await event.client.download_profile_photo("me")
     full_user = await event.client(functions.users.GetFullUserRequest("me"))
-    old_bio = full_user.about if hasattr(full_user, "about") else None
+    old_bio = full_user.about if full_user.about else None  
 
     first_name = replied_user.first_name or ""
     last_name = replied_user.last_name or ""
     
-   
     replied_full_user = await event.client(functions.users.GetFullUserRequest(replied_user.id))
-    bio = replied_full_user.about if hasattr(replied_full_user, "about") else None
+    bio = replied_full_user.about if replied_full_user.about else None  
 
-  
     await event.client(functions.account.UpdateProfileRequest(
         first_name=first_name,
         last_name=last_name
     ))
 
-    
     if bio:
         await event.client(functions.account.UpdateProfileRequest(about=bio))
 
-    
     profile_pic = await event.client.download_profile_photo(replied_user.id)
     if profile_pic:
         uploaded_photo = await event.client.upload_file(profile_pic)
@@ -91,6 +87,10 @@ async def get_user(event):
     elif event.pattern_match.group(1):
         user = event.pattern_match.group(1)
         if user.isnumeric():
-            user = int(user)
-        return await event.client.get_entity(user)
+            return await event.client.get_entity(int(user))  
+        else:
+            try:
+                return await event.client.get_entity(user)  
+            except ValueError:
+                return None  
     return None
