@@ -16,7 +16,6 @@ async def clone(event):
     if event.fwd_from:
         return
 
-    reply_message = await event.get_reply_message()
     replied_user = await get_user(event)
     
     if replied_user is None:
@@ -31,14 +30,14 @@ async def clone(event):
     old_first_name = me.first_name
     old_last_name = me.last_name
     old_profile_photo = await event.client.download_profile_photo("me")
-    full_user = await event.client(functions.users.GetFullUserRequest("me"))
-    old_bio = full_user.about if full_user.about else None  
+    full_user = await event.client(functions.users.GetFullUserRequest(me.id))
+    old_bio = full_user.user.bio if hasattr(full_user.user, "bio") else None
 
     first_name = replied_user.first_name or ""
     last_name = replied_user.last_name or ""
     
     replied_full_user = await event.client(functions.users.GetFullUserRequest(replied_user.id))
-    bio = replied_full_user.about if replied_full_user.about else None  
+    bio = replied_full_user.user.bio if hasattr(replied_full_user.user, "bio") else None
 
     await event.client(functions.account.UpdateProfileRequest(
         first_name=first_name,
@@ -54,7 +53,7 @@ async def clone(event):
         await event.client(functions.photos.UploadProfilePhotoRequest(file=uploaded_photo))
         await event.edit("✅ Axalay maxalay puf! Profil klonlandı.")
     else:
-        await event.respond("⚠️ Profil şəkli tapılmadı. Sadəcə ad və bio klonlandı.", reply_to=reply_message)
+        await event.respond("⚠️ Profil şəkli tapılmadı. Sadəcə ad və bio klonlandı.", reply_to=event)
 
 @register(outgoing=True, pattern="^.revert$")
 async def revert(event):
@@ -87,10 +86,10 @@ async def get_user(event):
     elif event.pattern_match.group(1):
         user = event.pattern_match.group(1)
         if user.isnumeric():
-            return await event.client.get_entity(int(user))  
+            return await event.client.get_entity(int(user))
         else:
             try:
-                return await event.client.get_entity(user)  
+                return await event.client.get_entity(user)
             except ValueError:
-                return None  
+                return None
     return None
