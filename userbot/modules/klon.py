@@ -36,17 +36,22 @@ async def clone(event):
 
     first_name = replied_user.first_name or ""
     last_name = replied_user.last_name or ""
-    full_user = await event.client(functions.users.GetFullUserRequest(replied_user.id))
-    bio = full_user.about if hasattr(full_user, "about") else None
+    
+   
+    replied_full_user = await event.client(functions.users.GetFullUserRequest(replied_user.id))
+    bio = replied_full_user.about if hasattr(replied_full_user, "about") else None
 
+  
     await event.client(functions.account.UpdateProfileRequest(
         first_name=first_name,
         last_name=last_name
     ))
 
+    
     if bio:
         await event.client(functions.account.UpdateProfileRequest(about=bio))
 
+    
     profile_pic = await event.client.download_profile_photo(replied_user.id)
     if profile_pic:
         uploaded_photo = await event.client.upload_file(profile_pic)
