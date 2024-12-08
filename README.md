@@ -26,7 +26,7 @@ bu reponu əkən şəxs burdan bircə hərf belə götürən şəxs sənin anan�
 
 ## Məlumat / Info
 <h5 align="center">Botun yanlış istifadəsi halında məsuliyyət tamamilə istifadəçiyə
-aiddir.Userator idarəçiləri olaraq heç bir məsuliyyət qəbul etmirik.
+aiddir.SilgiUserbot idarəçiləri olaraq heç bir məsuliyyət qəbul etmirik.
 Botu telegramı daha rahat istifadə eləmək xaricində əylənmək
 üçün də istifadə edə bilərsiniz.</h5>
 
