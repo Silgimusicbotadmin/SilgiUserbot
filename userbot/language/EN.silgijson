@@ -879,6 +879,11 @@
             "WWW2": "Shows the nearest datacenter to your server.",
             "WWW3": "Displays the ping value of the bot.",
             "ISP": "ISP:"
+        },
+        "userbot": {
+            "SILGI": "`⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ I cannot do this for the admin/owner.`"
+
+
         }
     }
 }
