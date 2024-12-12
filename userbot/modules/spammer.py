@@ -55,6 +55,28 @@ async def bigspam(e):
                 "Bigspam uğurla edildi"
                 )
         
+@register(outgoing=True, pattern="^.numspam")
+async def numspammer(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        try:
+            mesaj = e.text
+            mesaj_split = mesaj.split(" ", 2)
+            gecikme = float(mesaj_split[1])  
+            limit = int(mesaj_split[2])  
+            await e.delete()
+            for num in range(1, limit + 1):
+                await e.respond(str(num))
+                await asyncio.sleep(gecikme)  
+            if BOTLOG:
+                await e.client.send_message(
+                    BOTLOG_CHATID,
+                    f"#NUMSPAM\n\n"
+                    f"Numspam uğurla edildi. 1-dən {limit}-ə qədər {gecikme} saniyə aralıqla göndərildi."
+                )
+        except (IndexError, ValueError):
+            await e.reply(
+                "Səhv komanda formatı! Düzgün istifadə:\n`.numspam <gecikmə> <sayıya_qədər>`"
+            )
         
 @register(outgoing=True, pattern="^.picspam")
 async def tiny_pic_spam(e):
@@ -100,6 +122,8 @@ CmdHelp('spammer').add_command(
     'tspam', '<mətin>', 'Verilən mesajı tək tək göndərərək spam edər.'
 ).add_command(
     'spam', '<miqdar> <mətin>', 'Verilən miqdarda spam göndərir.'
+).add_command(
+    'numspam', '<gecikmə> <say>', ' Verilən say və gecikmə ilə gecikməli 1 dən n sayına qədər spam edər'
 ).add_command(
     'bigspam', '<miqdar> <mətin>', 'Verilən miqdarda spam göndərir.'
 ).add_command(
