@@ -4,7 +4,7 @@ from userbot.events import register
 from userbot import BOTLOG_CHATID, bot
 from userbot.cmdhelp import CmdHelp
 
-@register(outgoing=True, pattern=r'^\.sinfo$', disable_errors=True)
+@register(outgoing=True, pattern=r'^\.spinfo$', disable_errors=True)
 async def spaminfo(event):
     await event.edit("Spam məlumatları yoxlanılır...")
 
