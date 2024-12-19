@@ -39,12 +39,14 @@ async def deezl(event):
     if event.fwd_from:
         return
 
+   
     sira = event.pattern_match.group(1)
     if sira == '':
-        sira = 0
+        sira = 0  
     else:
         sira = int(sira)
 
+  
     sarki = event.pattern_match.group(2)
     if len(sarki) < 1:
         if event.is_reply:
@@ -53,31 +55,27 @@ async def deezl(event):
             await event.edit(LANG['GIVE_ME_SONG'])
             return
 
+    
     channels = [
-        "@provod", 
-        "https://t.me/Apk_1xbet_linebet_888starzs", 
-        "https://t.me/Apk_Mostbetof", 
+        "@provod",
+        "https://t.me/Apk_1xbet_linebet_888starzs",
+        "https://t.me/Apk_Mostbetof",
         "https://t.me/round_stickers"
     ]
     
     for channel in channels:
         try:
             await event.client(JoinChannelRequest(channel))
-        except Exception as e:
+        except Exception:
             pass
-
-    async with event.client.conversation('@SaveOFFbot') as save_off_bot:
-        await save_off_bot.send_message('/start')
-        await save_off_bot.get_response()
 
     await event.edit(LANG['SEARCHING'])
     chat = "@DeezerMusicBot"
     async with bot.conversation(chat) as conv:
         try:
-            mesaj = await conv.send_message(str(randint(31, 62)))
-            sarkilar = await conv.get_response()
-            await mesaj.edit(sarki)
-            sarkilar = await conv.get_response()
+          
+            await conv.send_message(sarki)
+            yanit = await conv.get_response()
         except YouBlockedUserError:
             await event.reply(LANG['BLOCKED_DEEZER'])
             return
@@ -85,25 +83,23 @@ async def deezl(event):
             await event.reply(f"Bir xəta baş verdi: {str(e)}")
             return
 
-        await event.client.send_read_acknowledge(conv.chat_id)
-
-        if sarkilar.audio:
-            await event.client.send_read_acknowledge(conv.chat_id)
-            await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarkilar.message)
-            await event.delete()
-        elif sarkilar.buttons[0][0].text == "No results":
-            await event.edit(LANG['NOT_FOUND'])
-        else:
-            if isinstance(sira, int) and sira >= 0:
-                await sarkilar.click(sira)
-                sarki = await conv.wait_event(events.NewMessage(incoming=True, from_users=595898211))
-                await event.client.send_message(event.chat_id, f"`{sarkilar.buttons[sira][0].text}` | " + LANG['UPLOADED_WITH'], file=sarki.message)
+        
+        if yanit.buttons:
+            if isinstance(sira, int) and 0 <= sira < len(yanit.buttons):
+                
+                await yanit.buttons[sira][0].click()
+                sarki_yanit = await conv.get_response()
+                await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarki_yanit)
                 await event.delete()
             else:
-                await event.edit(LANG['NOT_FOUND'])
-                
+                await event.edit(LANG['INVALID_INDEX'])
+        elif yanit.audio:
+           
+            await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=yanit)
+            await event.delete()
+        else:
+            await event.edit(LANG['NOT_FOUND'])
             
-
 
                 
 
