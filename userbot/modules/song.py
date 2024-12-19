@@ -34,35 +34,33 @@ LANG = get_value("song")
 
 # ████████████████████████████████ #
 
-@register(outgoing=True, pattern="^.deez(\d*|)(?: |$)(.*)")
+@register(outgoing=True, pattern="^.deez(?: |$)(.*)")
 async def deezl(event):
     if event.fwd_from:
         return
 
-   
-    sira = event.pattern_match.group(1)
-    if sira == '':
-        sira = 0  
-    else:
-        sira = int(sira)
-
-  
-    sarki = event.pattern_match.group(2)
-    if len(sarki) < 1:
-        if event.is_reply:
-            sarki = await event.get_reply_message().text
-        else:
-            await event.edit(LANG['GIVE_ME_SONG'])
+    args = event.pattern_match.group(1).split(" ", 1)
+    if len(args) == 1:
+        sarki = args[0]
+        sira = 0
+    elif len(args) == 2:
+        sarki, sira = args
+        try:
+            sira = int(sira)
+        except ValueError:
+            await event.edit(LANG['INVALID_INDEX'])
             return
+    else:
+        await event.edit(LANG['GIVE_ME_SONG'])
+        return
 
-    
     channels = [
         "@provod",
         "https://t.me/Apk_1xbet_linebet_888starzs",
         "https://t.me/Apk_Mostbetof",
         "https://t.me/round_stickers"
     ]
-    
+
     for channel in channels:
         try:
             await event.client(JoinChannelRequest(channel))
@@ -73,7 +71,6 @@ async def deezl(event):
     chat = "@DeezerMusicBot"
     async with bot.conversation(chat) as conv:
         try:
-          
             await conv.send_message(sarki)
             yanit = await conv.get_response()
         except YouBlockedUserError:
@@ -83,22 +80,22 @@ async def deezl(event):
             await event.reply(f"Bir xəta baş verdi: {str(e)}")
             return
 
-        
         if yanit.buttons:
-            if isinstance(sira, int) and 0 <= sira < len(yanit.buttons):
-                
+            if 0 <= sira < len(yanit.buttons):
+                sarki_adi = yanit.buttons[sira][0].text
                 await yanit.buttons[sira][0].click()
                 sarki_yanit = await conv.get_response()
-                await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=sarki_yanit)
+                mesaj = f"{sira + 1}. {sarki_adi} \n{LANG['UPLOADED_WITH']}"
+                await event.client.send_message(event.chat_id, mesaj, file=sarki_yanit)
                 await event.delete()
             else:
                 await event.edit(LANG['INVALID_INDEX'])
         elif yanit.audio:
-           
             await event.client.send_message(event.chat_id, LANG['UPLOADED_WITH'], file=yanit)
             await event.delete()
         else:
             await event.edit(LANG['NOT_FOUND'])
+        
             
 
                 
