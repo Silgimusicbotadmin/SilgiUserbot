@@ -733,6 +733,7 @@
             "GIVE_ME_SONG": "**Bana bir şarkı ver!** `Kullanım: .deez şarkı ismi/youtube/spotify/soundcloud`",
             "SEARCHING": "`Şarkı aranıyor...`",
             "BLOCKED_DEEZER": "`Mmmh sanırım` @DeezerMusicBot `engellemişsin. Lütfen engeli aç.",
+            "INVALID_INDEX": "Seçtiğiniz satır mevcut değil!",
             "NOT_FOUND": "`Aradığınız şarkı bulunamadı! Üzgünüm.`",
             "UPLOADED_WITH": "@SilgiUb ile yüklendi.",
             "USAGE": "`Kullanım:` `.song şarkı ismi/youtube url/spotify url`",
