@@ -34,25 +34,25 @@ LANG = get_value("song")
 
 # ████████████████████████████████ #
 
-@register(outgoing=True, pattern="^.deez(?: |$)(.*)")
+
+@register(outgoing=True, pattern="^.deez(\d*|)(?: |$)(.*)")
 async def deezl(event):
     if event.fwd_from:
         return
 
-    args = event.pattern_match.group(1).split(" ", 1)
-    if len(args) == 1:
-        sarki = args[0]
+    sira = event.pattern_match.group(1)
+    if sira == '':
         sira = 0
-    elif len(args) == 2:
-        sarki, sira = args
-        try:
-            sira = int(sira)
-        except ValueError:
-            await event.edit(LANG['INVALID_INDEX'])
-            return
     else:
-        await event.edit(LANG['GIVE_ME_SONG'])
-        return
+        sira = int(sira)
+
+    sarki = event.pattern_match.group(2)
+    if len(sarki) < 1:
+        if event.is_reply:
+            sarki = await event.get_reply_message().text
+        else:
+            await event.edit(LANG['GIVE_ME_SONG'])
+            return
 
     channels = [
         "@provod",
@@ -81,7 +81,7 @@ async def deezl(event):
             return
 
         if yanit.buttons:
-            if 0 <= sira < len(yanit.buttons):
+            if isinstance(sira, int) and 0 <= sira < len(yanit.buttons):
                 sarki_adi = yanit.buttons[sira][0].text
                 await yanit.buttons[sira][0].click()
                 sarki_yanit = await conv.get_response()
@@ -95,9 +95,7 @@ async def deezl(event):
             await event.delete()
         else:
             await event.edit(LANG['NOT_FOUND'])
-        
-            
-
+    
                 
 
 @register(outgoing=True, pattern="^.song ?(.*)")
