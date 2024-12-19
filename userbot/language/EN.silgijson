@@ -711,6 +711,7 @@
             "GIVE_ME_SONG": "** Give me a song! ** ` Usage: .deez song name/youtube/spotify/soundcloud `",
             "SEARCHING": "`Song searching...`",
             "BLOCKED_DEEZER": "`Mmmh, I think you blocked` @DeezerMusicBot `Please open the block.`",
+            "INVALID_INDEX": "The row you selected does not exist!",
             "NOT_FOUND": "` The song you were looking for was not found! I'm sorry.`",
             "UPLOADED_WITH": "Upload with @SilgiUB",
             "USAGE": "`Usage:` `.song song name/youtube url/spotify url`",
