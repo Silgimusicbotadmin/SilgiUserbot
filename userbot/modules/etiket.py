@@ -3,17 +3,17 @@ import requests
 from telethon import events
 from telethon.tl.types import ChannelParticipantsAdmins
 from asyncio import sleep
-from userbot import CMD_HELP, bot
+from userbot import CMD_HELP, bot, WHITELIST
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 
 tag_active = True
-tagged_users = set()  
+tagged_users = set()
 
 @register(outgoing=True, pattern="^.etiketall$")
 async def tag_all(event):
     global tag_active
-    tag_active = True  
+    tag_active = True
     if event.fwd_from:
         return
     if not tag_active:
@@ -22,8 +22,8 @@ async def tag_all(event):
     mentions = "@tag"
     chat = await event.get_input_chat()
     async for x in bot.iter_participants(chat):
-        if x.id not in tagged_users: 
-            tagged_users.add(x.id)    
+        if x.id not in tagged_users and x.id not in WHITELIST: 
+            tagged_users.add(x.id)
             mentions += f"[\u2063](tg://user?id={x.id})"
     await event.reply(mentions)
     await event.delete()
@@ -31,7 +31,7 @@ async def tag_all(event):
 @register(outgoing=True, pattern="^.etiketadmin (.*)")
 async def tag_admins(event):
     global tag_active
-    tag_active = True  
+    tag_active = True
     if event.fwd_from:
         return
     if not tag_active:
@@ -40,8 +40,8 @@ async def tag_admins(event):
     text = event.pattern_match.group(1)
     chat = await event.get_input_chat()
     async for admin in event.client.iter_participants(chat, filter=ChannelParticipantsAdmins):
-        if admin.id not in tagged_users:  
-            tagged_users.add(admin.id)    
+        if admin.id not in tagged_users and admin.id not in WHITELIST:  
+            tagged_users.add(admin.id)
             mention = f"[{admin.first_name}](tg://user?id={admin.id}) {text}"
             await event.respond(mention)
             await sleep(1)
@@ -50,7 +50,7 @@ async def tag_admins(event):
 @register(outgoing=True, pattern="^.etiket(?: |$)(.*)")
 async def tag_one_by_one(tag):
     global tag_active
-    tag_active = True  
+    tag_active = True
     if not tag_active:
         await tag.respond("Tagging dayandı.")
         return
@@ -65,8 +65,8 @@ async def tag_one_by_one(tag):
         if not tag_active:
             await tag.respond("Tagging dayandı.")
             break
-        if i.id not in tagged_users: 
-            tagged_users.add(i.id)    
+        if i.id not in tagged_users and i.id not in WHITELIST:  
+            tagged_users.add(i.id)
             await tag.client.send_message(tag.chat_id, "[{}](tg://user?id={}) {}".format(i.first_name, i.id, seasons))
             await sleep(1.9)
 
@@ -80,12 +80,12 @@ async def stop_tag(event):
 @register(outgoing=True, pattern="^.resetlist$")
 async def reset_tag_list(event):
     global tagged_users
-    tagged_users.clear()  
+    tagged_users.clear()
     await event.respond("Tag listi sıfırlandı.")
     await event.delete()
+        
 
-
-CmdHelp('tagger').add_command(
+CmdHelp('etiket').add_command(
     'etiketall', None, 'Hərkəsi bir mesajda tağ edər.'
 ).add_command(
     'etiket', None, 'Hərkəsi bir-bir tağ edər.'
