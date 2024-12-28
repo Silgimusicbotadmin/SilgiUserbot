@@ -92,7 +92,7 @@ async def sangmata(event):
     if not reply_message.text:
        await event.edit(LANG['REPLY_MSG'])
        return
-    chat = "@SangMataInfo_bot"
+    chat = "@SangMata_beta_bot"
     sender = reply_message.sender
     if reply_message.sender.bot:
        await event.edit(LANG['REPLY_BOT_ERROR'])
