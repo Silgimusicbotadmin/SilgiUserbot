@@ -352,7 +352,7 @@ with bot:
 Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmayın, siz başqasının botunu idarə edə bilmərsiz! Altdakı GitHub adresindən bütün qurulum haqda məlumat var.""",
                     buttons=[
                         [custom.Button.url("Dəstək qrupuna Qatıl", "https://t.me/silgiub"), custom.Button.url(
-                            "Sahibim", "https://t.me/silgiteam")],
+                            "Sahibim", "https://t.me/hvseyn")],
                         [custom.Button.url(
                             "GitHub", "https://github.com/Silgimusicbot/SilgiUserbot")],
                         [custom.Button.url(
