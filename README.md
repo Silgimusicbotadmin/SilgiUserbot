@@ -33,7 +33,7 @@ Botu telegramı daha rahat istifadə eləmək xaricində əylənmək
 
 ## Yaradıcı / Creator
 
-[SILGI](https://t.me/silgiteam)
+[SILGI](https://t.me/hvseyn)
 
 ## Credits
 Thanks for;
