@@ -2,7 +2,7 @@
     "__SILGIJSON__": true,
     "LANGUAGE": "Azərbaycanca",
     "LANGCODE": "az",
-    "AUTHOR": "@silgiteam",
+    "AUTHOR": "@hvseyn",
     "STRINGS": {
         "__plugin": {
             "REPLY_FOR_PORT": "`Zəhmət olmasa Plugin-Port üçün bir fayla cavab yazın`",
@@ -480,7 +480,7 @@
             "GOODBYE_MFRS": "`Görüşənədək... *Windows XP söndürlmə səsi*`",
             "RESTARTING": "`Bot yenidən qoşulur..`",
             "SUPPORT_GROUP": "[Buradan](http://t.me/silgiub) Dəstək qrupumuza çata bilərsiniz.",
-            "CREATOR": "Bu bot \n[SILGI](https://t.me/silgiteam) tərəfindən hazırlanmışdır. \n",
+            "CREATOR": "Bu bot \n[SILGI](https://t.me/hvseyn) tərəfindən hazırlanmışdır. \n",
             "README": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
             "REPO": "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
             "RD1": "<əşya1> <əşya2>",
