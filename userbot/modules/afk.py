@@ -33,9 +33,12 @@ async def mention_afk(mention):
     global COUNT_MSG
     global USERS
     global ISAFK
-    if mention.message.mentioned and not (await mention.get_sender()).bot:
-        if ISAFK:
-            from_user = await mention.get_sender()
+    if mention.message.mentioned:
+        sender = await mention.get_sender()
+        if isinstance(sender, Channel):  
+            return
+        if not sender.bot and ISAFK:
+            from_user = sender
             if from_user.username:
                 username = '@' + from_user.username
             else:
