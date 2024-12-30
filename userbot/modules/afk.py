@@ -1,6 +1,7 @@
 from random import randint
 from asyncio import sleep
 from telethon.tl.types import Message
+from telethon.tl.types import Channel
 from telethon.events import StopPropagation
 
 from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
