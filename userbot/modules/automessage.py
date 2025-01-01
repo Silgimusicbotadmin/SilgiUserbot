@@ -31,13 +31,14 @@ async def automessage(event):
     await event.edit(f"Avtomatik mesaj aktivləşdirildi. Mesaj: `{message}` hər {readable_time} göndəriləcək.")
 
     async def send_message_to_all_groups():
-        async for dialog in bot.iter_dialogs():
-            if dialog.is_group and dialog.id != EXCLUDED_GROUP_ID:
-                try:
-                    await bot.send_message(dialog.id, message)
-                    await asyncio.sleep(interval)
-                except Exception as e:
-                    pass
+        while True:
+            async for dialog in bot.iter_dialogs():
+                if dialog.is_group and dialog.id != EXCLUDED_GROUP_ID:
+                    try:
+                        await bot.send_message(dialog.id, message)
+                    except Exception as e:
+                        print(f"Mesaj gönderilemedi ({dialog.id}): {e}")
+            await asyncio.sleep(interval)  # Döngü tamamlandıktan sonra bekle
 
     automessage_task = asyncio.create_task(send_message_to_all_groups())
 
@@ -71,13 +72,14 @@ async def autoreply(event):
     await event.edit(f"Avtomatik mesaj aktivləşdirildi. Mesaj: `{replied_message.message}` hər {readable_time} göndəriləcək.")
 
     async def send_message_to_all_groups():
-        async for dialog in bot.iter_dialogs():
-            if dialog.is_group and dialog.id != EXCLUDED_GROUP_ID:
-                try:
-                    await bot.send_message(dialog.id, replied_message.message)
-                    await asyncio.sleep(interval)
-                except Exception as e:
-                    pass
+        while True:
+            async for dialog in bot.iter_dialogs():
+                if dialog.is_group and dialog.id != EXCLUDED_GROUP_ID:
+                    try:
+                        await bot.send_message(dialog.id, replied_message.message)
+                    except Exception as e:
+                        pass
+            await asyncio.sleep(interval) 
 
     automessage_task = asyncio.create_task(send_message_to_all_groups())
 
@@ -91,7 +93,7 @@ async def autostop(event):
         await event.edit("Avtomatik mesaj dayandırıldı.")
     else:
         await event.edit("Avtomatik mesaj aktiv deyil.")
-
+                            
 CmdHelp('automessage').add_command(
     'automessage', '<zaman (10s/10m/10h/10d)> <mesaj>', 'Bütün qruplara təyin etdiyiniz mesajı təyin etdiyiniz zaman intervalında göndərər.'
 ).add_command(
