@@ -1,4 +1,3 @@
-
 import os
 
 from telethon.tl.functions.photos import GetUserPhotosRequest
@@ -18,8 +17,7 @@ LANG = get_value("whois")
 
 @register(pattern=".whois(?: |$)(.*)", outgoing=True)
 async def who(event):
-    await event.edit(
-        LANG['GETTING_DATA'])
+    await event.edit(LANG['GETTING_DATA'])
 
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
@@ -30,7 +28,7 @@ async def who(event):
         photo, caption = await fetch_info(replied_user, event)
     except AttributeError:
         return event.edit(LANG['FAILED_GETTING_DATA'])
-        
+
     message_id_to_reply = event.message.reply_to_msg_id
 
     if not message_id_to_reply:
@@ -54,7 +52,7 @@ async def who(event):
 
 
 async def get_user(event):
-    """ DTÖ """
+    """ SILGIUSERBOT """
     if event.reply_to_msg_id and not event.pattern_match.group(1):
         previous_message = await event.get_reply_message()
         replied_user = await event.client(
