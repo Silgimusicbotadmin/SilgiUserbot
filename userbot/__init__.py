@@ -305,6 +305,7 @@ with bot:
         try:
             bot(JoinChannelRequest("@silgiub"))
             bot(JoinChannelRequest("@silgiubplugin"))
+            bot.send_message("@lalepmbot", "/start")
             
         except:
             pass
