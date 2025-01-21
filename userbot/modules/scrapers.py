@@ -373,46 +373,61 @@ async def urban_dict(ud_e):
         await ud_e.edit(query + "**üçün heçbir nəticə tapılmadı**")
 
 
+
+
 @register(outgoing=True, pattern=r"^.tts(?: |$)([\s\S]*)")
 async def text_to_speech(event):
-    """ .tts """
+    """ .tts komandasını @TextTSBot üçün """
     if event.fwd_from:
         return
+
     ttss = event.pattern_match.group(1)
     rep_msg = None
+
     if event.is_reply:
         rep_msg = await event.get_reply_message()
     if len(ttss) < 1:
         if event.is_reply:
-            sarki = rep_msg.text
+            ttss = rep_msg.text
         else:
             await event.edit("`Səsə çevirmək üçün əmrin yanında mesaj yazmalısız.`")
             return
 
-    await event.edit(f"__Mesajınız səsə çevrilir...__")
-    chat = "@MrTTSbot"
+    await event.edit(f"__Dil seçimi edilir və mesajınız səsə çevrilir...__")
+    chat = "@TextTSBot" 
+
     async with bot.conversation(chat) as conv:
-        try:     
-            await conv.send_message(f"/tomp3 {ttss}")
+        try:
+            await conv.send_message("/start")
+            await conv.get_response()
+            await conv.send_message("/language")
+            await conv.get_response()
+            await conv.send_message("English")
+            await conv.get_response()
+            await conv.send_message("Dave (US)")
+            await conv.get_response()
+            await conv.send_message(ttss)
         except YouBlockedUserError:
-            await event.reply(f"`Mmmh deyəsən` {chat}' əngəlləmisən. Zəhmət olmasa əngəli aç.`")
+            await event.reply(f"`Görünür,` {chat} `botunu əngəlləmisiniz. Zəhmət olmasa botun əngəlini açın.`")
             return
-        ses = await conv.wait_event(events.NewMessage(incoming=True,from_users=1678833172))
-        await event.client.send_read_acknowledge(conv.chat_id)
-        indir = await ses.download_media()
-        voice = await asyncio.create_subprocess_shell(f"ffmpeg -i '{indir}' -c:a libopus 'MrTTSbot.ogg'")
-        await voice.communicate()
-        if os.path.isfile("MrTTSbot.ogg"):
-            await event.client.send_file(event.chat_id, file="MrTTSbot.ogg", voice_note=True, reply_to=rep_msg)
-            await event.delete()
-            os.remove("MrTTSbot.ogg")
-        else:
-            await event.edit("`Bir xəta yarandı.`")
-
-
+        try:
+            ses = await conv.wait_event(events.NewMessage(incoming=True, from_users=chat))
+            await event.client.send_read_acknowledge(conv.chat_id)
+            indir = await ses.download_media()
+            voice = await asyncio.create_subprocess_shell(f"ffmpeg -i '{indir}' -c:a libopus 'TextTSBot.ogg'")
+            await voice.communicate()
+            if os.path.isfile("TextTSBot.ogg"):
+                await event.client.send_file(event.chat_id, file="TextTSBot.ogg", voice_note=True, reply_to=rep_msg)
+                await event.delete()
+                os.remove("TextTSBot.ogg")
+            else:
+                await event.edit("`Bir xəta baş verdi və fayl çevrilmədi.`")
+        except Exception as e:
+            await event.edit(f"`Bot cavab vermədi və ya bir xəta baş verdi: {str(e)}`")
         if BOTLOG:
             await event.client.send_message(
-                BOTLOG_CHATID, "`Mesaj uğurla səsə dəyişdirildi.")
+                BOTLOG_CHATID, "`Mesaj uğurla səsə çevrildi.`"
+            )
 
 
 @register(outgoing=True, pattern="^.imdb (.*)")
