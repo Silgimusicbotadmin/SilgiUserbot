@@ -402,9 +402,9 @@ async def text_to_speech(event):
             await conv.get_response()
             await conv.send_message("/language")
             await conv.get_response()
-            await conv.send_message("English")
+            await conv.send_message("Turkish")
             await conv.get_response()
-            await conv.send_message("Dave (US)")
+            await conv.send_message("Kerem")
             await conv.get_response()
             await conv.send_message(ttss)
         except YouBlockedUserError:
