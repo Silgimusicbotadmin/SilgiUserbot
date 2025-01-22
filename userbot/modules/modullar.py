@@ -81,6 +81,26 @@ BAYQUS_TEMPLATE = """
 \↺↺↺↺/
 ¯¯/\¯/\¯
 """
+import asyncio
+from telethon import events
+
+@register(outgoing=True, pattern=r"^.p(?: |$)([\s\S]*)")
+async def type_like_computer(event):
+    """ .p """
+    if event.fwd_from:
+        return
+
+    text = event.pattern_match.group(1)
+    if not text:
+        await event.edit("`Xaiş yazılacaq mətni daxil edin.`")
+        return
+    await event.edit("▌")
+    typed_text = ""
+    for char in text:
+        typed_text += char
+        await event.edit(f"`{typed_text}▌`")  
+        await asyncio.sleep(0.1) 
+    await event.edit(f"`{typed_text}`")
 
 @register(outgoing=True, pattern=r"^\.(?:bayqus|qus)\s?(.)?")
 async def emoji_nah(e):
@@ -1163,6 +1183,8 @@ async def kurucu(event):
 
 CmdHelp('modullar').add_command(
     'usta', None, ' SILGI Usda 💻'
+).add_command(
+    'p', '<mətn>', 'Verilən mətni animasiyalı şəkildə yazar'
 ).add_command(
     'hav', None, ' İt yaradar'
 ).add_command(
