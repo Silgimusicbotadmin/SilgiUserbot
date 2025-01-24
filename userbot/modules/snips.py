@@ -1,7 +1,6 @@
-from userbot.cmdhelp import CmdHelp
 from userbot.events import register
-from telethon.tl.functions.messages import GetHistoryRequest, DeleteMessagesRequest
-from telethon.tl.types import InputPeerSelf
+from userbot import CMD_HELP, BOTLOG_CHATID
+from userbot.cmdhelp import CmdHelp
 
 # ██████ LANGUAGE CONSTANTS ██████ #
 
@@ -10,110 +9,109 @@ LANG = get_value("snips")
 
 # ████████████████████████████████
 
-SNIP_TAG = "#SNIP"  
-
-
-async def fetch_snips(client):
-    """"""
-    snips = {}
-    try:
-        result = await client(GetHistoryRequest(
-            peer=InputPeerSelf(),
-            limit=1000,  
-            offset_date=None,
-            offset_id=0,
-            max_id=0,
-            min_id=0,
-            add_offset=0,
-            hash=0
-        ))
-        for message in result.messages:
-            if message.message and message.message.startswith(SNIP_TAG):
-                parts = message.message.split("\n", 1)
-                if len(parts) > 1:
-                    keyword = parts[0][len(SNIP_TAG):].strip()  # Keyword çıkar
-                    content = parts[1]  
-                    snips[keyword] = {
-                        "content": content,
-                        "id": message.id
-                    }
-    except Exception as e:
-        print(f"Hata: {e}")
-    return snips
-
-
-@register(outgoing=True, pattern=r"\$\w*")
+@register(outgoing=True,
+          pattern=r"\$\w*",
+          ignore_unsafe=True,
+          disable_errors=True)
 async def on_snip(event):
-    """Snip."""
-    keyword = event.text[1:]
-    snips = await fetch_snips(event.client)
-    if keyword in snips:
-        message_id_to_reply = event.message.reply_to_msg_id or None
-        await event.client.send_message(
-            event.chat_id,
-            snips[keyword]["content"],
-            reply_to=message_id_to_reply
-        )
+    """ Snip. """
+    try:
+        from userbot.modules.sql_helper.snips_sql import get_snip
+    except AttributeError:
+        return
+    name = event.text[1:]
+    snip = get_snip(name)
+    message_id_to_reply = event.message.reply_to_msg_id
+    if not message_id_to_reply:
+        message_id_to_reply = None
+    if snip and snip.f_mesg_id:
+        await event.delete()
+        msg_o = await event.client.get_messages(entity=BOTLOG_CHATID,
+                                                ids=int(snip.f_mesg_id))
+        await event.client.send_message(event.chat_id,
+                                        msg_o.message,
+                                        reply_to=message_id_to_reply,
+                                        file=msg_o.media)
+    elif snip and snip.reply:
+        await event.client.send_message(event.chat_id,
+                                        snip.reply,
+                                        reply_to=message_id_to_reply)
 
 
 @register(outgoing=True, pattern="^.snip (\w*)")
 async def on_snip_save(event):
-    """Yeni snip kaydet."""
+    """ .snip """
+    try:
+        from userbot.modules.sql_helper.snips_sql import add_snip
+    except AtrributeError:
+        await event.edit(LANG['NO_SQL'])
+        return
     keyword = event.pattern_match.group(1)
     string = event.text.partition(keyword)[2]
     msg = await event.get_reply_message()
-
+    msg_id = None
     if msg and msg.media and not string:
-        await event.edit(LANG['NO_MEDIA_SUPPORT'])
-        return
+        if BOTLOG_CHATID:
+            await event.client.send_message(
+                BOTLOG_CHATID, f"#SNIP\
+            \nSÖZ: {keyword}\
+            \n\nAşağıdakI mesaj snip üçün veri olaraq qeyd edilir, xaiş silməyin !!"
+            )
+            msg_o = await event.client.forward_messages(
+                entity=BOTLOG_CHATID,
+                messages=msg,
+                from_peer=event.chat_id,
+                silent=True)
+            msg_id = msg_o.id
+        else:
+            await event.edit(
+                LANG['NEED_BOTLOG']
+            )
+            return
     elif event.reply_to_msg_id and not string:
         rep_msg = await event.get_reply_message()
         string = rep_msg.text
-
-    if not string:
-        await event.edit(LANG['NO_CONTENT'])
-        return
-
-
-    saved_message = f"{SNIP_TAG} {keyword}\n{string}"
-    await event.client.send_message("me", saved_message)
-
-    await event.edit(f"`{keyword}` {LANG['SAVED']}")
+    success = "`Snip {}. {}:` **${}** `"
+    if add_snip(keyword, string, msg_id) is False:
+        await event.edit(success.format(LANG['UPDATED'], LANG['USAGE'], keyword))
+    else:
+        await event.edit(success.format(LANG['SAVED'], LANG['USAGE'], keyword))
 
 
 @register(outgoing=True, pattern="^.snips$")
 async def on_snip_list(event):
-    
-    snips = await fetch_snips(event.client)
-    if not snips:
-        await event.edit(LANG['NO_SNIP'])
+    """ .snips """
+    try:
+        from userbot.modules.sql_helper.snips_sql import get_snips
+    except AttributeError:
+        await event.edit("`SQL dışı modda işləyir!`")
         return
 
-    message = f"{LANG['SNIPS']}:\n"
-    for keyword in snips:
-        message += f"`${keyword}`\n"
+    message = LANG['NO_SNIP']
+    all_snips = get_snips()
+    for a_snip in all_snips:
+        if message == LANG['NO_SNIP']:
+            message = f"{LANG['SNIPS']}:\n"
+            message += f"`${a_snip.snip}`\n"
+        else:
+            message += f"`${a_snip.snip}`\n"
 
     await event.edit(message)
 
 
 @register(outgoing=True, pattern="^.remsnip (\w*)")
 async def on_snip_delete(event):
-    """Snip sil."""
-    keyword = event.pattern_match.group(1)
-    snips = await fetch_snips(event.client)
-
-    if keyword in snips:
-        
-        try:
-            await event.client(DeleteMessagesRequest(
-                peer=InputPeerSelf(),
-                id=[snips[keyword]["id"]]
-            ))
-            await event.edit(f"`Snip:` **{keyword}** `{LANG['DELETED']}`")
-        except Exception as e:
-            await event.edit(f"`{LANG['DELETE_FAILED']}:` {str(e)}")
+    """ .remsnip  """
+    try:
+        from userbot.modules.sql_helper.snips_sql import remove_snip
+    except AttributeError:
+        await event.edit("`SQL dışı modda işləyir!`")
+        return
+    name = event.pattern_match.group(1)
+    if remove_snip(name) is True:
+        await event.edit(f"`Snip:` **{name}** `{LANG['DELETED']}`")
     else:
-        await event.edit(f"`Snip:` **{keyword}** `{LANG['NOT_FOUND']}`")
+        await event.edit(f"`Snip:` **{name}** `{LANG['NOT_FOUND']}` ")
 
 
 CmdHelp('snips').add_command(
