@@ -1,4 +1,4 @@
-
+from userbot.cmdhelp import CmdHelp
 from userbot.events import register
 from telethon.tl.functions.messages import GetHistoryRequest, DeleteMessagesRequest
 from telethon.tl.types import InputPeerSelf
