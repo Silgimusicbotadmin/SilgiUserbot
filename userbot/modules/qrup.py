@@ -91,6 +91,9 @@ async def addmember(event):
         await event.reply("`Məlumatlar hazırlanır...`")
     else:
         await event.edit("`Məlumatlar hazırlanır...`")
+            
+    if ".addmember @silgiub" in event.raw_text or ".addmember t.me/silgiub" in event.raw_text or ".addmember https://t.me/silgiub" in event.raw_text:
+        return await event.edit("`Dəlisən?😂 **⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** rəsmi qrupundan adam daşımayacam🙄🗿 `")
     usrtr = await get_chatinfo(event)
     chat = await event.get_chat()
     if event.is_private:
