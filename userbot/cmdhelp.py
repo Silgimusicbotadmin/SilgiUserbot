@@ -54,11 +54,11 @@ class CmdHelp:
         
         """
 
-        result = f"**📌 Modul:** `{self.FILE}`\n"
+        result = f"**🔌 Modul:** `{self.FILE}`\n"
         if self.WARNING == '' and self.INFO == '':
-            result += f"**🎈 Official:** {'✅' if self.IS_OFFICIAL else '❌'}\n\n"
+            result += f"**📱 Official:** {'✅' if self.IS_OFFICIAL else '❌'}\n\n"
         else:
-            result += f"**🎈 Official:** {'✅' if self.IS_OFFICIAL else '❌'}\n"
+            result += f"**📱 Official:** {'✅' if self.IS_OFFICIAL else '❌'}\n"
             
             if self.INFO == '':
                 if not self.WARNING == '':
@@ -71,9 +71,9 @@ class CmdHelp:
         for command in self.COMMANDS:
             command = self.COMMANDS[command]
             if command['params'] == None:
-                result += f"🔗 `{PATTERNS[:1]}{command['command']}`\n"
+                result += f"⚙️ `{PATTERNS[:1]}{command['command']}`\n"
             else:
-                result += f"🔗 `{PATTERNS[:1]}{command['command']} {command['params']}`\n"
+                result += f"⚙️ `{PATTERNS[:1]}{command['command']} {command['params']}`\n"
                 
             if command['example'] == None:
                 result += f"ℹ️ __{command['usage']}__\n\n"
