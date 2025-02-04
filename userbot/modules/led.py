@@ -4,6 +4,7 @@ from telethon.errors import FloodWaitError
 from userbot.events import register
 from userbot import bot
 from userbot.cmdhelp import CmdHelp
+
 led_running = False
 
 @register(outgoing=True, pattern="^.led$")
@@ -15,24 +16,27 @@ async def led(event):
 
     led_running = True
     user = await bot.get_me()
-    original_last_name = user.last_name if user.last_name else ""
-    base_name = original_last_name.strip()
+    original_first_name = user.first_name if user.first_name else ""
+    
+    base_name = original_first_name.strip()  
 
-    msg = await event.edit("LED başladı...")
+    msg = await event.edit("LED başlatıldı...")
 
     while led_running:
         try:
-            await bot(UpdateProfileRequest(last_name=f"{base_name} 🔴🟢"))
+            new_first_name = f"{base_name} 🔴🟢"
+            await bot(UpdateProfileRequest(first_name=new_first_name))
             await asyncio.sleep(5)
 
-            await bot(UpdateProfileRequest(last_name=f"{base_name} 🟢🔴"))
+            new_first_name = f"{base_name} 🟢🔴"
+            await bot(UpdateProfileRequest(first_name=new_first_name))
             await asyncio.sleep(5)
 
         except FloodWaitError as e:
             await event.edit(f"Flood aşkarlandı! {e.value} saniyə gözləyirəm...")
             await asyncio.sleep(e.value)
 
-    
+    await bot(UpdateProfileRequest(first_name=original_first_name))
     await msg.edit("LED dayandırıldı.")
 
 @register(outgoing=True, pattern="^.stopled$")
@@ -46,7 +50,7 @@ async def stop_led(event):
     await event.edit("LED dayandırılır...")
 
 CmdHelp('led').add_command(
-    'led', 'LED effektini soyadınıza əlavə edərək başladır.', '`.led` yazdıqda soyadınıza 🔴🟢 və 🟢🔴 effekti əlavə olunur.'
+    'led', 'LED effektini adınıza əlavə edərək başladır.', '`.led` yazdıqda adınızın sonuna 🔴🟢 və 🟢🔴 əlavə olunur.'
 ).add_command(
-    'stopled', None, 'LED effektini dayandırır.'
+    'stopled', 'LED effektini dayandırır.', '`.stopled` yazdıqda ad əvvəlki vəziyyətinə qayıdır.'
 ).add()
