@@ -128,11 +128,7 @@ async def selfdestruct(destroy):
         await destroy.client.send_message(BOTLOG_CHATID,
                                           "sd sorğusu uğurla başa çatdı")
 
-CmdHelp('purge').addcommand(
-    'sdela', None, 'Bütün grupun mesajlarını silər Botda adminlik lazımdır'
-).addcommand(
-    'dela', None, 'Şəxsi vəya grupdakı mesajları silər'
-).add_command(
+CmdHelp('purge').add_command(
     'purge', None, (LANG['PUR1'])
 ).add_command(
     'purgeme', (LANG['PURG1']), (LANG['PURG2'])
