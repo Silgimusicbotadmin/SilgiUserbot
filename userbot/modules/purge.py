@@ -14,39 +14,7 @@ from userbot.language import get_value
 LANG = get_value("purge")
 
 # ████████████████████████████████ #
-async def mesajları_silmə(event, göndərən_id):
-    """ İstifadəçinin mesajlarını iki tərəfli silən funksiya """
-    söhbət = event.chat_id
-    say = 0
 
-    async for mesaj in event.client.iter_messages(söhbət, from_user=göndərən_id):
-        try:
-            await mesaj.delete()
-            say += 1
-        except rpcbaseerrors.BadRequestError:
-            if BOTLOG:
-                await event.client.send_message(
-                    BOTLOG_CHATID, "Bu mesajları silə bilmirəm.")
-
-    return say
-
-
-@register(outgoing=True, pattern="^.dela$")
-@register(incoming=True, from_users=SUDO_ID, pattern="^.sdela$")
-async def dela_əmri(event):
-    """ """
-    silinən_say = await mesajları_silmə(event, event.sender_id)
-
-    
-    tamamlandı = await event.client.send_message(
-        event.chat_id, f"✅ {silinən_say} mesaj uğurla silindi.")
-
-    if BOTLOG:
-        await event.client.send_message(
-            BOTLOG_CHATID, f"Hədəflənən {silinən_say} mesaj uğurla silindi.")
-
-    await sleep(2)
-    await tamamlandı.delete()
 @register(incoming=True, from_users=SUDO_ID, pattern="^.spurge$")
 @register(outgoing=True, pattern="^.purge$")
 async def fastpurger(purg):
