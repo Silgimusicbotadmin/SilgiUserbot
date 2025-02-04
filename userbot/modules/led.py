@@ -1,0 +1,51 @@
+import asyncio
+from userbot.events import register
+from userbot import bot
+from userbot.cmdhelp import CmdHelp
+
+led_running = False
+
+@register(outgoing=True, pattern="^.led$")
+async def led(event):
+    global led_running
+    if led_running:
+        await event.edit("LED artıq işləyir!")
+        return
+
+    led_running = True
+    user = await bot.get_me()
+    original_last_name = user.last_name if user.last_name else ""
+    base_name = original_last_name.strip()
+
+    msg = await event.edit("LED başlatıldı...")
+
+    while led_running:
+        try:
+            await bot(UpdateProfile(last_name=f"{base_name} 🔴🟢"))
+            await asyncio.sleep(1.5)
+
+            await bot(UpdateProfile(last_name=f"{base_name} 🟢🔴"))
+            await asyncio.sleep(1.5)
+
+        except FloodWait as e:
+            await event.edit(f"Flood aşkarlandı! {e.value} saniyə gözləyirəm...")
+            await asyncio.sleep(e.value)
+
+    await bot(UpdateProfile(last_name=original_last_name))
+    await msg.edit("LED dayandırıldı.")
+
+@register(outgoing=True, pattern="^.stopled$")
+async def stop_led(event):
+    global led_running
+    if not led_running:
+        await event.edit("LED işləmirdi!")
+        return
+
+    led_running = False
+    await event.edit("LED dayandırılır...")
+
+CmdHelp('led').add_command(
+    'led', 'LED effektini soyadınıza əlavə edərək başladır.', '`.led` yazdıqda soyadınıza 🔴🟢 və 🟢🔴 effekti əlavə olunur.'
+).add_command(
+    'stopled', 'LED effektini dayandırır.', '`.stopled` yazdıqda soyad əvvəlki vəziyyətinə qayıdır.'
+).add()
