@@ -25,7 +25,7 @@ async def lyrics(lyric):
         await lyric.edit("Herokudakı Genius dəyişənini silin")
         return
     else:
-        genius = lyricsgenius.Genius("FdiG8NMlpEVOW3fJnaJqW7Vom-8p9lUauP_jNuA5PLbX3L-kDznZlIghV2Opiooz")
+        genius = lyricsgenius.Genius("nRXe5QJhd_p5iqcIOQcm5K7Ng8zjG6doVNzpa6d6tyn0ev4OBbyB5m8Ys1XkWgqb")
         try:
             args = lyric.text.split('.lyrics')[1].split('-')
             artist = args[0].strip(' ')
