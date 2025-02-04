@@ -1,6 +1,6 @@
 import asyncio
-from telethon.tl.functions.account import UpdateProfile
-from telethon.errors import FloodWait
+from telethon.tl.functions.account import UpdateProfileRequest
+from telethon.errors import FloodWaitError
 from userbot.events import register
 from userbot import bot
 from userbot.cmdhelp import CmdHelp
@@ -28,7 +28,7 @@ async def led(event):
             await bot(UpdateProfile(last_name=f"{base_name} 🟢🔴"))
             await asyncio.sleep(3)
 
-        except FloodWait as e:
+        except FloodWaitError as e:
             await event.edit(f"Flood aşkarlandı! {e.value} saniyə gözləyirəm...")
             await asyncio.sleep(e.value)
 
