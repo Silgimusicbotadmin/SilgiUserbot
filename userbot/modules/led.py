@@ -48,5 +48,5 @@ async def stop_led(event):
 CmdHelp('led').add_command(
     'led', 'LED effektini soyadınıza əlavə edərək başladır.', '`.led` yazdıqda soyadınıza 🔴🟢 və 🟢🔴 effekti əlavə olunur.'
 ).add_command(
-    'stopled', 'LED effektini dayandırır.', '`.stopled` yazdıqda soyad əvvəlki vəziyyətinə qayıdır.'
+    'stopled', None, 'LED effektini dayandırır.'
 ).add()
