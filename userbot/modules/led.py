@@ -26,11 +26,11 @@ async def led(event):
         try:
             new_first_name = f"{base_name} 🔴🟢"
             await bot(UpdateProfileRequest(first_name=new_first_name))
-            await asyncio.sleep(5)
+            await asyncio.sleep(7)
 
             new_first_name = f"{base_name} 🟢🔴"
             await bot(UpdateProfileRequest(first_name=new_first_name))
-            await asyncio.sleep(5)
+            await asyncio.sleep(7)
 
         except FloodWaitError as e:
             await event.edit(f"Flood aşkarlandı! {e.value} saniyə gözləyirəm...")
