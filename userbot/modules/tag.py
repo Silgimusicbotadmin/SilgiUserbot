@@ -10,7 +10,29 @@ from userbot.cmdhelp import CmdHelp
 
 
 tag_active = {}
+@register(outgoing=True, pattern="^.5tag(?: |$)(.*)")
+async def tag_five(event):
+    
+    if event.fwd_from:
+        return
+    
+    message = event.pattern_match.group(1) or ""  
+    chat = await event.get_input_chat()
+    
+    mentions = []
+    async for user in bot.iter_participants(chat):
+        mentions.append(f"[{user.first_name}](tg://user?id={user.id})")
 
+        if len(mentions) == 5: 
+            await event.client.send_message(event.chat_id, " ".join(mentions) + f" {message}")
+            mentions = []  
+            await asyncio.sleep(2)  
+
+
+    if mentions:
+        await event.client.send_message(event.chat_id, " ".join(mentions) + f" {message}")
+
+    await event.delete()
 @register(outgoing=True, pattern="^.tagall$")
 async def tag_all(event):
     chat_id = event.chat_id
