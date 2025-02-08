@@ -26,7 +26,7 @@ async def tag_five(event):
         if len(mentions) == 5: 
             await event.client.send_message(event.chat_id, " ".join(mentions) + f" {message}")
             mentions = []  
-            await asyncio.sleep(2)  
+            await sleep(2)  
 
 
     if mentions:
