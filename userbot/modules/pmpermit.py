@@ -32,6 +32,10 @@ async def permitpm(event):
                 return
             apprv = is_approved(event.chat_id)
             notifsoff = gvarstatus("NOTIF_OFF")
+            
+            if event.chat_id in WHITELIST:
+              return
+    
 
             reply_user = await event.get_sender()
             id = reply_user.id
@@ -161,6 +165,13 @@ async def auto_accept(event):
 
         username = '@' + chat.username if chat.username else f'[{first_name} {last_name}](tg://user?id={id})'
         mention = f'[{first_name} {last_name}](tg://user?id={id})'
+                
+        if id in WHITELIST:
+            try:
+                approve(event.chat_id)
+            except IntegrityError:
+                return
+            return
 
         if isinstance(chat, User):
             if is_approved(event.chat_id) or chat.bot:
