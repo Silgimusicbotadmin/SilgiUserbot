@@ -140,7 +140,7 @@ async def amialive(e):
             PLUGIN_MESAJLAR['alive'].text = PLUGIN_MESAJLAR['alive'].text.format(
                 telethon=version.__version__,
                 python=python_version(),
-                dto=DTO_VERSION,
+                silgi=SILGI_VERSION,
                 plugin=len(CMD_HELP),
                 id=me.id,
                 username='@' + me.username if me.username else f'[{me.first_name}](tg://user?id={me.id})',
