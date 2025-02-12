@@ -1,5 +1,6 @@
 deep-translator
 aiohttp
+pyautogui
 aria2p
 async_generator
 bs4
