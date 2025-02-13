@@ -21,7 +21,7 @@ import userbot.cmdhelp
 
 
 DIZCILIK_STR = [
-    "Stikeri fırladıram...",
+    "SStikeri fırladıram...",
     "Yaşaşın fırlatmaq...",
     "Bu stikeri öz paketimə dəvət edirəm...",
     "Bunu fırlatmalıyam...",
