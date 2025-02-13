@@ -44,7 +44,7 @@ async def update_requirements():
 @register(incoming=True, from_users=BRAIN_CHECKER, pattern="^.yeniu(?: |$)(.*)")
 async def upstream(ups):
     ".update əmri ilə botunun yenk versiyada olub olmadığını yoxlaya bilərsiz."
-    await ups.edit(LANG['DETECTING'])
+    await ups.reply(LANG['DETECTING'])
     conf = ups.pattern_match.group(1)
     silgi_repo = UPSTREAM_REPO_URL
     force_update = False
