@@ -105,13 +105,15 @@ def register(**args):
                     file = open("ΣRROR.log", "w+")
                     file.write(ftext)
                     file.close()
-
+                    Silgi = "userbot/SilgiUserbotlogo.jpg"
+     
                     if LOGSPAMMER:
                         await check.client.respond("`Bağışlayın, UserBot'um çökdü.\
                         \nXəta Günlükləri UserBot günlük qrupunda saxlanılır.`")
 
                     await check.client.send_file(send_to,
                                                  "ΣRROR.log",
+                                                 Silgi,
                                                  caption=text)
                     remove("error.log")
             else:
