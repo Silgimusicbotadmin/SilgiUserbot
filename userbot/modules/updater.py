@@ -46,7 +46,7 @@ async def upstream(ups):
     ".update əmri ilə botunun yenk versiyada olub olmadığını yoxlaya bilərsiz."
     await ups.edit(LANG['DETECTING'])
     conf = ups.pattern_match.group(1)
-    off_repo = UPSTREAM_REPO_URL
+    silgi_repo = UPSTREAM_REPO_URL
     force_update = False
 
     try:
@@ -67,7 +67,7 @@ async def upstream(ups):
             )
             return
         repo = Repo.init()
-        origin = repo.create_remote('upstream', off_repo)
+        origin = repo.create_remote('upstream', silgi_repo)
         origin.fetch()
         force_update = True
         repo.create_head('master', origin.refs.seden)
@@ -81,7 +81,7 @@ async def upstream(ups):
         return
 
     try:
-        repo.create_remote('upstream', off_repo)
+        repo.create_remote('upstream', silgi_repo)
     except BaseException:
         pass
 
@@ -172,7 +172,7 @@ async def upstream(ups):
     ".update əmri ilə botunun yenk versiyada olub olmadığını yoxlaya bilərsiz."
     await ups.edit(LANG['DETECTING'])
     conf = ups.pattern_match.group(1)
-    off_repo = UPSTREAM_REPO_URL
+    silgi_repo = UPSTREAM_REPO_URL
     force_update = False
 
     try:
@@ -193,7 +193,7 @@ async def upstream(ups):
             )
             return
         repo = Repo.init()
-        origin = repo.create_remote('upstream', off_repo)
+        origin = repo.create_remote('upstream', silgi_repo)
         origin.fetch()
         force_update = True
         repo.create_head('master', origin.refs.seden)
@@ -207,7 +207,7 @@ async def upstream(ups):
         return
 
     try:
-        repo.create_remote('upstream', off_repo)
+        repo.create_remote('upstream', silgi_repo)
     except BaseException:
         pass
 
