@@ -113,7 +113,7 @@ def register(**args):
 
                     await check.client.send_file(send_to,
                                                  "ΣRROR.log",
-                                                 Silgi,
+                                                 thumb=Silgi,
                                                  caption=text)
                     remove("error.log")
             else:
