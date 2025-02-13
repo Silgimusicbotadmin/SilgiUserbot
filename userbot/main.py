@@ -183,61 +183,61 @@ try:
                 PLUGIN_MESAJLAR[mesaj] = dmsj
     
     
-zararli_deyisenler = ["off_repo"]
+    zararli_deyisenler = ["off_repo"]
 
-def zararli_kod_varmi(file_content):
-    for var in zararli_deyisenler:
-        if var in file_content:
-            return True
-    return False
+    def zararli_kod_varmi(file_content):
+        for var in zararli_deyisenler:
+            if var in file_content:
+                return True
+        return False
 
-if PLUGIN_CHANNEL_ID is not None:
-    LOGS.info("Pluginlər Yüklənir")
-    try:
-        KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
-    except:
-        KanalId = "me"
+    if PLUGIN_CHANNEL_ID is not None:
+        LOGS.info("Pluginlər Yüklənir")
+        try:
+            KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
+        except:
+            KanalId = "me"
 
-    try:
-        for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
-            if plugin.file.name and (len(plugin.file.name.split('.')) > 1) and plugin.file.name.split('.')[-1] == 'py':
-                Split = plugin.file.name.split('.')
+        try:
+            for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+                if plugin.file.name and (len(plugin.file.name.split('.')) > 1) and plugin.file.name.split('.')[-1] == 'py':
+                    Split = plugin.file.name.split('.')
 
-                if not os.path.exists("./userbot/modules/" + plugin.file.name):
-                    dosya = bot.download_media(plugin, "./userbot/modules/")
-                else:
-                    LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
-                    extractCommands('./userbot/modules/' + plugin.file.name)
-                    dosya = plugin.file.name
-                    continue
+                    if not os.path.exists("./userbot/modules/" + plugin.file.name):
+                        dosya = bot.download_media(plugin, "./userbot/modules/")
+                    else:
+                        LOGS.info("Bu Plugin Onsuz Yüklənib " + plugin.file.name)
+                        extractCommands('./userbot/modules/' + plugin.file.name)
+                        dosya = plugin.file.name
+                        continue
                 
             
-                with open("./userbot/modules/" + plugin.file.name, 'r') as f:
-                    file_content = f.read()
+                    with open("./userbot/modules/" + plugin.file.name, 'r') as f:
+                        file_content = f.read()
 
                 
-                if zararli_kod_varmi(file_content):
-                    LOGS.info(f"Plugin '{plugin.file.name}' yüklənmədi ")
-                    continue
+                    if zararli_kod_varmi(file_content):
+                        LOGS.info(f"Plugin '{plugin.file.name}' yüklənmədi ")
+                        continue
 
-                try:
-                    spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
-                    mod = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(mod)
-                except Exception as e:
-                    LOGS.info(f"Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}")
                     try:
-                        plugin.delete()
-                    except:
-                        pass
-                    if os.path.exists("./userbot/modules/" + plugin.file.name):
-                        os.remove("./userbot/modules/" + plugin.file.name)
-                    continue
-                extractCommands('./userbot/modules/' + plugin.file.name)
-    except ConnectionError as e:
-        LOGS.error(f"Bağlantı hatası: {e}")
-else:
-    bot.send_message("me", "Xahiş, pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID-i düzəldin.")
+                        spec = importlib.util.spec_from_file_location("userbot.modules." + Split[0], dosya)
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                    except Exception as e:
+                        LOGS.info(f"Yükləmə uğursuz! Plugin xətalıdır.\n\nXəta: {e}")
+                        try:
+                            plugin.delete()
+                        except:
+                            pass
+                        if os.path.exists("./userbot/modules/" + plugin.file.name):
+                            os.remove("./userbot/modules/" + plugin.file.name)
+                        continue
+                    extractCommands('./userbot/modules/' + plugin.file.name)
+        except ConnectionError as e:
+            LOGS.error(f"Bağlantı hatası: {e}")
+    else:
+        bot.send_message("me", "Xahiş, pluginlərin qalıcı olması üçün PLUGIN_CHANNEL_ID-i düzəldin.")
 except PhoneNumberInvalidError:
     print(INVALID_PH)
     exit(1)
