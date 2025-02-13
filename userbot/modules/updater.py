@@ -44,7 +44,7 @@ async def update_requirements():
 @register(incoming=True, from_users=BRAIN_CHECKER, pattern="^.yeniu(?: |$)(.*)")
 async def upstream(ups):
     ".update əmri ilə botunun yenk versiyada olub olmadığını yoxlaya bilərsiz."
-    await ups.reply(LANG['DETECTING'])
+    mesaj = await ups.reply(LANG['DETECTING'])
     conf = ups.pattern_match.group(1)
     silgi_repo = UPSTREAM_REPO_URL
     force_update = False
@@ -53,16 +53,16 @@ async def upstream(ups):
         txt = "`Yenilənmə uğursuz oldu! Bəzi problemlərlə qarşılaşdım.`\n\n**LOG:**\n"
         repo = Repo()
     except NoSuchPathError as error:
-        await ups.edit(f'{txt}\n`{error} {LANG["NOT_FOUND"]}.`')
+        await mesaj.edit(f'{txt}\n`{error} {LANG["NOT_FOUND"]}.`')
         repo.__del__()
         return
     except GitCommandError as error:
-        await ups.edit(f'{txt}\n`{LANG["GIT_ERROR"]} {error}`')
+        await mesaj.edit(f'{txt}\n`{LANG["GIT_ERROR"]} {error}`')
         repo.__del__()
         return
     except InvalidGitRepositoryError as error:
         if conf != "now":
-            await ups.edit(
+            await mesaj.edit(
                 f"`{error} {LANG['NOT_GIT']}`"
             )
             return
@@ -76,7 +76,7 @@ async def upstream(ups):
 
     ac_br = repo.active_branch.name
     if ac_br != 'master':
-        await ups.edit(LANG['INVALID_BRANCH'])
+        await mesaj.edit(LANG['INVALID_BRANCH'])
         repo.__del__()
         return
 
@@ -91,14 +91,14 @@ async def upstream(ups):
     changelog = await gen_chlog(repo, f'HEAD..upstream/{ac_br}')
 
     if not changelog and not force_update:
-        await ups.edit(LANG['UPDATE'].format(ac_br))
+        await mesaj.edit(LANG['UPDATE'].format(ac_br))
         repo.__del__()
         return
 
     if conf != "now" and not force_update:
         changelog_str = LANG['WAS_UPDATE'].format(ac_br, changelog)
         if len(changelog_str) > 4096:
-            await ups.edit(LANG['BIG'])
+            await mesaj.edit(LANG['BIG'])
             file = open("UPDΔTΣ.txt", "w+")
             file.write(changelog_str)
             file.close()
@@ -109,14 +109,14 @@ async def upstream(ups):
             )
             remove("UPDΔTΣ.txt")
         else:
-            await ups.edit(changelog_str)
+            await mesaj.edit(changelog_str)
         await ups.respond('`Botunuz [⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub) tərəfindən yenilənir`')
         return
 
     if force_update:
-        await ups.edit(LANG['FORCE_UPDATE'])
+        await mesaj.edit(LANG['FORCE_UPDATE'])
     else:
-        await ups.edit(LANG['UPDATING'])
+        await mesaj.edit(LANG['UPDATING'])
     # Bot Heroku.
     if HEROKU_APIKEY is not None:
         import heroku3
@@ -124,7 +124,7 @@ async def upstream(ups):
         heroku_app = None
         heroku_applications = heroku.apps()
         if not HEROKU_APPNAME:
-            await ups.edit(LANG['INVALID_APPNAME'])
+            await mesaj.edit(LANG['INVALID_APPNAME'])
             repo.__del__()
             return
         for app in heroku_applications:
@@ -132,12 +132,12 @@ async def upstream(ups):
                 heroku_app = app
                 break
         if heroku_app is None:
-            await ups.edit(
+            await mesaj.edit(
                 LANG['INVALID_HEROKU'].format(txt)
             )
             repo.__del__()
             return
-        await ups.edit(LANG['HEROKU_UPDATING'])
+        await mesaj.edit(LANG['HEROKU_UPDATING'])
         ups_rem.fetch(ac_br)
         repo.git.reset("--hard", "FETCH_HEAD")
         heroku_git_url = heroku_app.git_url.replace(
@@ -150,10 +150,10 @@ async def upstream(ups):
         try:
             remote.push(refspec="HEAD:refs/heads/master", force=True)
         except GitCommandError as error:
-            await ups.edit(f'{txt}\n`{LANG["ERRORS"]}:\n{error}`')
+            await mesaj.edit(f'{txt}\n`{LANG["ERRORS"]}:\n{error}`')
             repo.__del__()
             return
-        await ups.edit(LANG['SUCCESSFULLY'])
+        await mesaj.edit(LANG['SUCCESSFULLY'])
     else:
         # Klasik yenilənmə
         try:
@@ -161,7 +161,7 @@ async def upstream(ups):
         except GitCommandError:
             repo.git.reset("--hard", "FETCH_HEAD")
         await update_requirements()
-        await ups.edit(LANG['SUCCESSFULLY'])
+        await mesaj.edit(LANG['SUCCESSFULLY'])
         # Bot Heroku
         args = [sys.executable, "main.py"]
         execle(sys.executable, *args, environ)
