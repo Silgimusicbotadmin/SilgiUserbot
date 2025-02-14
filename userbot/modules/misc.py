@@ -83,11 +83,23 @@ def zararli_kod_varmi(file_content):
         if var in file_content:
             return True
     return False
+
 @register(outgoing=True, pattern="^.restart$")
 @register(outgoing=True, pattern="^.stop$")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.restart$")
 async def restart(event):
     await event.edit(PLUGIN_MESAJLAR['restart'])
+
+    for file in os.listdir("./userbot/modules/"):
+        file_path = f"./userbot/modules/{file}"
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                if zararli_kod_varmi(content):  
+                    os.remove(file_path)
+                    LOGS.info(f"Bu plugin SilgiUserbot'a zərər verir: {file}")
+        except Exception as e:
+            LOGS.error(f"Fayl oxunarkən xəta baş verdi: {e}")
 
     if PLUGIN_CHANNEL_ID is not None:
         LOGS.info("Pluginlər Yüklənir")
@@ -101,31 +113,28 @@ async def restart(event):
                 if plugin.file.name and plugin.file.name.endswith('.py'):
                     plugin_path = f"./userbot/modules/{plugin.file.name}"
 
-                    
                     if os.path.exists(plugin_path):
                         LOGS.info(f"Bu plugin artıq yüklənib: {plugin.file.name}")
                         continue
 
-                    
                     await bot.download_media(plugin, plugin_path)
 
-                    
-                    with open(plugin_path, 'r') as f:
+                    with open(plugin_path, 'r', encoding='utf-8') as f:
                         file_content = f.read()
 
                     if zararli_kod_varmi(file_content):
-                        LOGS.info(f"Bu plugin SilgiUserbota ziddir: {plugin.file.name}")
-                        os.remove(plugin_path)  
+                        LOGS.info(f"Bu plugin SilgiUserbot'a zərər verir və silinir: {plugin.file.name}")
+                        os.remove(plugin_path)
                         continue
 
-                
                     try:
-                        spec = importlib.util.spec_from_file_location(f"userbot.modules.{plugin.file.name.split('.')[0]}", plugin_path)
+                        spec = importlib.util.spec_from_file_location(
+                            f"userbot.modules.{plugin.file.name.split('.')[0]}", plugin_path)
                         mod = importlib.util.module_from_spec(spec)
                         spec.loader.exec_module(mod)
                     except Exception as e:
                         LOGS.info(f"Plugin yüklənmədi! Xəta: {e}")
-                        os.remove(plugin_path)  
+                        os.remove(plugin_path)
                         continue
         except Exception as e:
             LOGS.error(f"Pluginləri yükləyərkən xəta baş verdi: {e}")
@@ -138,7 +147,6 @@ async def restart(event):
     except:
         pass
 
-    # Botu yenidən başlad
     execl(sys.executable, sys.executable, *sys.argv)
 
 
