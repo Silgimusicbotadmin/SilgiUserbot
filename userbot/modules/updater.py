@@ -110,7 +110,7 @@ async def upstream(ups):
             remove("UPDΔTΣ.txt")
         else:
             await mesaj.edit(changelog_str)
-        await mesaj.edit('`Botunuz ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝(@silgiub) tərəfindən yenilənir`')
+        await mesaj.respond('`Botunuz ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ admini tərəfindən yenilənir`')
         return
 
     if force_update:
