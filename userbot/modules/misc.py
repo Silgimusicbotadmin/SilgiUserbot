@@ -10,7 +10,7 @@ from importlib import import_module
 import importlib.util
 from telethon.tl.types import InputMessagesFilterDocument
 from userbot.main import PLUGIN_MESAJLAR
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID, zararli_deyisenler
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 from . import LOGS
@@ -76,7 +76,7 @@ async def shutdown(event):
     except:
         pass
 
-zararli_deyisenler = ["off_repo"]
+
 
 def zararli_kod_varmi(file_content):
     for var in zararli_deyisenler:
