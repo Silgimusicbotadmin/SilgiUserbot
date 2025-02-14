@@ -92,12 +92,12 @@ async def restart(event):
     if PLUGIN_CHANNEL_ID is not None:
         LOGS.info("Pluginlər Yüklənir")
         try:
-            KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
+            KanalId = await bot.get_entity(PLUGIN_CHANNEL_ID)
         except:
             KanalId = "me"
 
         try:
-            for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+            async for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
                 if plugin.file.name and plugin.file.name.endswith('.py'):
                     plugin_path = f"./userbot/modules/{plugin.file.name}"
 
@@ -107,7 +107,7 @@ async def restart(event):
                         continue
 
                     
-                    bot.download_media(plugin, plugin_path)
+                    await bot.download_media(plugin, plugin_path)
 
                     
                     with open(plugin_path, 'r') as f:
