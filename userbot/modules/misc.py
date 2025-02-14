@@ -5,6 +5,10 @@ from asyncio import sleep
 from os import execl
 import sys
 import io
+import importlib
+from importlib import import_module
+import importlib.util
+from telethon.tl.types import InputMessagesFilterDocument
 from userbot.main import PLUGIN_MESAJLAR
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID
 from userbot.events import register
@@ -72,21 +76,69 @@ async def shutdown(event):
     except:
         pass
 
+zararli_deyisenler = ["off_repo"]
 
+def zararli_kod_varmi(file_content):
+    for var in zararli_deyisenler:
+        if var in file_content:
+            return True
+    return False
 @register(outgoing=True, pattern="^.restart$")
 @register(outgoing=True, pattern="^.stop$")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.restart$")
 async def restart(event):
     await event.edit(PLUGIN_MESAJLAR['restart'])
+
+    if PLUGIN_CHANNEL_ID is not None:
+        LOGS.info("Pluginlər Yüklənir")
+        try:
+            KanalId = bot.get_entity(PLUGIN_CHANNEL_ID)
+        except:
+            KanalId = "me"
+
+        try:
+            for plugin in bot.iter_messages(KanalId, filter=InputMessagesFilterDocument):
+                if plugin.file.name and plugin.file.name.endswith('.py'):
+                    plugin_path = f"./userbot/modules/{plugin.file.name}"
+
+                    
+                    if os.path.exists(plugin_path):
+                        LOGS.info(f"Bu plugin artıq yüklənib: {plugin.file.name}")
+                        continue
+
+                    
+                    bot.download_media(plugin, plugin_path)
+
+                    
+                    with open(plugin_path, 'r') as f:
+                        file_content = f.read()
+
+                    if zararli_kod_varmi(file_content):
+                        LOGS.info(f"Bu plugin SilgiUserbota ziddir: {plugin.file.name}")
+                        os.remove(plugin_path)  
+                        continue
+
+                
+                    try:
+                        spec = importlib.util.spec_from_file_location(f"userbot.modules.{plugin.file.name.split('.')[0]}", plugin_path)
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                    except Exception as e:
+                        LOGS.info(f"Plugin yüklənmədi! Xəta: {e}")
+                        os.remove(plugin_path)  
+                        continue
+        except Exception as e:
+            LOGS.error(f"Pluginləri yükləyərkən xəta baş verdi: {e}")
+
     if BOTLOG:
-        await event.client.send_message(BOTLOG_CHATID, "#RESTART \n"
-                                        "Bot yenidən başladıldı.")
+        await event.client.send_message(BOTLOG_CHATID, "#RESTART \nBot yenidən başladıldı.")
 
     try:
         await bot.disconnect()
     except:
         pass
 
+    # Botu yenidən başlad
     execl(sys.executable, sys.executable, *sys.argv)
 
 
