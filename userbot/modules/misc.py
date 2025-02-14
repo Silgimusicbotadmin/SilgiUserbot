@@ -9,8 +9,8 @@ import importlib
 from importlib import import_module
 import importlib.util
 from telethon.tl.types import InputMessagesFilterDocument
-from userbot.main import PLUGIN_MESAJLAR
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID, zararli_deyisenler
+from userbot.main import PLUGIN_MESAJLAR, zararli_deyisenler
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 from . import LOGS
