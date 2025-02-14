@@ -13,7 +13,7 @@ from userbot.main import PLUGIN_MESAJLAR
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
-
+from . import LOGS
 # ██████ LANGUAGE CONSTANTS ██████ #
 
 from userbot.language import get_value
