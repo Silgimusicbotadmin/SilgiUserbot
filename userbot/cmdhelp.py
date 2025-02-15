@@ -62,10 +62,10 @@ class CmdHelp:
             
             if self.INFO == '':
                 if not self.WARNING == '':
-                    result += f"❗ {self.WARNING}\n\n"
+                    result += f"⚠️ {self.WARNING}\n\n"
             else:
                 if not self.WARNING == '':
-                    result += f"❗ {self.WARNING}\n"
+                    result += f"⚠️ {self.WARNING}\n"
                 result += f"ℹ️ {self.INFO}\n\n"
                      
         for command in self.COMMANDS:
