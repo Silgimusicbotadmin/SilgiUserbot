@@ -183,7 +183,7 @@ async def dyno_usage(dyno):
 
 
 
-
+silgi = "userbot/SilgiUserbotlogo.jpg"
 @register(outgoing=True, pattern=r"^\.loq$")
 async def get_heroku_logs(dyno):
     try:
@@ -203,7 +203,7 @@ async def get_heroku_logs(dyno):
         with open(log_filename, "w", encoding="utf-8") as log_file:
             log_file.write(log_data)
         await dyno.client.send_file(
-            dyno.chat_id, log_filename, caption="Heroku Loqları"
+            dyno.chat_id, log_filename, thumb=silgi, caption="Heroku Loqları"
         )
 
     except Exception as e:
