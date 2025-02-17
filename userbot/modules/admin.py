@@ -264,7 +264,6 @@ async def set_group_photo(gpic):
 
 
 @register(outgoing=True, pattern="^.promote(?: |$)(.*)")
-@register(incoming=True, from_users=BRAIN_CHECKER, pattern="^.promote(?: |$)(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.promote(?: |$)(.*)")
 async def promote(promt):
     """ .promote """
@@ -287,16 +286,24 @@ async def promote(promt):
                                  pin_messages=True)
 
     await promt.edit(LANG['PROMOTING'])
-    user, rank = await get_user_from_event(promt)
-    if not rank:
-        rank = "Admin"  # 
-
-    if user:
-        pass
-    else:
+    try:
+        result = await get_user_from_event(promt)
+    except Exception as e:
+        await promt.edit(f"⚠️ Xəta baş verdi: {str(e)}")
         return
 
-    # 
+    if result is None:
+        await promt.edit("❌ İstifadəçi tapılmadı və ya xəta baş verdi.")
+        return
+
+    user, rank = result  
+
+    if not rank:
+        rank = "Admin"
+
+    if user is None:
+        await promt.edit("❌ İstifadəçi məlumatları əldə edilə bilmədi.")
+        return
     try:
         await promt.client(
             EditAdminRequest(promt.chat_id, user.id, new_rights, rank))
@@ -317,7 +324,6 @@ async def promote(promt):
 
 
 @register(outgoing=True, pattern="^.demote(?: |$)(.*)")
-@register(incoming=True, from_users=BRAIN_CHECKER, pattern="^.demote(?: |$)(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.demote(?: |$)(.*)")
 async def demote(dmod):
     """ .demote """
@@ -368,7 +374,6 @@ async def demote(dmod):
 
 
 @register(outgoing=True, pattern="^.ban(?: |$)(.*)")
-@register(incoming=True, from_users=BRAIN_CHECKER, pattern="^.ban(?: |$)(.*)")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.ban(?: |$)(.*)")
 async def ban(bon):
     """ .ban"""
