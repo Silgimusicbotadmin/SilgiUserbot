@@ -33,7 +33,7 @@
             "DTO_PLUGIN_CAPTION": "`Bu` [⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](https://t.me/silgiub) `pluginidir.`"
         },
         
-        "__up": {
+        "__silgi": {
             "NEED_PLUGIN": "**❗️Zəhmət olmasa düzgün bir** `⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝` **modulu qeyd edin.**\n**ℹ️ Hansısa plugin haqqında məlumat lazımdırsa, əvvəlcə plugini yüklədiyinizdən əmin olun.**",
             "NEED_MODULE": "`Modullar aşağıdadır ⬇️ \nİstifadəsi: .silgi <modul adı>`"
         },
