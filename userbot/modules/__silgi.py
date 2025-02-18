@@ -8,7 +8,7 @@ from userbot.events import register
 # ██████ LANGUAGE CONSTANTS ██████ #
 
 from userbot.language import get_value
-LANG = get_value("__up")
+LANG = get_value("__silgi")
 
 # ████████████████████████████████ #
 
