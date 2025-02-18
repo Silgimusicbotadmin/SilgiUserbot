@@ -32,7 +32,7 @@
             "PLUG_DELETED": "`Plugin deleted successfully!` '**Restarting.**",
             "DTO_PLUGIN_CAPTION": "This is a plugin of [⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](https://t.me/silgiub)."
         },
-        "__up": {
+        "__silgi": {
             "NEED_PLUGIN": "**❗️ Please enter the correct** `⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝` **module name.**\n**ℹ️ If you want information about any plugin, make sure the plugin is installed.**",
             "NEED_MODULE": "Modules are below ⬇️\nUse: .silgi <module name>"
         },
