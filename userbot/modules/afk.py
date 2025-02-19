@@ -31,7 +31,7 @@ def time_formatter(seconds, short=True):
 
 seen_users = set()
 
-@register(incoming=True, disable_edited=True)
+@register(incoming=True, disable_errors=True, disable_edited=True)
 async def mention_afk(mention):
     """ ."""
     global COUNT_MSG
@@ -45,9 +45,7 @@ async def mention_afk(mention):
         if isinstance(sender, Channel):  
             return
         
-        if sender and not sender.bot and ISAFK:
-            if sender.id not in seen_users:
-                seen_users.add(sender.id)  
+        if ISAFK:  
                 
                 from_user = sender
                 if from_user.username:
