@@ -38,7 +38,7 @@ async def mention_afk(mention):
         sender = await mention.get_sender()
         if isinstance(sender, Channel):  
             return
-        if not sender.bot and ISAFK:
+        if sender and not sender.bot and ISAFK:
             from_user = sender
             if from_user.username:
                 username = '@' + from_user.username
