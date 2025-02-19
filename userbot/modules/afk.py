@@ -28,34 +28,41 @@ def time_formatter(seconds, short=True):
         ((str(seconds) + (" saniyə, " if not short else "s, ")) if seconds else "")
     return tmp[:-2] + " əvvəl"
 
+
+seen_users = set()
+
 @register(incoming=True, disable_edited=True)
 async def mention_afk(mention):
     """ ."""
     global COUNT_MSG
     global USERS
     global ISAFK
+    
     if mention.message.mentioned:
         sender = await mention.get_sender()
+        
+        
         if isinstance(sender, Channel):  
             return
+        
         if sender and not sender.bot and ISAFK:
-            from_user = sender
-            if from_user.username:
-                username = '@' + from_user.username
-            else:
-                username = f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
-            
-            mention_format = f'[{from_user.first_name}](tg://user?id={from_user.id})'
-            first_name = from_user.first_name
+            if sender.id not in seen_users:
+                seen_users.add(sender.id)  
+                
+                from_user = sender
+                if from_user.username:
+                    username = '@' + from_user.username
+                else:
+                    username = f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
+                
+                mention_format = f'[{from_user.first_name}](tg://user?id={from_user.id})'
+                first_name = from_user.first_name
 
-            if from_user.last_name:
-                last_name = from_user.last_name
-            else:
-                last_name = ''
+                last_name = from_user.last_name if from_user.last_name else ''
 
-            last_seen_seconds = round(time() - SON_GORULME)
-            last_seen = time_formatter(last_seen_seconds)
-            last_seen_long = time_formatter(last_seen_seconds, False)
+                last_seen_seconds = round(time() - SON_GORULME)
+                last_seen = time_formatter(last_seen_seconds)
+                last_seen_long = time_formatter(last_seen_seconds, False)
 
             if mention.sender_id not in USERS:
                 if AFKREASON:
