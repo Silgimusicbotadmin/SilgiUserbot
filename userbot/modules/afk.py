@@ -37,30 +37,25 @@ async def mention_afk(mention):
     global COUNT_MSG
     global USERS
     global ISAFK
-    
-    if mention.message.mentioned:
-        sender = await mention.get_sender()
-        
-        
-        if isinstance(sender, Channel):  
-            return
-        
-        if ISAFK:  
-                
-                from_user = sender
-                if from_user.username:
-                    username = '@' + from_user.username
-                else:
-                    username = f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
-                
-                mention_format = f'[{from_user.first_name}](tg://user?id={from_user.id})'
-                first_name = from_user.first_name
+    if mention.message.mentioned and not (await mention.get_sender()).bot:
+        if ISAFK:
+            from_user = await mention.get_sender()
+            if from_user.username:
+                username = '@' + from_user.username
+            else:
+                username = f'[{from_user.first_name} {from_user.last_name}](tg://user?id={from_user.id})'
+            
+            mention_format = f'[{from_user.first_name}](tg://user?id={from_user.id})'
+            first_name = from_user.first_name
 
-                last_name = from_user.last_name if from_user.last_name else ''
+            if from_user.last_name:
+                last_name = from_user.last_name
+            else:
+                last_name = ''
 
-                last_seen_seconds = round(time() - SON_GORULME)
-                last_seen = time_formatter(last_seen_seconds)
-                last_seen_long = time_formatter(last_seen_seconds, False)
+            last_seen_seconds = round(time() - SON_GORULME)
+            last_seen = time_formatter(last_seen_seconds)
+            last_seen_long = time_formatter(last_seen_seconds, False)
 
             if mention.sender_id not in USERS:
                 if AFKREASON:
