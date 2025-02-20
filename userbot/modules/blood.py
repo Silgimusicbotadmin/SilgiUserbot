@@ -14,17 +14,19 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.qanli (.*)")
+@register(outgoing=True, pattern="^.blood (.*)")
 async def qanli_yazi(event):
     yazi = event.pattern_match.group(1)
     await event.edit("`Qanlı yazı hazırlanır...` 🩸")
 
-    data = f'------WebKitFormBoundaryohlfuyMygb1aEMcp\r\nContent-Disposition: form-data; name="text"\r\n\r\n{yazi}\r\n------WebKitFormBoundaryohlfuyMygb1aEMcp--\r\n'
+    data = f'------WebKitFormBoundaryohlfuyMygb1aEMcp\r\nContent-Disposition: form-data; name="text"\r\n\r\n{yazi}\r\n------WebKitFormBoundaryohlfuyMygb1aEMcp--\r\n'.encode("utf-8")
     
     try:
-        response = requests.post(API_URL, headers=HEADERS, data=data).text
+        response = requests.post(API_URL, headers=HEADERS, data=data, verify=False)
+        response.encoding = "utf-8"
+        response_text = response.text
         
-        soup = BeautifulSoup(response, "html.parser")
+        soup = BeautifulSoup(response_text, "html.parser")
         matches = soup.find_all("a", href=True)
 
         image_url = None
@@ -54,7 +56,7 @@ async def qanli_yazi(event):
         await event.delete()
     except Exception as e:
         with open("response.html", "w", encoding="utf-8") as file:
-            file.write(response)
+            file.write(response_text)
 
         await event.client.send_file(
             event.chat_id,
