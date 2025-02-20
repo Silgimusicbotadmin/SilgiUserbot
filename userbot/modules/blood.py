@@ -1,5 +1,7 @@
 import re
 import requests
+import aiohttp
+import aiofiles
 from bs4 import BeautifulSoup
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
@@ -12,7 +14,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.qanli (.*)")
+@register(outgoing=True, pattern="^.blood (.*)")
 async def qanli_yazi(event):
     yazi = event.pattern_match.group(1)
     await event.edit("`Qanlı yazı hazırlanır...` 🩸")
@@ -32,10 +34,18 @@ async def qanli_yazi(event):
                 break
         
         if image_url:
+            file_name = "blood_text.jpg"
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(image_url) as resp:
+                    if resp.status == 200:
+                        async with aiofiles.open(file_name, "wb") as f:
+                            await f.write(await resp.read())
+
             await event.client.send_file(
                 event.chat_id,
-                image_url,
-                caption=f"🩸 {yazi} üçün qanlı yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                file_name,
+                caption=f"🩸 `{yazi}` üçün qanlı yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                 reply_to=event.reply_to_msg_id
             )
         else:
@@ -52,8 +62,8 @@ async def qanli_yazi(event):
             caption=f"❌ Xəta baş verdi: {str(e)}\n📄 **Photofunia cavabı əlavə olunub.**"
         )
 
-CmdHelp('qan').add_command(
-    'qanli', "`.qanli <yazı>` şəklində istifadə edin.", "Sizə qanlı yazı tərzində şəkil yaradar."
+CmdHelp('blood').add_command(
+    'blood', "`.blood <yazı>` şəklində istifadə edin.", "Sizə qanlı yazı tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
