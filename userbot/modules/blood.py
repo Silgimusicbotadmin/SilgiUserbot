@@ -14,7 +14,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.blood (.*)")
+@register(outgoing=True, pattern="^.qanli (.*)")
 async def qanli_yazi(event):
     yazi = event.pattern_match.group(1)
     await event.edit("`Qanlı yazı hazırlanır...` 🩸")
@@ -39,7 +39,7 @@ async def qanli_yazi(event):
             file_name = "blood_text.jpg"
 
             async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
+                async with session.get(image_url, ssl=False) as resp:  # SSL doğrulaması söndürüldü
                     if resp.status == 200:
                         async with aiofiles.open(file_name, "wb") as f:
                             await f.write(await resp.read())
@@ -64,8 +64,8 @@ async def qanli_yazi(event):
             caption=f"❌ Xəta baş verdi: {str(e)}\n📄 **Photofunia cavabı əlavə olunub.**"
         )
 
-CmdHelp('blood').add_command(
-    'blood', "`.blood <yazı>` şəklində istifadə edin.", "Sizə qanlı yazı tərzində şəkil yaradar."
+CmdHelp('qan').add_command(
+    'qanli', "`.qanli <yazı>` şəklində istifadə edin.", "Sizə qanlı yazı tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
