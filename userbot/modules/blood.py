@@ -14,7 +14,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.blood (.*)")
+@register(outgoing=True, pattern="^.qanli (.*)")
 async def qanli_yazi(event):
     yazi = event.pattern_match.group(1)
     await event.edit("`Qanlı yazı hazırlanır...` 🩸")
