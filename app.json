@@ -5,7 +5,7 @@
   "keywords": [
     "telegram",
     "userbot",
-	"Dto",
+	"Silgi",
     "plugin",
     "modular",
     "productivity"
@@ -50,11 +50,6 @@
     },
     "HEROKU_APPNAME": {
       "description": "Heroku app adını bura yazın. UserBot yenilənmələrinə kömək olur.",
-      "required": true
-    },
-    "UPSTREAM_REPO_URL": {
-      "description": "Bura toxunmayın.",
-      "value": "https://github.com/Silgimusicbot/SilgiUserbot",
       "required": true
     },
     "COUNTRY": {
