@@ -90,9 +90,7 @@ HEROKU_APPNAME = os.environ.get("HEROKU_APPNAME", None)
 HEROKU_APIKEY = os.environ.get("HEROKU_APIKEY", None)
 
 # Yenilənmə
-UPSTREAM_REPO_URL = os.environ.get(
-    "UPSTREAM_REPO_URL",
-    "https://github.com/Silgimusicbot/SilgiUserbot.git")
+UPSTREAM_REPO_URL = "https://github.com/Silgimusicbot/SilgiUserbot.git"
 
 # Konsol
 CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
