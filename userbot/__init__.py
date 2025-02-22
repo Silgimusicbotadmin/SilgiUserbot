@@ -112,7 +112,7 @@ ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
 DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
 BREND_MENTION = f"SilgiUserbot"
 BREND_VERSION = "4.5"
-
+DTO_VERSION = "4.5"
 # Warn modül
 WARN_LIMIT = int(os.environ.get("WARN_LIMIT", 3))
 WARN_MODE = os.environ.get("WARN_MODE", "gmute")
