@@ -10,7 +10,7 @@ from importlib import import_module
 import importlib.util
 from telethon.tl.types import InputMessagesFilterDocument
 from userbot.main import PLUGIN_MESAJLAR, zararli_deyisenler
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, SUDO_ID, PLUGIN_CHANNEL_ID, WHITELIST
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 from . import LOGS
@@ -87,6 +87,7 @@ def zararli_kod_varmi(file_content):
 @register(outgoing=True, pattern="^.restart$")
 @register(outgoing=True, pattern="^.stop$")
 @register(incoming=True, from_users=SUDO_ID, pattern="^.restart$")
+@register(incoming=True, from_users=WHITELIST, pattern="^.urestart$")
 async def restart(event):
     await event.edit(PLUGIN_MESAJLAR['restart'])
 
