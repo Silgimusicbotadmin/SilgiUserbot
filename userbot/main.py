@@ -183,7 +183,7 @@ try:
                 PLUGIN_MESAJLAR[mesaj] = dmsj
     
     
-    zararli_deyisenler = ["off_repo"]
+    zararli_deyisenler = ["off_repo", "Repo", "git", "GitCommandError"]
 
     def zararli_kod_varmi(file_content):
         for var in zararli_deyisenler:
