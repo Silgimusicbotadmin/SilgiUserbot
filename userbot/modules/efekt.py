@@ -11,7 +11,12 @@ effects = {
     "qanli": "https://m.photofunia.com/effects/blood_writing",
     "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
     "qar": "https://m.photofunia.com/categories/all_effects/snow-sign",
-    "yeni": "https://m.photofunia.com/categories/all_effects/christmas-writing"
+    "yeni": "https://m.photofunia.com/categories/all_effects/christmas-writing",
+    "isiq": "https://m.photofunia.com/effects/light-graffiti",
+    "su": "https://m.photofunia.com/categories/all_effects/water-writing",
+    "balon": "https://m.photofunia.com/categories/all_effects/balloon"
+    
+    
     
 }
 
@@ -20,7 +25,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|qapi|qar|yeni) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi|qar|yeni|isiq|su|balon) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -161,6 +166,15 @@ CmdHelp('yazi_efektleri').add_command(
 ).add_command(
     'yeni', ".yeni <yazı> şəklində istifadə edin.",
     "Sizə yeni il tərzində şəkil yaradar."
+).add_command(
+    'isiq', ".isiq <yazı> şəklində istifadə edin.",
+    "Sizə İşıqlı yazı tərzində şəkil yaradar."
+).add_command(
+    'su', ".su <yazı> şəklində istifadə edin.",
+    "Sizə Sulu yazı tərzində şəkil yaradar."
+).add_command(
+    'balon', ".balon <yazı> şəklində istifadə edin.",
+    "Sizə Şar üzərində yazı tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
