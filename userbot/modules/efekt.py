@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 
 effects = {
-    "qanli": "https://m.photofunia.com/categories/halloween/blood_writing",
+    "qanli": "https://m.photofunia.com/effects/blood_writing",
     "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates"
 }
 
