@@ -22,8 +22,6 @@ effects = {
 
 HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryohlfuyMygb1aEMcp',
-    'Referer': '',
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
@@ -31,33 +29,36 @@ HEADERS = {
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
-    await event.edit(f"{effect} yazısı hazırlanır... 🖌️")
+    await event.edit(f"🔄 `{effect}` efekti ilə `{yazi}` yazısı hazırlanır...")
 
-    
     effect_url = effects.get(effect)
     if not effect_url:
-        await event.edit(f"❌ Effekt {effect} tapılmadı!")
+        await event.edit(f"❌ Effekt `{effect}` tapılmadı!")
         return
 
-    data = f'------WebKitFormBoundaryohlfuyMygb1aEMcp\r\nContent-Disposition: form-data; name="text"\r\n\r\n{yazi}\r\n------WebKitFormBoundaryohlfuyMygb1aEMcp--\r\n'.encode("utf-8")
-    if yazi=="duman":
-        data = f'------WebKitFormBoundaryohlfuyMygb1aEMcp\r\nContent-Disposition: form-data; name="text"\r\n\r\n{yazi}\r\n\r\n------WebKitFormBoundaryohlfuyMygb1aEMcp--\r\n\r\n'.encode("utf-8")
-    try:
-        
-        HEADERS['Referer'] = effect_url
-        response = requests.post(effect_url, headers=HEADERS, data=data, verify=False)
-        response.encoding = "utf-8"
-        response_text = response.text
-        
-        soup = BeautifulSoup(response_text, "html.parser")
-        matches = soup.find_all("a", href=True)
+    boundary = "----WebKitFormBoundary123456789"
+    data = (
+        f"--{boundary}\r\n"
+        f'Content-Disposition: form-data; name="text"\r\n\r\n'
+        f"{yazi}\r\n"
+        f"--{boundary}--\r\n"
+    ).encode("utf-8")
 
-        image_url = None
-        for match in matches:
-            if "download" in match["href"]:
-                image_url = match["href"].split("?")[0]
-                break
+    try:
+        HEADERS["Content-Type"] = f"multipart/form-data; boundary={boundary}"
+        HEADERS["Referer"] = effect_url
         
+        response = requests.post(effect_url, headers=HEADERS, data=data, verify=False)
+        response_text = response.text
+
+        soup = BeautifulSoup(response_text, "html.parser")
+        image_url = None
+
+        for link in soup.find_all("a", href=True):
+            if "download" in link["href"]:
+                image_url = link["href"].split("?")[0]
+                break
+
         if image_url:
             file_name = f"{effect}_text.jpg"
 
@@ -70,13 +71,13 @@ async def effect_yazi(event):
             await event.client.send_file(
                 event.chat_id,
                 file_name,
-                caption=f"🖼 {yazi} üçün seçilmiş {effect} efekti ilə yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                caption=f"✅ **{effect}** efekti ilə yazı hazırdır!\n📌 **Mətn:** `{yazi}`\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                 reply_to=event.reply_to_msg_id
             )
+            await event.delete()
         else:
-            raise ValueError(f"Effekt {effect} üçün şəkil URL-si tapılmadı.")
+            raise ValueError("Şəkil linki tapılmadı!")
 
-        await event.delete()
     except Exception as e:
         with open("response.html", "w", encoding="utf-8") as file:
             file.write(response_text)
@@ -84,9 +85,8 @@ async def effect_yazi(event):
         await event.client.send_file(
             event.chat_id,
             "response.html",
-            caption=f"❌ Xəta baş verdi: {str(e)}\n📄 **Photofunia cavabı əlavə olunub.**"
+            caption=f"❌ Xəta baş verdi: `{str(e)}`\n📄 **Photofunia cavabı əlavə olundu.**"
         )
-
 
 CmdHelp('yazi_efektleri').add_command(
     'qanli', ".qanli <yazı> şəklində istifadə edin.", 
