@@ -1,92 +1,76 @@
-import re
-import requests
 import aiohttp
 import aiofiles
+import requests
+from bs4 import BeautifulSoup
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
-from bs4 import BeautifulSoup
-
 
 effects = {
     "qanli": "https://m.photofunia.com/categories/halloween/blood_writing",
     "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
-    "bezek": "https://photofunia.com/categories/all_effects/glass-bauble",
-    "ucan": "https://photofunia.com/effects/plane-banner",
-    "qorxu": "https://photofunia.com/effects/nightmare-writing",
-    "duman": "https://photofunia.com/effects/foggy_window_writing",
-    "neon": "https://photofunia.com/effects/neon-writing",
-    "taxta": "https://photofunia.com/effects/wooden_sign",
-    "rengli": "https://photofunia.com/categories/all_effects/watercolour-text",
-    "gece": "https://photofunia.com/categories/lab/light-graffiti"
+    "bezek": "https://m.photofunia.com/categories/all_effects/glass-bauble",
+    "ucan": "https://m.photofunia.com/effects/plane-banner",
+    "qorxu": "https://m.photofunia.com/effects/nightmare-writing",
+    "duman": "https://m.photofunia.com/effects/foggy_window_writing",
+    "neon": "https://m.photofunia.com/effects/neon-writing",
+    "taxta": "https://m.photofunia.com/effects/wooden_sign",
+    "rengli": "https://m.photofunia.com/categories/all_effects/watercolour-text",
+    "gece": "https://m.photofunia.com/categories/lab/light-graffiti"
 }
 
 HEADERS = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryohlfuyMygb1aEMcp',
-    'Referer': '',
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
 @register(outgoing=True, pattern="^.(qanli|qapi|bezek|ucan|qorxu|duman|neon|taxta|rengli|gece) (.*)")
 async def effect_yazi(event):
-    effect = event.pattern_match.group(1)  
-    yazi = event.pattern_match.group(2) 
+    effect = event.pattern_match.group(1)
+    yazi = event.pattern_match.group(2)
     await event.edit(f"`{effect} yazısı hazırlanır...` 🖌️")
-
-    
     effect_url = effects.get(effect)
     if not effect_url:
         await event.edit(f"❌ Effekt `{effect}` tapılmadı!")
         return
 
-    data = f'------WebKitFormBoundaryohlfuyMygb1aEMcp\r\nContent-Disposition: form-data; name="text"\r\n\r\n{yazi}\r\n------WebKitFormBoundaryohlfuyMygb1aEMcp--\r\n'.encode("utf-8")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(effect_url, headers=HEADERS) as resp:
+            page = await resp.text()
     
-    try:
-        
-        HEADERS['Referer'] = effect_url
-        response = requests.post(effect_url, headers=HEADERS, data=data, verify=False)
-        response.encoding = "utf-8"
-        response_text = response.text
-        
-        soup = BeautifulSoup(response_text, "html.parser")
-        matches = soup.find_all("a", href=True)
+    soup = BeautifulSoup(page, "html.parser")
+    form = soup.find("form", class_="effect-form")
+    if not form:
+        await event.edit("❌ Effekt üçün forma tapılmadı!")
+        return
 
-        image_url = None
-        for match in matches:
-            if "download" in match["href"]:
-                image_url = match["href"].split("?")[0]
-                break
-        
-        if image_url:
-            file_name = f"{effect}_text.jpg"
+    action_url = effect_url + form["action"]
+    data = {inp["name"]: yazi for inp in form.find_all("input") if inp.get("name")}
 
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url, ssl=False) as resp:  
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
+    async with aiohttp.ClientSession() as session:
+        async with session.post(action_url, data=data, headers=HEADERS) as resp:
+            result_page = await resp.text()
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"🖼 `{yazi}` üçün seçilmiş `{effect}` efekti ilə yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
-                reply_to=event.reply_to_msg_id
-            )
-        else:
-            raise ValueError(f"Effekt `{effect}` üçün şəkil URL-si tapılmadı.")
+    soup = BeautifulSoup(result_page, "html.parser")
+    img_tag = soup.find("img", class_="result-image")
+    if not img_tag:
+        await event.edit("❌ Şəkil tapılmadı!")
+        return
 
-        await event.delete()
-    except Exception as e:
-        with open("response.html", "w", encoding="utf-8") as file:
-            file.write(response_text)
+    image_url = img_tag["src"]
+    file_name = f"{effect}_text.jpg"
 
-        await event.client.send_file(
-            event.chat_id,
-            "response.html",
-            caption=f"❌ Xəta baş verdi: {str(e)}\n📄 **Photofunia cavabı əlavə olunub.**"
-        )
+    async with aiohttp.ClientSession() as session:
+        async with session.get(image_url) as resp:
+            if resp.status == 200:
+                async with aiofiles.open(file_name, "wb") as f:
+                    await f.write(await resp.read())
 
-
+    await event.client.send_file(
+        event.chat_id,
+        file_name,
+        caption=f"🖼 `{yazi}` üçün seçilmiş `{effect}` efekti ilə yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+        reply_to=event.reply_to_msg_id
+    )
+    await event.delete()
 CmdHelp('yazi_efektleri').add_command(
     'qanli', "`.qanli <yazı>` şəklində istifadə edin.", 
     "Sizə qanlı yazı tərzində şəkil yaradar."
