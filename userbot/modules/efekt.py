@@ -9,15 +9,7 @@ from bs4 import BeautifulSoup
 
 effects = {
     "qanli": "https://m.photofunia.com/categories/halloween/blood_writing",
-    "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
-    "bezek": "https://photofunia.com/categories/all_effects/glass-bauble",
-    "ucan": "https://photofunia.com/effects/plane-banner",
-    "qorxu": "https://photofunia.com/effects/nightmare-writing",
-    "duman": "https://photofunia.com/effects/foggy_window_writing",
-    "neon": "https://photofunia.com/effects/neon-writing",
-    "taxta": "https://photofunia.com/effects/wooden_sign",
-    "rengli": "https://photofunia.com/categories/all_effects/watercolour-text",
-    "gece": "https://photofunia.com/categories/lab/light-graffiti"
+    "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates"
 }
 
 HEADERS = {
@@ -25,7 +17,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|qapi|bezek|ucan|qorxu|duman|neon|taxta|rengli|gece) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -87,6 +79,69 @@ async def effect_yazi(event):
             "response.html",
             caption=f"❌ Xəta baş verdi: `{str(e)}`\n📄 **Photofunia cavabı əlavə olundu.**"
         )
+@register(outgoing=True, pattern="^.duman (.*)")
+async def effect_duman(event):
+    text = event.pattern_match.group(1)
+
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
+        "Referer": "https://photofunia.com/effects/foggy_window_writing",
+        "Cookie": "_ga=GA1.2.502152313.1735403255; PHPSESSID=po5p6i6qqntpp7f54rl47qvld4",
+    }
+    
+    effect_url = "https://photofunia.com/effects/foggy_window_writing"
+    
+    boundary = "----geckoformboundary6c098c0794da59d498a54e05921a6c0e"
+    data = (
+        f"--{boundary}\r\n"
+        'Content-Disposition: form-data; name="text"\r\n\r\n'
+        f"{text}\r\n"
+        f"--{boundary}--\r\n"
+    ).encode("utf-8")
+
+    await event.edit(f"🖌 `{text}` yazısı hazırlanır...")
+
+    try:
+        response = requests.post(effect_url, headers=HEADERS, data=data, verify=False)
+        response_text = response.text
+
+        soup = BeautifulSoup(response_text, "html.parser")
+        image_url = None
+
+        for img in soup.find_all("img"):
+            if "cdn.photofunia.com" in img["src"]:
+                image_url = img["src"]
+                break
+
+        if image_url:
+            file_name = "duman_text.jpg"
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(image_url, ssl=False) as resp:  
+                    if resp.status == 200:
+                        async with aiofiles.open(file_name, "wb") as f:
+                            await f.write(await resp.read())
+
+            await event.client.send_file(
+                event.chat_id,
+                file_name,
+                caption=f"✅ **Duman** efekti ilə yazı hazırdır!\n📌 **Mətn:** `{text}`\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                reply_to=event.reply_to_msg_id
+            )
+            await event.delete()
+        else:
+            raise ValueError("Şəkil linki tapılmadı!")
+
+    except Exception as e:
+        with open("response.html", "w", encoding="utf-8") as file:
+            file.write(response_text)
+
+        await event.client.send_file(
+            event.chat_id,
+            "response.html",
+            caption=f"❌ Xəta baş verdi: `{str(e)}`\n📄 **Photofunia cavabı əlavə olundu.**"
+        )
+
 
 CmdHelp('yazi_efektleri').add_command(
     'qanli', ".qanli <yazı> şəklində istifadə edin.", 
