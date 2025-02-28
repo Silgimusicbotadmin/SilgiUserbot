@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 effects = {
     "qanli": "https://m.photofunia.com/categories/halloween/blood_writing",
-    "yanmis": "https://m.photofunia.com/categories/halloween/burning_text",
+    "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
     "isiq": "https://m.photofunia.com/categories/halloween/glowing_text",
     "ucan": "https://m.photofunia.com/categories/other/flying_text",
     "ag": "https://m.photofunia.com/categories/other/white_text",
@@ -27,7 +27,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|yanmis|isiq|ucan|ag|susa|neon|taxta|karnaval|supurge) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi|isiq|ucan|ag|susa|neon|taxta|karnaval|supurge) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -91,7 +91,7 @@ CmdHelp('yazi_efektleri').add_command(
     'qanli', "`.qanli <yazı>` şəklində istifadə edin.", 
     "Sizə qanlı yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Blood Writing](https://m.photofunia.com/categories/halloween/blood_writing)"
 ).add_command(
-    'yanmis', "`.yanmis <yazı>` şəklində istifadə edin.", 
+    'qapi', "`.yanmis <yazı>` şəklində istifadə edin.", 
     "Sizə yanmış yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Burning Text](https://m.photofunia.com/categories/halloween/burning_text)"
 ).add_command(
     'isiq', "`.isli <yazı>` şəklində istifadə edin.", 
