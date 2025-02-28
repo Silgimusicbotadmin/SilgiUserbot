@@ -32,7 +32,7 @@ async def effect_yazi(event):
         await event.edit(f"❌ Effekt `{effect}` tapılmadı!")
         return
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.get(effect_url, headers=HEADERS) as resp:
             page = await resp.text()
     
@@ -45,7 +45,7 @@ async def effect_yazi(event):
     action_url = effect_url + form["action"]
     data = {inp["name"]: yazi for inp in form.find_all("input") if inp.get("name")}
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.post(action_url, data=data, headers=HEADERS) as resp:
             result_page = await resp.text()
 
@@ -58,7 +58,7 @@ async def effect_yazi(event):
     image_url = img_tag["src"]
     file_name = f"{effect}_text.jpg"
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with session.get(image_url) as resp:
             if resp.status == 200:
                 async with aiofiles.open(file_name, "wb") as f:
