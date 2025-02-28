@@ -9,7 +9,10 @@ from bs4 import BeautifulSoup
 
 effects = {
     "qanli": "https://m.photofunia.com/effects/blood_writing",
-    "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates"
+    "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
+    "qar": "https://m.photofunia.com/categories/all_effects/snow-sign",
+    "yeni": "https://m.photofunia.com/categories/all_effects/christmas-writing"
+    
 }
 
 HEADERS = {
@@ -17,7 +20,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|qapi) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi|qar|yeni) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -153,29 +156,11 @@ CmdHelp('yazi_efektleri').add_command(
     'qapi', ".yanmis <yazı> şəklində istifadə edin.", 
     "Sizə yanmış yazı tərzində şəkil yaradar. "
 ).add_command(
-    'bezek', ".bezek <yazı> şəklində istifadə edin.", 
-    "Sizə yeni il bəzəyi üzərində şəkil yaradar."
+    'qar', ".qar <yazı> şəklində istifadə edin.",
+    "Sizə qarlı taxta yazı tərzində şəkil yaradar."
 ).add_command(
-    'ucan', ".ucan <yazı> şəklində istifadə edin.", 
-    "Sizə uçan yazı tərzində şəkil yaradar. "
-).add_command(
-    'qorxu', ".qorxu <yazı> şəklində istifadə edin.", 
-    "Sizə gecə yazı tərzində şəkil yaradar. "
-).add_command(
-    'duman', ".duman <yazı> şəklində istifadə edin.", 
-    "Sizə dumanlı yazı tərzində şəkil yaradar."
-).add_command(
-    'neon', ".neon <yazı> şəklində istifadə edin.", 
-    "Sizə neon yazı tərzində şəkil yaradar."
-).add_command(
-    'taxta', ".taxta <yazı> şəklində istifadə edin.", 
-    "Sizə taxta yazı tərzində şəkil yaradar."
-).add_command(
-    'rengli', ".rengli <yazı> şəklində istifadə edin.", 
-    "Sizə rəngli yazı tərzində şəkil yaradar."
-).add_command(
-    'gece', ".gece <yazı> şəklində istifadə edin.", 
-    "Sizə gecə yazı tərzində şəkil yaradar."
+    'yeni', ".yeni <yazı> şəklində istifadə edin.",
+    "Sizə yeni il tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
