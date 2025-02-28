@@ -10,14 +10,14 @@ from bs4 import BeautifulSoup
 effects = {
     "qanli": "https://m.photofunia.com/categories/halloween/blood_writing",
     "qapi": "https://m.photofunia.com/categories/halloween/cemetery-gates",
-    "isiq": "https://m.photofunia.com/categories/halloween/glowing_text",
-    "ucan": "https://m.photofunia.com/categories/other/flying_text",
-    "ag": "https://m.photofunia.com/categories/other/white_text",
-    "susa": "https://m.photofunia.com/categories/other/glass_text",
-    "neon": "https://m.photofunia.com/categories/other/neon_text",
-    "taxta": "https://m.photofunia.com/categories/other/wooden_text",
-    "karnaval": "https://m.photofunia.com/categories/other/carnival_text",
-    "supurge": "https://m.photofunia.com/categories/other/brush_text"
+    "bezek": "https://photofunia.com/categories/all_effects/glass-bauble",
+    "ucan": "https://photofunia.com/effects/plane-banner",
+    "qorxu": "https://photofunia.com/effects/nightmare-writing",
+    "duman": "https://photofunia.com/effects/foggy_window_writing",
+    "neon": "https://photofunia.com/effects/neon-writing",
+    "taxta": "https://photofunia.com/effects/wooden_sign",
+    "rengli": "https://photofunia.com/categories/all_effects/watercolour-text",
+    "gece": "https://photofunia.com/categories/lab/light-graffiti"
 }
 
 HEADERS = {
@@ -27,7 +27,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|qapi|isiq|ucan|ag|susa|neon|taxta|karnaval|supurge) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi|bezek|ucan|qorxu|duman|neon|taxta|rengli|gece) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -61,7 +61,7 @@ async def effect_yazi(event):
             file_name = f"{effect}_text.jpg"
 
             async with aiohttp.ClientSession() as session:
-                async with session.get(image_url, ssl=False) as resp:  # SSL doğrulaması söndürüldü
+                async with session.get(image_url, ssl=False) as resp:  
                     if resp.status == 200:
                         async with aiofiles.open(file_name, "wb") as f:
                             await f.write(await resp.read())
@@ -69,7 +69,7 @@ async def effect_yazi(event):
             await event.client.send_file(
                 event.chat_id,
                 file_name,
-                caption=f"🖌️ `{yazi}` üçün seçilmiş `{effect}` efekti ilə yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                caption=f"🖼 `{yazi}` üçün seçilmiş `{effect}` efekti ilə yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                 reply_to=event.reply_to_msg_id
             )
         else:
@@ -89,34 +89,34 @@ async def effect_yazi(event):
 
 CmdHelp('yazi_efektleri').add_command(
     'qanli', "`.qanli <yazı>` şəklində istifadə edin.", 
-    "Sizə qanlı yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Blood Writing](https://m.photofunia.com/categories/halloween/blood_writing)"
+    "Sizə qanlı yazı tərzində şəkil yaradar."
 ).add_command(
     'qapi', "`.yanmis <yazı>` şəklində istifadə edin.", 
-    "Sizə yanmış yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Burning Text](https://m.photofunia.com/categories/halloween/burning_text)"
+    "Sizə yanmış yazı tərzində şəkil yaradar. "
 ).add_command(
-    'isiq', "`.isli <yazı>` şəklində istifadə edin.", 
-    "Sizə işıqlı yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Glowing Text](https://m.photofunia.com/categories/halloween/glowing_text)"
+    'bezek', "`.bezek <yazı>` şəklində istifadə edin.", 
+    "Sizə yeni il bəzəyi üzərində şəkil yaradar."
 ).add_command(
     'ucan', "`.ucan <yazı>` şəklində istifadə edin.", 
-    "Sizə uçan yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Flying Text](https://m.photofunia.com/categories/other/flying_text)"
+    "Sizə uçan yazı tərzində şəkil yaradar. "
 ).add_command(
-    'ag', "`.ag <yazı>` şəklində istifadə edin.", 
-    "Sizə ağ yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - White Text](https://m.photofunia.com/categories/other/white_text)"
+    'qorxu', "`.qorxu <yazı>` şəklində istifadə edin.", 
+    "Sizə gecə yazı tərzində şəkil yaradar. "
 ).add_command(
-    'susa', "`.susa <yazı>` şəklində istifadə edin.", 
-    "Sizə şüşə yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Glass Text](https://m.photofunia.com/categories/other/glass_text)"
+    'duman', "`.duman <yazı>` şəklində istifadə edin.", 
+    "Sizə dumanlı yazı tərzində şəkil yaradar."
 ).add_command(
     'neon', "`.neon <yazı>` şəklində istifadə edin.", 
-    "Sizə neon yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Neon Text](https://m.photofunia.com/categories/other/neon_text)"
+    "Sizə neon yazı tərzində şəkil yaradar."
 ).add_command(
     'taxta', "`.taxta <yazı>` şəklində istifadə edin.", 
-    "Sizə taxta yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Wooden Text](https://m.photofunia.com/categories/other/wooden_text)"
+    "Sizə taxta yazı tərzində şəkil yaradar."
 ).add_command(
-    'karnaval', "`.karnaval <yazı>` şəklində istifadə edin.", 
-    "Sizə karnaval yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Carnival Text](https://m.photofunia.com/categories/other/carnival_text)"
+    'rengli', "`.rengli <yazı>` şəklində istifadə edin.", 
+    "Sizə rəngli yazı tərzində şəkil yaradar."
 ).add_command(
-    'supurge', "`.supurge <yazı>` şəklində istifadə edin.", 
-    "Sizə süpürgə yazı tərzində şəkil yaradar. Sayt: [PhotoFunia - Brush Text](https://m.photofunia.com/categories/other/brush_text)"
+    'gece', "`.gece <yazı>` şəklində istifadə edin.", 
+    "Sizə gecə yazı tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
