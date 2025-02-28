@@ -50,12 +50,12 @@ async def effect_yazi(event):
             result_page = await resp.text()
 
     soup = BeautifulSoup(result_page, "html.parser")
-    img_tag = soup.find("a", href=True, text="Download")
+    img_tag = soup.find("img", class_="final-result")
     if not img_tag:
         await event.edit("❌ Şəkil tapılmadı!")
         return
 
-    image_url = img_tag["href"]
+    image_url = img_tag["src"]
     file_name = f"{effect}_text.jpg"
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
