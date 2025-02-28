@@ -34,43 +34,39 @@ async def qanli_yazi(event):
         response.encoding = "utf-8"
         response_text = response.text
         
-        soup = BeautifulSoup(response_text, "html.parser")
-        matches = soup.find_all("a", href=True)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response_text, "html.parser")
+            matches = soup.find_all("a", href=True)
 
-        image_url = None
-        for match in matches:
-            if "download" in match["href"]:
-                image_url = match["href"].split("?")[0]
-                break
-        
-        if image_url:
-            file_name = "blood_text.jpg"
+            image_url = None
+            for match in matches:
+                if "download" in match["href"]:
+                    image_url = match["href"].split("?")[0]
+                    break
 
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url, ssl=False) as resp:  # SSL doğrulaması söndürüldü
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
+            if image_url:
+                file_name = "blood_text.jpg"
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"🩸 `{yazi}` üçün qanlı yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
-                reply_to=event.reply_to_msg_id
-            )
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(image_url, ssl=False) as resp:
+                        if resp.status == 200:
+                            async with aiofiles.open(file_name, "wb") as f:
+                                await f.write(await resp.read())
+
+                await event.client.send_file(
+                    event.chat_id,
+                    file_name,
+                    caption=f"🩸 `{yazi}` üçün qanlı yazı hazırdır!\n⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                    reply_to=event.reply_to_msg_id
+                )
+            else:
+                raise ValueError("Qanlı yazı üçün şəkil URL-si tapılmadı.")
         else:
-            raise ValueError("Qanlı yazı üçün şəkil URL-si tapılmadı.")
-
+            await event.edit(f"❌ Xəta baş verdi: Server cavabı alınmadı (Status kodu: {response.status_code})")
         await event.delete()
     except Exception as e:
-        with open("response.html", "w", encoding="utf-8") as file:
-            file.write(response_text)
+        await event.edit(f"❌ Xəta baş verdi: {str(e)}")
 
-        await event.client.send_file(
-            event.chat_id,
-            "response.html",
-            caption=f"❌ Xəta baş verdi: {str(e)}\n📄 **Photofunia cavabı əlavə olunub.**"
-        )
 
 @register(outgoing=True, pattern="^.neon (.*)")
 async def neon_yazi(event):
@@ -81,24 +77,31 @@ async def neon_yazi(event):
 
     try:
         response = requests.post(TEXTPRO_API_URLS['neon'], data=data)
-        image_url = response.json().get('image_url')
-        
-        if image_url:
-            file_name = "neon_text.jpg"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"💡 `{yazi}` üçün neon yazı hazırdır!",
-                reply_to=event.reply_to_msg_id
-            )
+        if response.status_code == 200:
+            try:
+                response_json = response.json()  
+                image_url = response_json.get('image_url')
+                if image_url:
+                    file_name = "neon_text.jpg"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(image_url) as resp:
+                            if resp.status == 200:
+                                async with aiofiles.open(file_name, "wb") as f:
+                                    await f.write(await resp.read())
+
+                    await event.client.send_file(
+                        event.chat_id,
+                        file_name,
+                        caption=f"💡 `{yazi}` üçün neon yazı hazırdır!",
+                        reply_to=event.reply_to_msg_id
+                    )
+                else:
+                    raise ValueError("Yazı üçün neon şəkil URL-si tapılmadı.")
+            except ValueError as e:
+                await event.edit(f"❌ Cavab düzgün formatda deyil: {str(e)}")
         else:
-            raise ValueError("Yazı üçün neon şəkil URL-si tapılmadı.")
+            await event.edit(f"❌ Xəta baş verdi: Server cavabı alınmadı (Status kodu: {response.status_code})")
 
         await event.delete()
     except Exception as e:
@@ -114,24 +117,31 @@ async def odun_yazi(event):
 
     try:
         response = requests.post(TEXTPRO_API_URLS['odun'], data=data)
-        image_url = response.json().get('image_url')
-        
-        if image_url:
-            file_name = "odun_text.jpg"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"🔥 `{yazi}` üçün odun yazı hazırdır!",
-                reply_to=event.reply_to_msg_id
-            )
+        if response.status_code == 200:
+            try:
+                response_json = response.json()  
+                image_url = response_json.get('image_url')
+                if image_url:
+                    file_name = "odun_text.jpg"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(image_url) as resp:
+                            if resp.status == 200:
+                                async with aiofiles.open(file_name, "wb") as f:
+                                    await f.write(await resp.read())
+
+                    await event.client.send_file(
+                        event.chat_id,
+                        file_name,
+                        caption=f"🔥 `{yazi}` üçün odun yazı hazırdır!",
+                        reply_to=event.reply_to_msg_id
+                    )
+                else:
+                    raise ValueError("Yazı üçün odun şəkil URL-si tapılmadı.")
+            except ValueError as e:
+                await event.edit(f"❌ Cavab düzgün formatda deyil: {str(e)}")
         else:
-            raise ValueError("Yazı üçün odun şəkil URL-si tapılmadı.")
+            await event.edit(f"❌ Xəta baş verdi: Server cavabı alınmadı (Status kodu: {response.status_code})")
 
         await event.delete()
     except Exception as e:
@@ -147,24 +157,31 @@ async def qizil_yazi(event):
 
     try:
         response = requests.post(TEXTPRO_API_URLS['qizil'], data=data)
-        image_url = response.json().get('image_url')
-        
-        if image_url:
-            file_name = "qizil_text.jpg"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"💰 `{yazi}` üçün qızıl yazı hazırdır!",
-                reply_to=event.reply_to_msg_id
-            )
+        if response.status_code == 200:
+            try:
+                response_json = response.json()  
+                image_url = response_json.get('image_url')
+                if image_url:
+                    file_name = "qizil_text.jpg"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(image_url) as resp:
+                            if resp.status == 200:
+                                async with aiofiles.open(file_name, "wb") as f:
+                                    await f.write(await resp.read())
+
+                    await event.client.send_file(
+                        event.chat_id,
+                        file_name,
+                        caption=f"💰 `{yazi}` üçün qızıl yazı hazırdır!",
+                        reply_to=event.reply_to_msg_id
+                    )
+                else:
+                    raise ValueError("Yazı üçün qızıl şəkil URL-si tapılmadı.")
+            except ValueError as e:
+                await event.edit(f"❌ Cavab düzgün formatda deyil: {str(e)}")
         else:
-            raise ValueError("Yazı üçün qızıl şəkil URL-si tapılmadı.")
+            await event.edit(f"❌ Xəta baş verdi: Server cavabı alınmadı (Status kodu: {response.status_code})")
 
         await event.delete()
     except Exception as e:
@@ -180,24 +197,31 @@ async def metal_yazi(event):
 
     try:
         response = requests.post(TEXTPRO_API_URLS['metal'], data=data)
-        image_url = response.json().get('image_url')
-        
-        if image_url:
-            file_name = "metal_text.jpg"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(image_url) as resp:
-                    if resp.status == 200:
-                        async with aiofiles.open(file_name, "wb") as f:
-                            await f.write(await resp.read())
 
-            await event.client.send_file(
-                event.chat_id,
-                file_name,
-                caption=f"⚒️ `{yazi}` üçün metal yazı hazırdır!",
-                reply_to=event.reply_to_msg_id
-            )
+        if response.status_code == 200:
+            try:
+                response_json = response.json()  
+                image_url = response_json.get('image_url')
+                if image_url:
+                    file_name = "metal_text.jpg"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(image_url) as resp:
+                            if resp.status == 200:
+                                async with aiofiles.open(file_name, "wb") as f:
+                                    await f.write(await resp.read())
+
+                    await event.client.send_file(
+                        event.chat_id,
+                        file_name,
+                        caption=f"⚒️ `{yazi}` üçün metal yazı hazırdır!",
+                        reply_to=event.reply_to_msg_id
+                    )
+                else:
+                    raise ValueError("Yazı üçün metal şəkil URL-si tapılmadı.")
+            except ValueError as e:
+                await event.edit(f"❌ Cavab düzgün formatda deyil: {str(e)}")
         else:
-            raise ValueError("Yazı üçün metal şəkil URL-si tapılmadı.")
+            await event.edit(f"❌ Xəta baş verdi: Server cavabı alınmadı (Status kodu: {response.status_code})")
 
         await event.delete()
     except Exception as e:
