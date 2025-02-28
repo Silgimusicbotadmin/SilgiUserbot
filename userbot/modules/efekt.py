@@ -87,11 +87,12 @@ async def effect_duman(event):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
         "Referer": "https://photofunia.com/effects/foggy_window_writing",
         "Cookie": "_ga=GA1.2.502152313.1735403255; PHPSESSID=po5p6i6qqntpp7f54rl47qvld4",
+        "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary6c098c0794da59d498a54e05921a6c0e"
     }
-    
+
     effect_url = "https://photofunia.com/effects/foggy_window_writing"
     
-    boundary = "----geckoformboundary6c098c0794da59d498a54e05921a6c0e"
+    boundary = "----WebKitFormBoundary6c098c0794da59d498a54e05921a6c0e"
     data = (
         f"--{boundary}\r\n"
         'Content-Disposition: form-data; name="text"\r\n\r\n'
@@ -104,6 +105,9 @@ async def effect_duman(event):
     try:
         response = requests.post(effect_url, headers=HEADERS, data=data, verify=False)
         response_text = response.text
+
+    
+        
 
         soup = BeautifulSoup(response_text, "html.parser")
         image_url = None
@@ -141,7 +145,6 @@ async def effect_duman(event):
             "response.html",
             caption=f"❌ Xəta baş verdi: `{str(e)}`\n📄 **Photofunia cavabı əlavə olundu.**"
         )
-
 
 CmdHelp('yazi_efektleri').add_command(
     'qanli', ".qanli <yazı> şəklində istifadə edin.", 
