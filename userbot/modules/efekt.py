@@ -16,10 +16,6 @@ effects = {
     "isiq": "https://m.photofunia.com/effects/light-graffiti",
     "su": "https://m.photofunia.com/categories/all_effects/water-writing",
     "balon": "https://m.photofunia.com/categories/all_effects/balloon",
-    "einstein": "https://photofunia.com/categories/all_effects/einstein",
-    "qolbag": "https://photofunia.com/categories/all_effects/bracelet",
-    "kuce": "https://photofunia.com/categories/all_effects/street-sign",
-    "ucag": "https://photofunia.com/categories/all_effects/plane-banner"
     
 }
 
@@ -28,7 +24,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 12; M2004J19C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
 }
 
-@register(outgoing=True, pattern="^.(qanli|qapi|qar|yeni|isiq|su|balon|einstein|qolbag|kuce|ucag) (.*)")
+@register(outgoing=True, pattern="^.(qanli|qapi|qar|yeni|isiq|su|balon) (.*)")
 async def effect_yazi(event):
     effect = event.pattern_match.group(1)  
     yazi = event.pattern_match.group(2) 
@@ -178,18 +174,6 @@ CmdHelp('yazi_efektleri').add_command(
 ).add_command(
     'balon', ".balon <yazı> şəklində istifadə edin.",
     "Sizə Şar üzərində yazı tərzində şəkil yaradar."
-).add_command(
-    'einstein', ".einstein <yazı> şəklində istifadə edin.",
-    "Sizə Einştein löhvəsi üzərində yazı tərzində şəkil yaradar."
-).add_command(
-    'qolbag', ".qolbag <yazı> şəklində istifadə edin.",
-    "Sizə qolbağ üzərində yazı tərzində şəkil yaradar."
-).add_command(
-    'kuce', ".kuce <yazı> şəklində istifadə edin.",
-    "Sizə küçə löhvəsi üzərində yazı tərzində şəkil yaradar."
-).add_command(
-    'ucag', ".ucag <yazı> şəklində istifadə edin.",
-    "Sizə uçağ arxasına yazı tərzində şəkil yaradar."
 ).add_info(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
