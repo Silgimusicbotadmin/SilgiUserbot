@@ -273,12 +273,12 @@ else:
 """
 
 
-config = heroku_qurulum()
+app, config = heroku_qurulum()
 
 if config:
-    if "BOT_TOKEN" not in config:  
+    if "BOT_TOKEN" not in config:
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(silgiassistantbot(config))
+        loop.run_until_complete(silgiassistantbot(app, config))
 
 
 bot.run_until_disconnected()
