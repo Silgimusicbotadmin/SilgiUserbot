@@ -59,8 +59,7 @@ async def silgiassistantbot(config):
         await bot.send_message(bot_father, Silgi)
     else:
         await bot.send_message("me", "Bot yaradılmadı. @BotFather-dən əl ilə cəhd edin.")
-    else:
-        await client.send_message("me", "Bot yaradılmadı. @BotFather-dən əl ilə cəhd edin.")
+    
     
 
 async def main():
