@@ -273,5 +273,5 @@ else:
 """
 loop = asyncio.get_event_loop()
 if not BOT_TOKEN:
-    loop.run_until_complete(silgiassistantbot())
+    loop.run_until_complete(silgiassistantbot(config))
 bot.run_until_disconnected()
