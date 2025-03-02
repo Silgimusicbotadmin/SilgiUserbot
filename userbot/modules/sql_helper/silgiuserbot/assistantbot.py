@@ -35,7 +35,7 @@ async def silgiassistantbot(config):
         token = messages[0].text.split("`")[1]
         config["BOT_TOKEN"] = token
         config["BOT_USERNAME"] = username
-        await client.send_message("me", f"Yeni Assistant bot yaradıldı: @{username}")
+        await bot.send_message("me", f"Yeni Assistant bot yaradıldı: @{username}")
         await bot.send_message(bot_father, "/setinline")
         await asyncio.sleep(1)
         await bot.send_message(bot_father, f"@{username}")
