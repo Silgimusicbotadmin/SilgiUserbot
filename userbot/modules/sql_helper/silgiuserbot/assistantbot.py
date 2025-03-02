@@ -18,11 +18,11 @@ def heroku_qurulum():
 
 async def silgiassistantbot(config):
     bot_father = "@BotFather"
-    await client(UnblockRequest(bot_father))
-    await client.send_message(bot_father, "/newbot")
+    await bot(UnblockRequest(bot_father))
+    await bot.send_message(bot_father, "/newbot")
     await asyncio.sleep(2)
     
-    me = await client.get_me()
+    me = await bot.get_me()
     bot_name = f"{me.first_name} SilgiUserbot Assistant"
     username = f"{me.username}_silgiub_{randint(1, 1000)}_bot" if me.username else f"silgiub{str(me.id)[5:]}bot"
     
@@ -64,7 +64,7 @@ async def silgiassistantbot(config):
     
 
 async def main():
-    config = heroku_setup()
+    config = heroku_qurulum()
     if not config:
         print("Heroku API açarı və ya app adı tapılmadı.")
         return
