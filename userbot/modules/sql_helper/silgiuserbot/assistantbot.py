@@ -13,7 +13,8 @@ def heroku_qurulum():
     if HEROKU_APIKEY and HEROKU_APPNAME:
         heroku_conn = heroku3.from_key(HEROKU_APIKEY)
         app = heroku_conn.app(HEROKU_APPNAME)
-        return app.config()
+        config = app.config()
+        return config
     return None
 
 async def silgiassistantbot(config):
