@@ -18,6 +18,7 @@ import chromedriver_autoinstaller
 from json import loads, JSONDecodeError
 import re
 import userbot.cmdhelp
+from userbot.modules.sql_helper.silgiuserbot.assistantbot import silgiassistantbot
 
 
 DIZCILIK_STR = [
