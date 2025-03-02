@@ -33,7 +33,7 @@ async def silgiassistantbot(app, config):
 
     me = await bot.get_me()
     bot_name = f"{me.first_name} SilgiUserbot Assistant"
-    username = f"{me.username}_silgiub_{randint(1, 1000)}_bot" if me.username else f"silgiub{str(me.id)[5:]}bot"
+    username = f"silgiub{randint(1, 1000)}bot" if me.username else f"{me.user_name}{str(me.id)[5:]}bot"
 
     await bot.send_message(bot_father, "/newbot")
     await asyncio.sleep(2)
@@ -47,8 +47,6 @@ async def silgiassistantbot(app, config):
         await bot.send_message("me", "❌ Bot yaradılmadı. @BotFather-dən əl ilə cəhd edin.")
         return
 
-    config["BOT_TOKEN"] = token
-    config["BOT_USERNAME"] = username
     await bot.send_message("me", f"✅ Yeni Assistant bot yaradıldı: @{username}")
 
     await bot.send_message(bot_father, "/setinline")
@@ -75,7 +73,8 @@ async def silgiassistantbot(app, config):
     await bot.send_message(bot_father, f"@{username}")
     await asyncio.sleep(1)
     await bot.send_file(bot_father, Silgi)
-
+    config["BOT_TOKEN"] = token
+    config["BOT_USERNAME"] = username
 async def main():
     app, config = heroku_qurulum()
     if not app:
