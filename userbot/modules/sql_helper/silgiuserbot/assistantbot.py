@@ -5,7 +5,7 @@ from telethon.tl.functions.channels import CreateChannelRequest
 from telethon.tl.functions.contacts import UnblockRequest
 from random import randint
 from userbot import BOT_TOKEN, HEROKU_APIKEY, HEROKU_APPNAME, bot, me
-from userbot.events import Silgi
+
 Silgi = "userbot/SilgiUserbotlogo.jpg"
 
 
@@ -56,7 +56,7 @@ async def silgiassistantbot(config):
         await asyncio.sleep(2)
         await bot.send_message(bot_father, f"@{username}")
         await asyncio.sleep(1)
-        await bot.send_message(bot_father, Silgi)
+        await bot.send_file(bot_father, Silgi)
     else:
         await bot.send_message("me", "Bot yaradılmadı. @BotFather-dən əl ilə cəhd edin.")
     
