@@ -47,7 +47,7 @@ async def silgiassistantbot(app, config):
         await bot.send_message("me", "❌ Bot yaradılmadı. @BotFather-dən əl ilə cəhd edin.")
         return
 
-    await bot.send_message("me", f"✅ Yeni Assistant bot yaradıldı\nİşlətmək üçün botun tağını yazıb boşluq buraxın: @{username}")
+    await bot.send_message("me", f"✅ Yeni Assistant bot yaradıldı\nİşlətmək üçün .help yazın: @{username}")
 
     await bot.send_message(bot_father, "/setinline")
     await asyncio.sleep(1)
