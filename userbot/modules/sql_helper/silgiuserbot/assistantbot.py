@@ -33,7 +33,7 @@ async def silgiassistantbot(app, config):
 
     me = await bot.get_me()
     bot_name = f"{me.first_name} SilgiUserbot Assistant"
-    username = f"silgiub{randint(1, 1000)}bot" if me.username else f"{me.user_name}{str(me.id)[5:]}bot"
+    username = f"silgiub{randint(1, 1000)}bot" if me.username else f"silgi{str(me.id)[5:]}bot"
 
     await bot.send_message(bot_father, "/newbot")
     await asyncio.sleep(2)
