@@ -69,7 +69,8 @@ async def silgiassistantbot(app, config):
     await asyncio.sleep(1)
     await bot.send_message(bot_father, f"🖥 Sahib ~ {me.first_name} \n\n Created By ~ @SilgiUB ")
     await asyncio.sleep(2)
-
+    await bot.send_message(bot_father, "/setuserpic")
+    await asyncio.sleep(2)
     await bot.send_message(bot_father, f"@{username}")
     await asyncio.sleep(1)
     await bot.send_file(bot_father, Silgi)
