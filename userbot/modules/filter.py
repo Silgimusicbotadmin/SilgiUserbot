@@ -196,45 +196,46 @@ async def add_new_filter(new_handler):
     else:
         await new_handler.edit(success.format(keyword, LANG['GENEL_FILTER'], LANG['UPDATED']))
 
-@register(outgoing=True, pattern="^.genelstop (\w*)")
-async def remove_a_genel(r_handler):
-    """ .stop """
-    try:
-        from userbot.modules.sql_helper.filter_sql import remove_filter
-    except AttributeError:
-        await r_handler.edit("`Bot Non-SQL modunda işləyir!!`")
-        return
-    mesj = r_handler.text
-    if '"' in mesj:
-        filt = re.findall(r"\"(.*)\"", mesj)[0]
-    else:
-        filt = r_handler.pattern_match.group(1)
-
-    if not remove_filter("GENEL", filt):
-        await r_handler.edit(" **{}** `{}`".format(filt, LANG['NOT_FOUND']))
-    else:
-        await r_handler.edit(
-            "**{}** `{}`".format(filt, LANG['DELETED']))
-
-@register(outgoing=True, pattern="^.stop (\w*)")
+@register(outgoing=True, pattern="^.stop (.+)")
 async def remove_a_filter(r_handler):
-    """ .stop  """
+    """ .stop komutu ilə filteri silir """
     try:
         from userbot.modules.sql_helper.filter_sql import remove_filter
     except AttributeError:
         await r_handler.edit("`Bot Non-SQL modunda işləyir!!`")
         return
-    mesj = r_handler.text
-    if '"' in mesj:
-        filt = re.findall(r"\"(.*)\"", mesj)[0]
+    
+    mesj = r_handler.pattern_match.group(1).strip()
+    
+    if '"' in r_handler.text:
+        filt = re.findall(r"\"(.*)\"", r_handler.text)[0]
     else:
-        filt = r_handler.pattern_match.group(1)
+        filt = mesj
 
-    if not remove_filter(r_handler.chat_id, filt):
+    if not remove_filter(r_handler.chat_id, re.escape(filt)):  # 🔹 re.escape() 
         await r_handler.edit(" **{}** `{}`".format(filt, LANG['NOT_FOUND']))
     else:
-        await r_handler.edit(
-            "**{}** `{}`".format(filt, LANG['DELETED']))
+        await r_handler.edit("**{}** `{}`".format(filt, LANG['DELETED']))
+@register(outgoing=True, pattern="^.genelstop (.+)")
+async def remove_a_genel(r_handler):
+    """ .genelstop komutu ilə filteri silir """
+    try:
+        from userbot.modules.sql_helper.filter_sql import remove_filter
+    except AttributeError:
+        await r_handler.edit("`Bot Non-SQL modunda işləyir!!`")
+        return
+    
+    mesj = r_handler.pattern_match.group(1).strip()
+    
+    if '"' in r_handler.text:
+        filt = re.findall(r"\"(.*)\"", r_handler.text)[0]
+    else:
+        filt = mesj
+
+    if not remove_filter("GENEL", re.escape(filt)):  # 🔹 re.escape() 
+        await r_handler.edit(" **{}** `{}`".format(filt, LANG['NOT_FOUND']))
+    else:
+        await r_handler.edit("**{}** `{}`".format(filt, LANG['DELETED']))
 
 @register(outgoing=True, pattern="^.genelfilters$")
 async def genelfilters_active(event):
