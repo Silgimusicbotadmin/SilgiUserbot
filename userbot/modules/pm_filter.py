@@ -2,22 +2,20 @@
 import re
 from userbot import BOTLOG_CHATID
 from userbot.events import register
+from userbot.cmdhelp import CmdHelp
+from userbot import SILGI_VERSION
 from userbot.modules.sql_helper.pm_filter_sql import add_pm_filter, get_pm_filters, remove_pm_filter
 
-@register(outgoing=True, pattern=r"^.pmfilter (.+)")
+@register(outgoing=True, pattern=r"^.pvfilter (\S+)(?:\s+(.+))?")
 async def add_pm_filter_handler(event):
-    if event.is_group or event.is_channel:
-        await event.edit("`Bu əmr yalnız şəxsidə işləyir!`")
-        return
-
-    args = event.pattern_match.group(1)
-    mesj = args.strip()
+    args = event.pattern_match.groups()
+    filter_name = args[0]
+    response = args[1] if args[1] else ""
 
     msg = await event.get_reply_message()
     msg_id = None
-    response = ""
 
-    if msg and msg.media and not mesj:
+    if msg and msg.media and not response:
         if BOTLOG_CHATID:
             log_msg = await event.client.forward_messages(
                 BOTLOG_CHATID, messages=msg, from_peer=event.chat_id, silent=True
@@ -27,23 +25,21 @@ async def add_pm_filter_handler(event):
         else:
             await event.edit("`Media filter əlavə etmək üçün BOTLOG_CHATID təyin edilməlidir!`")
             return
-    elif msg and not mesj:
+    elif msg and not response:
         response = msg.text
-    elif mesj:
-        response = mesj
-    else:
-        await event.edit("`İstifadə: .pmfilter <söz>`")
+    elif not response:
+        await event.edit("`İstifadə: .pvfilter <ad> <cavab>`")
         return
 
-    add_pm_filter(event.chat_id, mesj, response, msg_id)
-    await event.edit(f"✅ **Filter əlavə edildi:** `{mesj}`")
+    add_pm_filter(filter_name, response, msg_id)
+    await event.edit(f"✅ **Filter əlavə edildi:** `{filter_name}`")
 
 @register(incoming=True, disable_edited=True)
 async def pm_filter_handler(event):
     if not event.is_private:
         return
 
-    filters = get_pm_filters(event.chat_id)
+    filters = get_pm_filters()
     if not filters:
         return
 
@@ -57,32 +53,20 @@ async def pm_filter_handler(event):
                 await event.reply(trigger.reply)
             break
 
-@register(outgoing=True, pattern=r"^.pmstop (.+)")
+@register(outgoing=True, pattern=r"^.pvstop (\S+)")
 async def remove_pm_filter_handler(event):
-    if event.is_group or event.is_channel:
-        await event.edit("`Bu əmr yalnız şəxsidə işləyir!`")
-        return
+    filter_name = event.pattern_match.group(1)
 
-    mesj = event.pattern_match.group(1).strip()
-    if '"' in event.text:
-        filt = re.findall(r"\"(.*)\"", event.text)[0]
+    if remove_pm_filter(filter_name):
+        await event.edit(f"❌ **Filter silindi:** `{filter_name}`")
     else:
-        filt = mesj
+        await event.edit(f"❌ **Filter tapılmadı:** `{filter_name}`")
 
-    if remove_pm_filter(event.chat_id, filt):
-        await event.edit(f"❌ **Filter silindi:** `{filt}`")
-    else:
-        await event.edit(f"❌ **Filter tapılmadı:** `{filt}`")
-
-@register(outgoing=True, pattern=r"^.pmfilters$")
+@register(outgoing=True, pattern=r"^.pvfilters$")
 async def list_pm_filters(event):
-    if event.is_group or event.is_channel:
-        await event.edit("`Bu komut yalnız xüsusi mesajlarda işləyir!`")
-        return
-
-    filters = get_pm_filters(event.chat_id)
+    filters = get_pm_filters()
     if not filters:
-        await event.edit("❌ **Xüsusi mesajlarda filter tapılmadı!**")
+        await event.edit("❌ **Heç bir filter əlavə edilməyib!**")
         return
 
     msg = "📌 **Aktiv PM filterlər:**\n\n"
@@ -90,3 +74,15 @@ async def list_pm_filters(event):
         msg += f"- `{filt.keyword}`\n"
 
     await event.edit(msg)
+CmdHelp('pvfilter').add_command(
+    'pvfilter', 'Bir mesajı və ya medianı xüsusi mesaj filteri olaraq yadda saxlayır.',
+    '`.pvfilter Salam Aleykum` - Kimsə "Salam Aleykum" yazanda bot cavab verəcək.',
+    'Mesaja cavab verərək `.pvfilter Salam` yazsan, həmin mesaj yadda qalacaq.',
+    'Media üçün də eyni şəkildə işləyir, məsələn, bir şəklə cavab verib `.pvfilter Foto` yaz.',
+).add_command(
+    'pvstop', 'Yadda saxlanmış bir xüsusi mesaj filterini silir.',
+    '`.pvstop Salam` - "Salam" filterini siləcək.',
+).add_command(
+    'pvfilters', 'Bütün xüsusi mesaj filterlərini göstərir.',
+    '`.pvfilters` - Aktiv filterlərin siyahısını göstərir.',
+).add()
