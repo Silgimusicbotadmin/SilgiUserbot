@@ -75,14 +75,13 @@ async def list_pm_filters(event):
 
     await event.edit(msg)
 CmdHelp('pvfilter').add_command(
-    'pvfilter', 'Bir mesajı və ya medianı xüsusi mesaj filteri olaraq yadda saxlayır.',
-    '`.pvfilter Salam Aleykum` - Kimsə "Salam Aleykum" yazanda bot cavab verəcək.',
-    'Mesaja cavab verərək `.pvfilter Salam` yazsan, həmin mesaj yadda qalacaq.',
-    'Media üçün də eyni şəkildə işləyir, məsələn, bir şəklə cavab verib `.pvfilter Foto` yaz.',
+    'pvfilter', '<söz> <cavab>', 'Şəxsi mesajlarda filter əlavə edər. Mesaja yanıt verərək media da filterləyə bilərsən.'
 ).add_command(
-    'pvstop', 'Yadda saxlanmış bir xüsusi mesaj filterini silir.',
-    '`.pvstop Salam` - "Salam" filterini siləcək.',
+    'pvstop', '<söz>', 'Əlavə olunmuş filteri silər.'
 ).add_command(
-    'pvfilters', 'Bütün xüsusi mesaj filterlərini göstərir.',
-    '`.pvfilters` - Aktiv filterlərin siyahısını göstərir.',
+    'pvfilters', None, 'Bütün şəxsi filterləri göstərər.'
+).add_info(
+    'Şəxsi mesaj filter sistemi'
+).add_info(
+    '[SİLGİ](t.me/hvseyn) tərəfindən hazırlanmışdır.'
 ).add()
