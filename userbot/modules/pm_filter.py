@@ -2,6 +2,8 @@
 import re
 from userbot import BOTLOG_CHATID
 from userbot.events import register
+from userbot.cmdhelp import CmdHelp
+from userbot import SILGI_VERSION
 from userbot.modules.sql_helper.pm_filter_sql import add_pm_filter, get_pm_filters, remove_pm_filter
 
 @register(outgoing=True, pattern=r"^.pvfilter (\S+)(?:\s+(.+))?")
