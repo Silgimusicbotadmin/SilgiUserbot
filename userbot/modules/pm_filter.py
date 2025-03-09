@@ -2,8 +2,6 @@
 import re
 from userbot import BOTLOG_CHATID
 from userbot.events import register
-from userbot.cmdhelp import CmdHelp
-from userbot import SILGI_VERSION
 from userbot.modules.sql_helper.pm_filter_sql import add_pm_filter, get_pm_filters, remove_pm_filter
 
 @register(outgoing=True, pattern=r"^.pvfilter (\S+)(?:\s+(.+))?")
@@ -16,15 +14,8 @@ async def add_pm_filter_handler(event):
     msg_id = None
 
     if msg and msg.media and not response:
-        if BOTLOG_CHATID:
-            log_msg = await event.client.forward_messages(
-                BOTLOG_CHATID, messages=msg, from_peer=event.chat_id, silent=True
-            )
-            msg_id = log_msg.id
-            response = "`[Media faylı]`"
-        else:
-            await event.edit("`Media filter əlavə etmək üçün BOTLOG_CHATID təyin edilməlidir!`")
-            return
+        msg_id = msg.id
+        response = "`[Media faylı]`"
     elif msg and not response:
         response = msg.text
     elif not response:
@@ -47,7 +38,7 @@ async def pm_filter_handler(event):
     for trigger in filters:
         if re.fullmatch(trigger.keyword, text, flags=re.IGNORECASE):
             if trigger.f_mesg_id:
-                msg_o = await event.client.get_messages(BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
+                msg_o = await event.client.get_messages(event.chat_id, ids=int(trigger.f_mesg_id))
                 await event.reply(msg_o.message, file=msg_o.media)
             else:
                 await event.reply(trigger.reply)
