@@ -2,7 +2,7 @@ from asyncio import sleep
 import re
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
-from userbot.modules.sql_helper.pm_filters_sql import (add_pm_filter, get_pm_filters, remove_pm_filter)
+from userbot.modules.sql_helper.pm_filterssql import (add_pm_filter, get_pm_filters, remove_pm_filter)
 @register(incoming=True, disable_edited=True, disable_errors=True)
 async def filter_incoming_handler(handler):
     """ Filtrelerin mesajlara yanıt verdiği ana işlev. """
@@ -15,7 +15,7 @@ async def filter_incoming_handler(handler):
         if not handler.is_private:
             return
         try:
-            from userbot.modules.sql_helper.pm_filters_sql import get_pm_filters
+            from userbot.modules.sql_helper.pm_filterssql import get_pm_filters
         except AttributeError:
             await handler.edit("`Bot Non-SQL modunda işləyir!!`")
             return
