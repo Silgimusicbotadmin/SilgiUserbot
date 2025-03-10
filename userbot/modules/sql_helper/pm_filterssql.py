@@ -2,7 +2,7 @@ from sqlalchemy import Column, UnicodeText, Numeric, String
 from userbot.modules.sql_helper import BASE, SESSION
 
 class PMMessageFilters(BASE):
-    __tablename__ = "pm_message_filters"  
+    __tablename__ = "pm_message_filter"  
     chat_id = Column(String(14), primary_key=True)
     keyword = Column(UnicodeText, primary_key=True, nullable=False)
     reply = Column(UnicodeText)
