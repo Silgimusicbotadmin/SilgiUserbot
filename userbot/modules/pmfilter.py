@@ -3,7 +3,20 @@ import re
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 from userbot.modules.sql_helper.pm_filters_sql import (add_pm_filter, get_pm_filters, remove_pm_filter)
-
+@register(incoming=True, disable_errors=True)
+async def incoming_pm_filter(event):
+    if not event.is_private:
+        return  
+    filters = get_pm_filters(event.sender_id)
+    message_text = event.raw_text
+    for trigger in filters:
+        if re.search(trigger.keyword, message_text, flags=re.IGNORECASE):
+            if trigger.f_mesg_id:
+                msg_o = await event.client.get_messages(BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
+                await event.reply(msg_o.message, file=msg_o.media)
+            else:
+                await event.reply(trigger.reply)
+            break  
 @register(outgoing=True, pattern="^.pvfilter (.+)")
 async def add_pmfilter(event):
     args = event.pattern_match.group(1).split(" ", 1)
@@ -42,15 +55,3 @@ async def list_pmfilters(event):
         msg += f"- `{f.keyword}`\n"
     await event.edit(msg)
 
-@register(incoming=True, disable_errors=True, func=lambda e: e.is_private)
-async def incoming_pm_filter(event):
-    filters = get_pm_filters(event.sender_id)
-    message_text = event.raw_text
-    for trigger in filters:
-        if re.fullmatch(trigger.keyword, message_text, flags=re.IGNORECASE):
-            if trigger.f_mesg_id:
-                msg_o = await event.client.get_messages(BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
-                await event.reply(msg_o.message, file=msg_o.media)
-            else:
-                await event.reply(trigger.reply)
-            break
