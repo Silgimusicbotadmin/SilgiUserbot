@@ -2,7 +2,7 @@ from asyncio import sleep
 import re
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
-from userbot.modules.sql_helper.pm_filter_sql import (add_pm_filter, get_pm_filters, remove_pm_filter)
+from userbot.modules.sql_helper.pm_filters_sql import (add_pm_filter, get_pm_filters, remove_pm_filter)
 
 @register(outgoing=True, pattern="^.pvfilter (.+)")
 async def add_pmfilter(event):
@@ -20,20 +20,20 @@ async def add_pmfilter(event):
         else:
             await event.edit("`BOTLOG_CHATID yoxdur!`")
             return
-    add_pm_filter(keyword, reply, msg_id)
+    add_pm_filter(event.sender_id, keyword, reply, msg_id)
     await event.edit(f"`{keyword}` filteri əlavə edildi!")
 
 @register(outgoing=True, pattern="^.pvstop (.+)")
 async def remove_pmfilter(event):
     keyword = event.pattern_match.group(1)
-    if remove_pm_filter(keyword):
+    if remove_pm_filter(event.sender_id, keyword):
         await event.edit(f"`{keyword}` filteri silindi!")
     else:
         await event.edit(f"`{keyword}` tapılmadı!")
 
 @register(outgoing=True, pattern="^.pvfilters$")
 async def list_pmfilters(event):
-    filters = get_pm_filters()
+    filters = get_pm_filters(event.sender_id)
     if not filters:
         await event.edit("`Heç bir PM filteri əlavə edilməyib!`")
         return
@@ -44,10 +44,10 @@ async def list_pmfilters(event):
 
 @register(incoming=True, disable_errors=True, func=lambda e: e.is_private)
 async def incoming_pm_filter(event):
-    filters = get_pm_filters()
-    name = event.raw_text
+    filters = get_pm_filters(event.sender_id)
+    message_text = event.raw_text
     for trigger in filters:
-        if re.fullmatch(trigger.keyword, name, flags=re.IGNORECASE):
+        if re.fullmatch(trigger.keyword, message_text, flags=re.IGNORECASE):
             if trigger.f_mesg_id:
                 msg_o = await event.client.get_messages(BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
                 await event.reply(msg_o.message, file=msg_o.media)
