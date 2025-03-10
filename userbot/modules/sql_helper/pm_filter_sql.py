@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer
-from userbot.modules.sql_helper.base import BASE, SESSION
+from userbot.modules.sql_helper import BASE, SESSION
 
 class PMFilters(BASE):
     __tablename__ = "pm_filters"
