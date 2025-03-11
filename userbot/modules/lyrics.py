@@ -1,66 +1,53 @@
 import os
 import lyricsgenius
-import asyncio
 
 from userbot.events import register
 from userbot import CMD_HELP, GENIUS
 from userbot.cmdhelp import CmdHelp
-
-# ██████ LANGUAGE CONSTANTS ██████ #
-
 from userbot.language import get_value
+
 LANG = get_value("lyrics")
 
-# ████████████████████████████████ #
-
 @register(outgoing=True, pattern="^.lyrics(?: |$)(.*)")
-async def lyrics(lyric):
-    if r"-" in lyric.text:
-        pass
-    else:
-        await lyric.edit(LANG['WRONG_TYPE'])
+async def lyrics(event):
+    if "-" not in event.pattern_match.group(1):
+        await event.edit(LANG['WRONG_TYPE'])
         return
 
-    if GENIUS:
-        await lyric.edit("Herokudakı Genius dəyişənini silin")
-        return
-    else:
+    if not GENIUS:
         genius = lyricsgenius.Genius("Hk9poq6xO0-XKnoCzxJ64ht9mTNgSfgZyOJTqCzavhf4L4oJ3QE_osJkB2A1kiuk")
-        try:
-            args = lyric.text.split('.lyrics')[1].split('-')
-            artist = args[0].strip(' ')
-            song = args[1].strip(' ')
-        except:
-            await lyric.edit(LANG['GIVE_INFO'])
-            return
-
-    if len(args) < 1:
-        await lyric.edit(LANG['GIVE_INFO'])
-        return
-
-    await lyric.edit(LANG['SEARCHING'].format(artist, song))
+    else:
+        genius = lyricsgenius.Genius(GENIUS)
 
     try:
-        songs = genius.search_song(song, artist)
-    except TypeError:
-        songs = None
-
-    if songs is None:
-        await lyric.edit(LANG['NOT_FOUND'].format(artist, song))
+        args = event.pattern_match.group(1).split('-')
+        artist = args[0].strip()
+        song = args[1].strip()
+    except IndexError:
+        await event.edit(LANG['GIVE_INFO'])
         return
-    if len(songs.lyrics) > 4096:
-        await lyric.edit(LANG['TOO_LONG'])
-        with open("lyrics.txt", "w+") as f:
-            f.write(f"{LANG['LYRICS']} \n{artist} - {song}\n\n{songs.lyrics}")
-        await lyric.client.send_file(
-            lyric.chat_id,
-            "lyrics.txt",
-            reply_to=lyric.id,
-        )
+
+    await event.edit(LANG['SEARCHING'].format(artist, song))
+
+    try:
+        song_data = genius.search_song(song, artist)
+    except Exception as e:
+        await event.edit(f"Xəta: {str(e)}")
+        return
+
+    if not song_data:
+        await event.edit(LANG['NOT_FOUND'].format(artist, song))
+        return
+
+    lyrics_text = song_data.lyrics
+    if len(lyrics_text) > 4096:
+        with open("lyrics.txt", "w") as file:
+            file.write(f"{LANG['LYRICS']} \n{artist} - {song}\n\n{lyrics_text}")
+        await event.client.send_file(event.chat_id, "lyrics.txt", reply_to=event.id)
         os.remove("lyrics.txt")
     else:
-        await lyric.edit(f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)\n{LANG['LYRICS']} \n`{artist} - {song}`\n\n```{songs.lyrics}```")
-    return
+        await event.edit(f"[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝](@silgiub)\n"
+                         f"{LANG['LYRICS']} \n`{artist} - {song}`\n\n```{lyrics_text}```")
 
 @register(outgoing=True, pattern="^.singer(?: |$)(.*)")
 async def singer(lyric):
