@@ -289,57 +289,6 @@ else:
     tgbot = None
 heroku_conn = heroku3.from_key(HEROKU_APIKEY)
 app = heroku_conn.apps()[HEROKU_APPNAME]
-
-@tgbot.on(InlineQuery)
-async def inline_handler(event):
-    builder = event.builder
-    query = event.text
-
-    if event.query.user_id == uid and query == "config":
-        config_vars = heroku_app.config()  
-        config_keys = list(config_vars)
-        PAGE_SIZE = 9
-        page = int(query.split("_")[-1]) if "_" in query else 0
-        total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
-
-        buttons = []
-        for key in config_keys[page * PAGE_SIZE: (page + 1) * PAGE_SIZE]:
-            buttons.append([custom.Button.inline(f"⚙️ {key}", data=f"config_edit[{key}]")])
-        nav_buttons = []
-        if page > 0:
-            nav_buttons.append(custom.Button.inline("◀️ Geri", data=f"config_page_{page - 1}"))
-        if page < total_pages - 1:
-            nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
-
-        if nav_buttons:
-            buttons.append(nav_buttons)
-
-        result = await builder.article(
-            "Heroku Config Vars",
-            text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
-            buttons=buttons,
-            link_preview=False
-        )
-        await event.answer([result])
-        await asyncio.sleep(0)
-        gc.collect
-
-
-@tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
-async def config_edit(event):
-    if not event.query.user_id == uid: 
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
-    key = event.data_match.group(1).decode("UTF-8")
-    user_id = event.query.user_id
-    config_vars = app.config().to_dict()
-    current_value = config_vars.get(key)
-
-    text = f"🔧 **{key}** dəyişdirilməsi\n\n"
-    text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
-    text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
-    await event.answer()
-    await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config")]])
-
 def butonlastir(sayfa, moduller):
     Satir = 5
     Kolon = 3
@@ -452,6 +401,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             veriler = butonlastir(0, sorted(CMD_HELP))
             buttons = veriler[1]  
             buttons.append([Button.inline("💻Bot configləri", data="config")])
+            await event.answer("📱Plugin listi açıldı")
             await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
                 buttons=buttons,  
@@ -475,10 +425,26 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons.append(Button.inline(f"🔢 {index}", data=f"config_edit:{key}"))
             buttons = list(itertools.zip_longest(*[iter(buttons)]*3))  
             buttons.append([Button.inline("📱Plugin listi", data="komek")])
-
+            await event.answer("Config listi açıldı🛠️", cache_time=0)
             await event.edit(text, buttons=buttons, link_preview=False)
 
-
+        @tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
+        async def config_edit(event):
+            if not event.query.user_id == uid: 
+                        return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
+            key = event.data_match.group(1).decode("UTF-8")
+            user_id = event.query.user_id
+            config_vars = app.config().to_dict()
+            current_value = config_vars.get(key)
+            text = f"🔧 **{key}** dəyişdirilməsi\n\n"
+            text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
+            text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
+            await event.answer(f"Config {key} açıldı")
+            await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config_back")]])
+        @tgbot.on(events.CallbackQuery(data=re.compile(b"config_back")))
+        async def config_back(event):
+            await event.answer("🔙 Geri qayıdıldı", cache_time=0)
+            await config_handler(event)
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
