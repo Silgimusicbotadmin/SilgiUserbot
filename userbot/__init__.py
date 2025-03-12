@@ -1,6 +1,7 @@
 
 import os
 import time
+import re
 import gc
 from re import compile
 from sys import version_info
