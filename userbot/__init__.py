@@ -283,7 +283,7 @@ if not BOT_TOKEN == None:
 else:
     tgbot = None
 heroku_conn = heroku3.from_key(HEROKU_APIKEY)
-heroku_app = heroku_conn.apps()[HEROKU_APPNAME]
+app = heroku_conn.apps()[HEROKU_APPNAME]
 
 @tgbot.on(InlineQuery)
 async def inline_handler(event):
@@ -326,7 +326,8 @@ async def config_edit(event):
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
     key = event.data_match.group(1).decode("UTF-8")
     user_id = event.query.user_id
-    current_value = heroku_app.config().get(key)
+    config_vars = app.config().to_dict()
+    current_value = config_vars.get(key)
 
     await event.edit(
         f"🛠 **{key}** dəyişdirilməsi\n\n🔹 Mövcud dəyər: `{current_value}`\n\n✏️ Yeni dəyəri göndərin:",
@@ -337,7 +338,7 @@ async def config_edit(event):
         msg = await tgbot.wait_for(events.NewMessage(from_users=user_id), timeout=60)
         new_value = msg.text
 
-        heroku_app.config()[key] = new_value 
+        app.config()[key] = new_value 
 
         await msg.reply(f"✅ **{key}** uğurla `{new_value}` olaraq dəyişdirildi!")
         await config_handler(event)
@@ -470,8 +471,8 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             if event.query.user_id != uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
     
-            needed_keys = ["BOT_TOKEN", "API_KEY"]  
-            config_vars = dict(heroku_app.config())
+            needed_keys = ["BOT_TOKEN", "BOTLOG_CHATID", "API_HASH"]  
+            config_vars = app.config().to_dict()
             config_keys = [key for key in needed_keys if key in config_vars]  
 
             if not config_keys:
