@@ -339,12 +339,12 @@ async def config_edit(event):
         buttons=[[Button.inline("❌ Ləğv et", data="config")]]
     )
 
-    @tgbot.on(events.NewMessage(from_users=user_id))
+    @client.on(events.NewMessage(from_users=user_id))
     async def new_config_handler(msg_event):
         new_value = msg_event.text.strip()
         app.config()[key] = new_value
         await event.edit(f"✅ **{key}** uğurla `{new_value}` olaraq dəyişdirildi!")
-        tgbot.remove_event_handler(new_config_handler, events.NewMessage)
+        client.remove_event_handler(new_config_handler, events.NewMessage)
         await asyncio.sleep(2)  
         await config_handler(event)
     
