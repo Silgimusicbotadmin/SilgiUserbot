@@ -16,6 +16,10 @@ from telethon.sync import TelegramClient, custom
 from telethon.sessions import StringSession
 from telethon.events import callbackquery, InlineQuery, NewMessage
 from math import ceil
+import heroku3
+from telethon import events, custom, callbackquery
+from heroku3 import from_key
+from telethon.tl.custom import Button
 
 load_dotenv("config.env")
 
@@ -456,7 +460,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             await event.answer([result])
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"config")))
         async def config_handler(event):
-             if not event.query.user_id == uid:
+            if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
             builder = event.builder
             config_vars = heroku_app.config()
@@ -474,11 +478,11 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
             if nav_buttons:
                 buttons.append(nav_buttons)
-            result = await builder.article(
-               "Heroku Config Vars",
-               text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
-               buttons=buttons,
-               link_preview=False
+            result = await builder.article(        
+                f"Heroku Config Vars",
+                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+                buttons=buttons,
+                link_preview=False
             )
             await event.answer([result])
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
