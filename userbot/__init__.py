@@ -1,6 +1,7 @@
 
 import os
 import time
+import gc
 from re import compile
 from sys import version_info
 from logging import basicConfig, getLogger, INFO, DEBUG
@@ -313,6 +314,8 @@ async def inline_handler(event):
             link_preview=False
         )
         await event.answer([result])
+        await asyncio.sleep(0)
+        gc.collect
 
 @tgbot.on(callbackquery.CallbackQuery(data=compile(b"config_page_(\d+)")))
 async def config_page(event):
@@ -475,6 +478,8 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons=buttons,
                 link_preview=False
             )
+            await asyncio.sleep(0)
+            gc.collect
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
