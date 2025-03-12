@@ -458,23 +458,19 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         async def config_handler(event):
             if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
-            config_vars = heroku_app.config()  
-            config_keys = list(config_vars)
-            PAGE_SIZE = 9
-            page = int(event.data.decode("UTF-8").split("_")[-1]) if "_" in event.data.decode("UTF-8") else 0
-            total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
+            needed_keys = ["BOT_TOKEN", "API_ID"]  # Buraya istədiyin dəyişənlərin adlarını əlavə et
+            config_vars = heroku_app.config()
+            config_keys = [key for key in needed_keys if key in config_vars]  # Sadəcə bu açarlara bax
+
+            if not config_keys:
+                return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
+
             buttons = []
-            for key in config_keys[page * PAGE_SIZE: (page + 1) * PAGE_SIZE]:
+            for key in config_keys:
                 buttons.append([custom.Button.inline(f"⚙️ {key}", data=f"config_edit[{key}]")])
-            nav_buttons = []
-            if page > 0:
-                nav_buttons.append(custom.Button.inline("◀️ Geri", data=f"config_page_{page - 1}"))
-            if page < total_pages - 1:
-                nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
-            if nav_buttons:
-                buttons.append(nav_buttons)
-            await event.edit(        
-                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+
+            await event.edit(
+                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}",
                 buttons=buttons,
                 link_preview=False
             )
