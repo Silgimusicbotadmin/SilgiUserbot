@@ -340,7 +340,7 @@ async def config_edit(event):
 
     try:
         msg = await event.client.wait_event(events.NewMessage(from_users=event.query.user_id))
-        new_value = msg.text
+        new_value = msg.text.strip()
 
         app.config()[key] = new_value 
 
@@ -481,16 +481,15 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
 
             if not config_keys:
                 return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
+            text = "**🔧 Heroku Config Vars**\n\n"
+            buttons = []
+            for index, key in enumerate(config_keys, start=1):
+                text += f"**{index}.** `{key}`\n"
+                buttons.append(Button.inline(f"🔢 {index}", data=f"config_edit:{key}"))
+            buttons = list(itertools.zip_longest(*[iter(buttons)]*3))  
+            buttons.append([Button.inline("🔙 Geri", data="config_back")])
 
-            buttons = [Button.inline(f"⚙️ {key}", data=f"config_edit:{key}") for key in config_keys]
-            button_layout = create_button_layout(buttons, 3)
-            button_layout.append([Button.inline("🔙 Geri", data="config_back")])
-
-            await event.edit(
-                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}",
-                buttons=buttons,
-                link_preview=False
-            )
+            await event.edit(text, buttons=buttons, link_preview=False)
 
 
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
