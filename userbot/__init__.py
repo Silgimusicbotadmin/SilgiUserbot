@@ -401,7 +401,7 @@ with bot:
                     "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                     text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
                     buttons=[
-                        [custom.Button.inline("Plugin Listi", data="kömek")],
+                        [custom.Button.inline("Plugin Listi", data="komek")],
                         [custom.Button.inline("Bot Configləri", data="config")]
                     ],
                     link_preview=False
@@ -444,7 +444,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons=veriler[1],
                 link_preview=False
             )
-        @tgbot.on(callbackquery.CallbackQuery(data=compile(b"kömek")))
+        @tgbot.on(callbackquery.CallbackQuery(data=compile(b"komek")))
         async def inline_handler(event):
             if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
