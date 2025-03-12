@@ -350,7 +350,7 @@ async def config_edit(event):
     except asyncio.TimeoutError:
         await event.edit("❌ Zaman aşımı! Config dəyişdirilmədi.", buttons=[[Button.inline("🔙 Geri", data="config")]])
     except Exception as e:
-        await event.respond(f"❌ Xəta baş verdi: {str(e)}")
+        await event.edit(f"❌ Xəta baş verdi: {str(e)}")
 
 @tgbot.on(events.CallbackQuery(data=b"config_back"))
 async def config_back(event):
