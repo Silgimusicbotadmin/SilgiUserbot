@@ -337,11 +337,8 @@ async def config_edit(event):
     text = f"🔧 **{key}** dəyişdirilməsi\n\n"
     text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
     text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
-
+    await event.answer()
     await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config")]])
-@tgbot.on(events.CallbackQuery(data=b"config_back"))
-async def config_back(event):
-    await config_handler(event)
 
 def butonlastir(sayfa, moduller):
     Satir = 5
