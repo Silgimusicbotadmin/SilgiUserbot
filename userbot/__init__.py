@@ -2,6 +2,7 @@
 import os
 import time
 import re
+import itertools
 import gc
 import asyncio
 from itertools import zip_longest
