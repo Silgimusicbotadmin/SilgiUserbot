@@ -128,7 +128,7 @@ CHROME_DRIVER = os.environ.get("CHROME_DRIVER", None)
 GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", None)
 
 PLUGINID = os.environ.get("PLUGIN_CHANNEL_ID", None)
-# Plugin İçin
+# Plugin 
 if not PLUGINID:
     PLUGIN_CHANNEL_ID = "me"
 else:
@@ -228,10 +228,10 @@ for binary, path in binaries.items():
 
 # 'bot' dəyişkəni
 if STRING_SESSION:
-    # pylint: devre dışı=geçersiz ad
+    
     bot = TelegramClient(StringSession(STRING_SESSION), API_KEY, API_HASH)
 else:
-    # pylint: devre dışı=geçersiz ad
+    
     bot = TelegramClient("userbot", API_KEY, API_HASH)
 
 if os.path.exists("dtobrain.check"):
