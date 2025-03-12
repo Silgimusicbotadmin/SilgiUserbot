@@ -277,7 +277,65 @@ if not BOT_TOKEN == None:
     ).start(bot_token=BOT_TOKEN)
 else:
     tgbot = None
+heroku_conn = heroku3.from_key(HEROKU_API_KEY)
+heroku_app = heroku_conn.apps()[HEROKU_APP_NAME]
 
+@tgbot.on(InlineQuery)
+async def inline_handler(event):
+    builder = event.builder
+    query = event.text
+
+    if event.query.user_id == uid and query == "config":
+        config_vars = heroku_app.config()
+        config_keys = list(config_vars.keys())
+        PAGE_SIZE = 9
+        page = int(query.split("_")[-1]) if "_" in query else 0
+        total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
+
+        buttons = []
+        for key in config_keys[page * PAGE_SIZE: (page + 1) * PAGE_SIZE]:
+            buttons.append([custom.Button.inline(f"⚙️ {key}", data=f"config_edit[{key}]")])
+
+        # Səhifələmə düymələri əlavə et
+        nav_buttons = []
+        if page > 0:
+            nav_buttons.append(custom.Button.inline("◀️ Geri", data=f"config_page_{page - 1}"))
+        if page < total_pages - 1:
+            nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
+
+        if nav_buttons:
+            buttons.append(nav_buttons)
+
+        result = await builder.article(
+            "Heroku Config Vars",
+            text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+            buttons=buttons,
+            link_preview=False
+        )
+        await event.answer([result])
+
+@tgbot.on(callbackquery.CallbackQuery(data=compile(b"config_page_(\d+)")))
+async def config_page(event):
+    page = int(event.data_match.group(1).decode("UTF-8"))
+    await inline_handler(event)
+
+@tgbot.on(callbackquery.CallbackQuery(data=compile(b"config_edit\[(.+?)\]")))
+async def config_edit(event):
+    key = event.data_match.group(1).decode("UTF-8")
+    await event.edit(f"🛠 **{key}** dəyərini dəyişmək üçün yeni dəyəri göndərin.", buttons=[custom.Button.inline("❌ Ləğv et", data="cancel_config")])
+
+    @tgbot.on(events.NewMessage(outgoing=True))
+    async def set_config(event):
+        new_value = event.text
+        try:
+            heroku_app.config()[key] = new_value
+            await event.respond(f"✅ **{key}** uğurla {new_value} olaraq dəyişdirildi!")
+        except Exception as e:
+            await event.respond(f"❌ Xəta baş verdi: {str(e)}")
+
+@tgbot.on(callbackquery.CallbackQuery(data=b"cancel_config"))
+async def cancel_config(event):
+    await event.edit("⚙️ Config dəyəri dəyişdirilmədi.")
 def butonlastir(sayfa, moduller):
     Satir = 5
     Kolon = 3
@@ -334,6 +392,16 @@ with bot:
                     buttons=veriler[1],
                     link_preview=False
                 )
+            elif event.query.user_id == uid and query == "@SilgiUB":
+                result = builder.article(
+                    "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                    text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
+                    buttons=[
+                        [custom.Button.inline("Plugin Listi", data="kömek")],
+                        [custom.Button.inline("Bot Configləri", data="config")]
+                    ],
+                    link_preview=False
+                )
             elif query.startswith("http"):
                 parca = query.split(" ")
                 result = builder.article(
@@ -372,7 +440,47 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons=veriler[1],
                 link_preview=False
             )
-        
+        @tgbot.on(callbackquery.CallbackQuery(data=compile(b"kömek")))
+        async def inline_handler(event):
+            if not event.query.user_id == uid:
+                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
+            builder = event.builder
+            query = event.data.decode("UTF-8")
+            veriler = butonlastir(0, sorted(CMD_HELP))
+            result = await builder.article(
+                f"⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
+                buttons=veriler[1],  
+                link_preview=False
+            )
+            await event.answer([result])
+        @tgbot.on(callbackquery.CallbackQuery(data=compile(b"config")))
+        async def config_handler(event):
+             if not event.query.user_id == uid:
+                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
+            builder = event.builder
+            config_vars = heroku_app.config()
+            config_keys = list(config_vars.keys())
+            PAGE_SIZE = 9
+            page = int(event.data.decode("UTF-8").split("_")[-1]) if "_" in event.data.decode("UTF-8") else 0
+            total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
+            buttons = []
+            for key in config_keys[page * PAGE_SIZE: (page + 1) * PAGE_SIZE]:
+                buttons.append([custom.Button.inline(f"⚙️ {key}", data=f"config_edit[{key}]")])
+            nav_buttons = []
+            if page > 0:
+                nav_buttons.append(custom.Button.inline("◀️ Geri", data=f"config_page_{page - 1}"))
+            if page < total_pages - 1:
+                nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
+            if nav_buttons:
+                buttons.append(nav_buttons)
+            result = await builder.article(
+               "Heroku Config Vars",
+               text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+               buttons=buttons,
+               link_preview=False
+            )
+            await event.answer([result])
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
