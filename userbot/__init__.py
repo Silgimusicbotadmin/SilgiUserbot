@@ -322,9 +322,11 @@ async def inline_handler(event):
 
 @tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
 async def config_edit(event):
+    if not event.query.user_id == uid: 
+                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
     key = event.data_match.group(1).decode("UTF-8")
     user_id = event.query.user_id
-    current_value = heroku_app.config().get(key, "⚠️ Dəyər tapılmadı")
+    current_value = heroku_app.config().get(key)
 
     await event.edit(
         f"🛠 **{key}** dəyişdirilməsi\n\n🔹 Mövcud dəyər: `{current_value}`\n\n✏️ Yeni dəyəri göndərin:",
@@ -335,7 +337,7 @@ async def config_edit(event):
         msg = await tgbot.wait_for(events.NewMessage(from_users=user_id), timeout=60)
         new_value = msg.text
 
-        heroku_app.config()[key] = new_value  # Yeni dəyəri tətbiq et
+        heroku_app.config()[key] = new_value 
 
         await msg.reply(f"✅ **{key}** uğurla `{new_value}` olaraq dəyişdirildi!")
         await config_handler(event)
@@ -468,9 +470,9 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             if event.query.user_id != uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
     
-            needed_keys = ["BOT_TOKEN", "API_ID"]  # Buraya istədiyin dəyişənlərin adlarını əlavə et
-            config_vars = heroku_app.config()
-            config_keys = [key for key in needed_keys if key in config_vars]  # Sadəcə bu açarlara bax
+            needed_keys = ["BOT_TOKEN", "API_KEY"]  
+            config_vars = dict(heroku_app.config())
+            config_keys = [key for key in needed_keys if key in config_vars]  
 
             if not config_keys:
                 return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
