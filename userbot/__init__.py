@@ -455,8 +455,8 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         async def config_handler(event):
             if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
-            config_vars = heroku_app.config()
-            config_keys = list(config_vars.keys())
+            config_vars = heroku_app.config()  
+            config_keys = list(config_vars)
             PAGE_SIZE = 9
             page = int(event.data.decode("UTF-8").split("_")[-1]) if "_" in event.data.decode("UTF-8") else 0
             total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
