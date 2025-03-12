@@ -334,21 +334,11 @@ async def config_edit(event):
     config_vars = app.config().to_dict()
     current_value = config_vars.get(key)
 
-    await event.edit(
-        f"🛠 **{key}** dəyişdirilməsi\n\n🔹 Mövcud dəyər: `{current_value}`\n\n✏️ Yeni dəyəri göndərin:",
-        buttons=[[Button.inline("❌ Ləğv et", data="config")]]
-    )
+    text = f"🔧 **{key}** dəyişdirilməsi\n\n"
+    text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
+    text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
 
-    @client.on(events.NewMessage(from_users=user_id))
-    async def new_config_handler(msg_event):
-        new_value = msg_event.text.strip()
-        app.config()[key] = new_value
-        await event.edit(f"✅ **{key}** uğurla `{new_value}` olaraq dəyişdirildi!")
-        client.remove_event_handler(new_config_handler, events.NewMessage)
-        await asyncio.sleep(2)  
-        await config_handler(event)
-    
-
+    await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config")]])
 @tgbot.on(events.CallbackQuery(data=b"config_back"))
 async def config_back(event):
     await config_handler(event)
@@ -414,8 +404,8 @@ with bot:
                     "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                     text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
                     buttons=[
-                        [custom.Button.inline("Plugin Listi", data="komek")],
-                        [custom.Button.inline("Bot Configləri", data="config")]
+                        [custom.Button.inline("📲Plugin Listi", data="komek")],
+                        [custom.Button.inline("🛠️Bot Configləri", data="config")]
                     ],
                     link_preview=False
                 )
@@ -463,9 +453,11 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
             query = event.data.decode("UTF-8")
             veriler = butonlastir(0, sorted(CMD_HELP))
+            buttons = veriler[1]  
+            buttons.append([Button.inline("💻Bot configləri", data="config")])
             await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
-                buttons=veriler[1],  
+                buttons=buttons,  
                 link_preview=False
             )
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config")))
@@ -485,7 +477,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 text += f"**{index}.** `{key}`\n"
                 buttons.append(Button.inline(f"🔢 {index}", data=f"config_edit:{key}"))
             buttons = list(itertools.zip_longest(*[iter(buttons)]*3))  
-            buttons.append([Button.inline("🔙 Geri", data="config_back")])
+            buttons.append([Button.inline("📱Plugin listi", data="komek")])
 
             await event.edit(text, buttons=buttons, link_preview=False)
 
