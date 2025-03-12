@@ -339,7 +339,7 @@ async def config_edit(event):
     )
 
     try:
-        msg = await tgbot.wait_event(events.NewMessage(from_users=user_id), timeout=60)
+        msg = await event.client.wait_event(events.NewMessage(from_users=event.query.user_id))
         new_value = msg.text
 
         app.config()[key] = new_value 
