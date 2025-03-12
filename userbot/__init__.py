@@ -319,12 +319,8 @@ async def inline_handler(event):
         await asyncio.sleep(0)
         gc.collect
 
-@tgbot.on(callbackquery.CallbackQuery(data=compile(b"config_page_(\d+)")))
-async def config_page(event):
-    page = int(event.data_match.group(1).decode("UTF-8"))
-    await inline_handler(event)
 
-@tgbot.on(callbackquery.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
+@tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
 async def config_edit(event):
     key = event.data_match.group(1).decode("UTF-8")
     user_id = event.query.user_id
@@ -335,24 +331,23 @@ async def config_edit(event):
         buttons=[[Button.inline("❌ Ləğv et", data="config")]]
     )
 
-    def check(msg):
-        return msg.sender_id == user_id and msg.out
-
     try:
-        msg = await tgbot.wait_for(events.NewMessage(func=check), timeout=60)
+        msg = await tgbot.wait_for(events.NewMessage(from_users=user_id), timeout=60)
         new_value = msg.text
-        heroku_app.config()[key] = new_value
+
+        heroku_app.config()[key] = new_value  # Yeni dəyəri tətbiq et
 
         await msg.reply(f"✅ **{key}** uğurla `{new_value}` olaraq dəyişdirildi!")
         await config_handler(event)
     except asyncio.TimeoutError:
-        await event.edit("❌ Vaxt bitdi! Config dəyişdirilmədi.", buttons=[[Button.inline("🔙 Geri", data="config")]])
+        await event.edit("❌ Zaman aşımı! Config dəyişdirilmədi.", buttons=[[Button.inline("🔙 Geri", data="config")]])
     except Exception as e:
         await event.respond(f"❌ Xəta baş verdi: {str(e)}")
 
-@tgbot.on(callbackquery.CallbackQuery(data=b"config_back"))
+@tgbot.on(events.CallbackQuery(data=b"config_back"))
 async def config_back(event):
     await config_handler(event)
+
 def butonlastir(sayfa, moduller):
     Satir = 5
     Kolon = 3
@@ -468,22 +463,28 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons=veriler[1],  
                 link_preview=False
             )
-        @tgbot.on(callbackquery.CallbackQuery(data=compile(b"config")))
+        @tgbot.on(events.CallbackQuery(data=re.compile(b"config")))
         async def config_handler(event):
             if event.query.user_id != uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
-            needed_keys = ["BOT_TOKEN", "API_ID"]  
+    
+            needed_keys = ["BOT_TOKEN", "API_ID"]  # Buraya istədiyin dəyişənlərin adlarını əlavə et
             config_vars = heroku_app.config()
-            config_keys = [key for key in needed_keys if key in config_vars]  
+            config_keys = [key for key in needed_keys if key in config_vars]  # Sadəcə bu açarlara bax
+
             if not config_keys:
                 return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
+
             buttons = [[Button.inline(f"⚙️ {key}", data=f"config_edit:{key}")] for key in config_keys]
             buttons.append([Button.inline("🔙 Geri", data="config_back")])
+
             await event.edit(
                 text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}",
                 buttons=buttons,
                 link_preview=False
             )
+
+
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
