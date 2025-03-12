@@ -17,9 +17,7 @@ from telethon.sessions import StringSession
 from telethon.events import callbackquery, InlineQuery, NewMessage
 from math import ceil
 import heroku3
-from telethon import events, custom, callbackquery
-from heroku3 import from_key
-from telethon.tl.custom import Button
+
 
 load_dotenv("config.env")
 
