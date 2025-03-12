@@ -3,6 +3,8 @@ import os
 import time
 import re
 import gc
+import asyncio
+from itertools import zip_longest
 from re import compile
 from sys import version_info
 from logging import basicConfig, getLogger, INFO, DEBUG
@@ -247,7 +249,9 @@ else:
 URL = 'https://raw.githubusercontent.com/Silgimusicbot/SilgiUserbot/master/upbrain.check'
 with open('upbrain.check', 'wb') as load:
     load.write(get(URL).content)
-
+def create_button_layout(items, row_size=3):
+    args = [iter(items)] * row_size
+    return [list(filter(None, row)) for row in zip_longest(*args)]
 async def get_call(event):
     mm = await event.client(getchat(event.chat_id))
     xx = await event.client(getvc(mm.full_chat.call))
@@ -335,7 +339,7 @@ async def config_edit(event):
     )
 
     try:
-        msg = await tgbot.wait_for(events.NewMessage(from_users=user_id), timeout=60)
+        msg = await tgbot.wait_event(events.NewMessage(from_users=user_id), timeout=60)
         new_value = msg.text
 
         app.config()[key] = new_value 
@@ -478,8 +482,9 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             if not config_keys:
                 return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
 
-            buttons = [[Button.inline(f"⚙️ {key}", data=f"config_edit:{key}")] for key in config_keys]
-            buttons.append([Button.inline("🔙 Geri", data="config_back")])
+            buttons = [Button.inline(f"⚙️ {key}", data=f"config_edit:{key}") for key in config_keys]
+            button_layout = create_button_layout(buttons, 3)
+            button_layout.append([Button.inline("🔙 Geri", data="config_back")])
 
             await event.edit(
                 text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}",
