@@ -288,8 +288,8 @@ async def inline_handler(event):
     query = event.text
 
     if event.query.user_id == uid and query == "config":
-        config_vars = heroku_app.config()
-        config_keys = list(config_vars.keys())
+        config_vars = heroku_app.config()  
+        config_keys = list(config_vars)
         PAGE_SIZE = 9
         page = int(query.split("_")[-1]) if "_" in query else 0
         total_pages = math.ceil(len(config_keys) / PAGE_SIZE)
@@ -444,21 +444,17 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         async def inline_handler(event):
             if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
-            builder = event.builder
             query = event.data.decode("UTF-8")
             veriler = butonlastir(0, sorted(CMD_HELP))
-            result = await builder.article(
-                f"⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+            await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
                 buttons=veriler[1],  
                 link_preview=False
             )
-            await event.answer([result])
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"config")))
         async def config_handler(event):
             if not event.query.user_id == uid:
                 return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
-            builder = event.builder
             config_vars = heroku_app.config()
             config_keys = list(config_vars.keys())
             PAGE_SIZE = 9
@@ -474,13 +470,11 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 nav_buttons.append(custom.Button.inline("İrəli ▶️", data=f"config_page_{page + 1}"))
             if nav_buttons:
                 buttons.append(nav_buttons)
-            result = await builder.article(        
-                f"Heroku Config Vars",
+            await event.edit(        
                 text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
                 buttons=buttons,
                 link_preview=False
             )
-            await event.answer([result])
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
