@@ -11,6 +11,7 @@ from pylast import LastFMNetwork, md5
 from pySmartDL import SmartDL
 from dotenv import load_dotenv
 from requests import get
+from telethon import Button
 from telethon.tl.functions.channels import GetFullChannelRequest as getchat
 from telethon.tl.functions.phone import GetGroupCallRequest as getvc
 from telethon.tl.functions.channels import JoinChannelRequest
