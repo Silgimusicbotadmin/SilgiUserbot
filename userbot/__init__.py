@@ -279,8 +279,8 @@ if not BOT_TOKEN == None:
     ).start(bot_token=BOT_TOKEN)
 else:
     tgbot = None
-heroku_conn = heroku3.from_key(HEROKU_API_KEY)
-heroku_app = heroku_conn.apps()[HEROKU_APP_NAME]
+heroku_conn = heroku3.from_key(HEROKU_APIKEY)
+heroku_app = heroku_conn.apps()[HEROKU_APPNAME]
 
 @tgbot.on(InlineQuery)
 async def inline_handler(event):
@@ -297,8 +297,6 @@ async def inline_handler(event):
         buttons = []
         for key in config_keys[page * PAGE_SIZE: (page + 1) * PAGE_SIZE]:
             buttons.append([custom.Button.inline(f"⚙️ {key}", data=f"config_edit[{key}]")])
-
-        # Səhifələmə düymələri əlavə et
         nav_buttons = []
         if page > 0:
             nav_buttons.append(custom.Button.inline("◀️ Geri", data=f"config_page_{page - 1}"))
@@ -310,7 +308,7 @@ async def inline_handler(event):
 
         result = await builder.article(
             "Heroku Config Vars",
-            text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+            text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
             buttons=buttons,
             link_preview=False
         )
@@ -478,7 +476,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
                 buttons.append(nav_buttons)
             result = await builder.article(        
                 f"Heroku Config Vars",
-                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APP_NAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
+                text=f"**Heroku Config Vars**\n\n🔹 **App:** {HEROKU_APPNAME}\n📌 **Səhifə:** {page + 1}/{total_pages}",
                 buttons=buttons,
                 link_preview=False
             )
