@@ -385,7 +385,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"sayfa\((.+?)\)")))
         async def sayfa(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
+                return await event.answer("❌ Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True)
             sayfa = int(event.data_match.group(1).decode("UTF-8"))
             veriler = butonlastir(sayfa, CMD_HELP)
             await event.edit(
@@ -396,7 +396,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"komek")))
         async def inline_handler(event):
             if not event.query.user_id == uid:
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
+                return await event.answer("❌ Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True)   
             query = event.data.decode("UTF-8")
             veriler = butonlastir(0, sorted(CMD_HELP))
             buttons = veriler[1]  
@@ -410,9 +410,9 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config")))
         async def config_handler(event):
             if event.query.user_id != uid:
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
+                return await event.answer("❌ Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True) 
     
-            needed_keys = ["BOT_TOKEN", "BOTLOG_CHATID", "API_HASH"]  
+            needed_keys = ["BOT_USERNAME", "BOT_TOKEN", "BOTLOG_CHATID", "API_HASH", "PM_AUTO_BAN", "TZ", "LANGUAGE", "COUNTRY"]  
             config_vars = app.config().to_dict()
             config_keys = [key for key in needed_keys if key in config_vars]  
 
@@ -431,7 +431,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
         async def config_edit(event):
             if not event.query.user_id == uid: 
-                        return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
+                        return await event.answer("❌ Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True)
             key = event.data_match.group(1).decode("UTF-8")
             user_id = event.query.user_id
             config_vars = app.config().to_dict()
@@ -439,7 +439,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             text = f"🔧 **{key}** dəyişdirilməsi\n\n"
             text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
             text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
-            await event.answer(f"Config {key} açıldı")
+            await event.answer(f"Config {key} açıldı", cache_time=0)
             await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config_back")]])
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config_back")))
         async def config_back(event):
@@ -448,7 +448,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌  Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
+                return await event.answer("❌  Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True)
 
             sayfa = int(event.data_match.group(1).decode("UTF-8"))
             komut = event.data_match.group(2).decode("UTF-8")
@@ -468,7 +468,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"komut\[(.*)\[(\d*)\]\]\((.*)\)")))
         async def komut(event):
             if not event.query.user_id == uid: 
-                return await event.answer("❌ Hey! Mənim mesajlarımı düzəltməyə çalışma! Özünə bir @silgiub qur.", cache_time=0, alert=True)
+                return await event.answer("❌ Hey! Məni əlləmə! Özünə bir @silgiub qur.", cache_time=0, alert=True)
 
             cmd = event.data_match.group(1).decode("UTF-8")
             sayfa = int(event.data_match.group(2).decode("UTF-8"))
