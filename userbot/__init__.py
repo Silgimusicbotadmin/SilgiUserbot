@@ -322,7 +322,7 @@ with bot:
     moduller = CMD_HELP
     me = bot.get_me()
     uid = me.id
-    SILGI_USER = f"[{me.first_name}](tg://user?id={uid})"
+    SILGI_USER = f"[{me.first_name}](tg://user?id={me.id})"
 
     try:
         @tgbot.on(NewMessage(pattern='/start'))
@@ -347,11 +347,12 @@ with bot:
                     link_preview=False
                 )
             elif event.query.user_id == uid and query == "@SilgiUB":
+                text = "**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__\n\n"
+                text += f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__"
                 result = builder.document(
                      file=botgif,
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
-                     text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
-                     text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__",
+                     text,
                      buttons=[
                          [custom.Button.inline("📲Plugin Listi", data="komek")],
                          [custom.Button.inline("🛠️Bot Configləri", data="config")]
@@ -413,7 +414,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(events.CallbackQuery(data=re.compile(b"evvel")))
         async def main_menu(event):
             text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__"
-            text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__"
+            text += f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__"
             buttons = [
                 [Button.inline("📲Plugin Listi", data="komek")],
                 [Button.inline("🛠️Bot Configləri", data="config")]
