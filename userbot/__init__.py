@@ -306,6 +306,7 @@ def butonlastir(sayfa, moduller):
         ])
 
     butonlar.append([custom.Button.inline("◀️ Geri", data=f"sayfa({(max_pages - 1) if sayfa == 0 else (sayfa - 1)})"), custom.Button.inline("İrəli ▶️", data=f"sayfa({0 if sayfa == (max_pages - 1) else sayfa + 1})")])
+    butonlar.append([custom.Button.inline("📂Menyu", data="evvel")])
     return [max_pages, butonlar]
 
 
