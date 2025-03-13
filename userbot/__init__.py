@@ -404,7 +404,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             query = event.data.decode("UTF-8")
             veriler = butonlastir(0, sorted(CMD_HELP))
             buttons = veriler[1]  
-            buttons.append(Button.inline("📂Menyu", data="evvel"))
+            buttons.append([Button.inline("📂Menyu", data="evvel")])
             await event.answer("📱Plugin listi açıldı", cache_time=1)
             await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
@@ -438,7 +438,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             for index, key in enumerate(config_keys, start=1):
                 text += f"**{index}.** `{key}`\n"
                 buttons.append(Button.inline(f"🔢 {index}", data=f"config_edit:{key}"))
-                buttons.append(Button.inline("📂Menyu", data="evvel"))
+            buttons.append(Button.inline("📂Menyu", data="evvel"))
             if buttons:
                 buttons = list(itertools.zip_longest(*[iter(buttons)] * 3))
                 buttons = [list(filter(None, row)) for row in buttons]
