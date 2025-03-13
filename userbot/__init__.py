@@ -322,6 +322,7 @@ with bot:
     moduller = CMD_HELP
     me = bot.get_me()
     uid = me.id
+    SILGI_USER = f"[{me.first_name}](tg://user?id={uid})"
 
     try:
         @tgbot.on(NewMessage(pattern='/start'))
@@ -350,6 +351,7 @@ with bot:
                      file=botgif,
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                      text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
+                     text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__"
                      buttons=[
                          [custom.Button.inline("📲Plugin Listi", data="komek")],
                          [custom.Button.inline("🛠️Bot Configləri", data="config")]
@@ -401,13 +403,23 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             query = event.data.decode("UTF-8")
             veriler = butonlastir(0, sorted(CMD_HELP))
             buttons = veriler[1]  
-            buttons.append([Button.inline("💻Bot configləri", data="config")])
+            buttons.append([Button.inline("📂Menyu", data="evvel")])
             await event.answer("📱Plugin listi açıldı", cache_time=1)
             await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
                 buttons=buttons,  
                 link_preview=False
             )
+        @tgbot.on(events.CallbackQuery(data=re.compile(b"evvel")))
+        async def main_menu(event):
+            text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__"
+            buttons = [
+                [Button.inline("📲Plugin Listi", data="komek")],
+                [Button.inline("🛠️Bot Configləri", data="config")]
+            ]
+
+            await event.answer("📌 Əsas menyuya qayıdıldı", cache_time=0)
+            await event.edit(text, buttons=buttons, link_preview=False)
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config")))
         async def config_handler(event):
             if event.query.user_id != uid:
