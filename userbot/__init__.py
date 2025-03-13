@@ -347,7 +347,7 @@ with bot:
                 )
             elif event.query.user_id == uid and query == "@SilgiUB":
                 result = builder.document(
-                     file="AAMCAgADGQEB3w0LZ9KTxpJrxRG3DlqBHtLmV-QhSpgAAktvAAJYCpFKwnDd4miAGM8BAAdtAAM2BA",
+                     file="https://media4.giphy.com/media/8XRvAgXntraURWFLdK/giphy.gif",
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                      text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
                      buttons=[
