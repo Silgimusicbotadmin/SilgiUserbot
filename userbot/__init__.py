@@ -217,7 +217,7 @@ WHITELIST = [7589331363, 7287936548]
 
 # Təhlükəli pluginlər üçün
 TEHLUKELI = ["SESSION", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save"]
-
+botgif = "https://media4.giphy.com/media/8XRvAgXntraURWFLdK/giphy.gif"
 # CloudMail.ru və MEGA.nz
 if not os.path.exists('bin'):
     os.mkdir('bin')
@@ -347,7 +347,7 @@ with bot:
                 )
             elif event.query.user_id == uid and query == "@SilgiUB":
                 result = builder.document(
-                     file="https://media4.giphy.com/media/8XRvAgXntraURWFLdK/giphy.gif",
+                     file=botgif,
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                      text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
                      buttons=[
@@ -402,7 +402,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             veriler = butonlastir(0, sorted(CMD_HELP))
             buttons = veriler[1]  
             buttons.append([Button.inline("💻Bot configləri", data="config")])
-            await event.answer("📱Plugin listi açıldı")
+            await event.answer("📱Plugin listi açıldı", cache_time=1)
             await event.edit(
                 text=f"**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __💻__\n\n**Yüklənən Modul Sayı:** `{len(CMD_HELP)}`\n**Səhifə:** 1/{veriler[0]}",
                 buttons=buttons,  
@@ -415,7 +415,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
     
             needed_keys = ["BOT_USERNAME", "BOT_TOKEN", "BOTLOG_CHATID", "API_HASH", "PM_AUTO_BAN", "TZ", "LANGUAGE", "COUNTRY"]  
             config_vars = app.config().to_dict()
-            config_keys = [key for key in needed_keys if key in config_vars]  
+            config_keys = [key for key in needed_keys if key in config_vars and config_vars[key]]  
 
             if not config_keys:
                 return await event.answer("❌ Heç bir uyğun config tapılmadı!", cache_time=0, alert=True)
@@ -424,9 +424,10 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             for index, key in enumerate(config_keys, start=1):
                 text += f"**{index}.** `{key}`\n"
                 buttons.append(Button.inline(f"🔢 {index}", data=f"config_edit:{key}"))
-            buttons = list(itertools.zip_longest(*[iter(buttons)]*3))  
-            buttons.append([Button.inline("📱Plugin listi", data="komek")])
-            await event.answer("Config listi açıldı🛠️", cache_time=0)
+            if buttons:
+                buttons = list(itertools.zip_longest(*[iter(buttons)] * 3))
+                buttons = [list(filter(None, row)) for row in buttons]
+            await event.answer("Config listi açıldı🛠️", cache_time=1)
             await event.edit(text, buttons=buttons, link_preview=False)
 
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config_edit:(.+)")))
@@ -440,11 +441,11 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             text = f"🔧 **{key}** dəyişdirilməsi\n\n"
             text += f"🔹 Mövcud dəyər: `{current_value}`\n\n"
             text += f"✏️ Dəyəri dəyişmək üçün:\n`.set var {key} yeni_dəyər`"
-            await event.answer(f"Config {key} açıldı", cache_time=0)
+            await event.answer(f"Config {key} açıldı", cache_time=1)
             await event.edit(text, buttons=[[Button.inline("🔙 Geri", data="config_back")]])
         @tgbot.on(events.CallbackQuery(data=re.compile(b"config_back")))
         async def config_back(event):
-            await event.answer("🔙 Geri qayıdıldı", cache_time=0)
+            await event.answer("🔙 Geri qayıdıldı", cache_time=1)
             await config_handler(event)
         @tgbot.on(callbackquery.CallbackQuery(data=compile(b"bilgi\[(\d*)\]\((.*)\)")))
         async def bilgi(event):
