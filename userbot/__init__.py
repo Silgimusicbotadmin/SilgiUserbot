@@ -346,17 +346,16 @@ with bot:
                     link_preview=False
                 )
             elif event.query.user_id == uid and query == "@SilgiUB":
-                video_url = "https://t.me/silgiub/77353"  
-    
-            await tgbot.send_file(
-                event.chat_id,
-                video_url,
-                caption="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 INTRO ⚝**\n\nAşağıdakı butonlardan istifadə edin:",
-                buttons=[
-                    [Button.inline("📲 Plugin Listi", data="komek")],
-                    [Button.inline("🛠️ Bot Configləri", data="config")]
-                ]
-            )
+                result = builder.photo(
+                     file="AAMCAgADGQEB3w0LZ9KTxpJrxRG3DlqBHtLmV-QhSpgAAktvAAJYCpFKwnDd4miAGM8BAAdtAAM2BA",
+                     "⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
+                     text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
+                     buttons=[
+                         [custom.Button.inline("📲Plugin Listi", data="komek")],
+                         [custom.Button.inline("🛠️Bot Configləri", data="config")]
+                     ],
+                     link_preview=False
+                 )
             elif query.startswith("http"):
                 parca = query.split(" ")
                 result = builder.article(
