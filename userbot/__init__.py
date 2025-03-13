@@ -351,7 +351,7 @@ with bot:
                      file=botgif,
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
                      text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
-                     text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__🫡",
+                     text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__🫡"
                      buttons=[
                          [custom.Button.inline("📲Plugin Listi", data="komek")],
                          [custom.Button.inline("🛠️Bot Configləri", data="config")]
@@ -413,7 +413,7 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
         @tgbot.on(events.CallbackQuery(data=re.compile(b"evvel")))
         async def main_menu(event):
             text="**⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝** [SilgiUb](https://t.me/silgiub) __işləyir__",
-            text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__🫡",
+            text+= f"👤 **Sahibim** {SILGI_USER}\n __Qulluğunda hazıram__🫡"
             buttons = [
                 [Button.inline("📲Plugin Listi", data="komek")],
                 [Button.inline("🛠️Bot Configləri", data="config")]
