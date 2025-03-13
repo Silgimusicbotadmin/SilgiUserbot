@@ -352,7 +352,7 @@ with bot:
                 result = builder.document(
                      file=botgif,
                      title="⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝",
-                     text,
+                     text=text,
                      buttons=[
                          [custom.Button.inline("📲Plugin Listi", data="komek")],
                          [custom.Button.inline("🛠️Bot Configləri", data="config")]
