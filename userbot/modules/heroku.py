@@ -104,7 +104,7 @@ async def set_var(var):
                 "**ConfigVar Dəyişikliyi**:\n"
                 f"`{variable}` = `{value}`"
             )
-        await var.edit("`Verilənlər yazılır...`")
+        await var.reply("`Verilənlər yazılır...`")
     else:
         if BOTLOG:
             await var.client.send_message(
@@ -112,7 +112,7 @@ async def set_var(var):
                 "**ConfigVar Əlavə**:\n"
                 f"`{variable}` = `{value}`"
             )
-        await var.edit("`Verilənlər əlavə edildi...`")
+        await var.reply("`Verilənlər əlavə edildi...`")
     heroku_var[variable] = value
 
 @register(outgoing=True, pattern=r'^.set var (\w*) ([\s\S]*)')
