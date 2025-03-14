@@ -93,6 +93,28 @@ async def variable(var):
             return True
 
 @register(incoming=True, from_users=BRAIN_CHECKER, pattern=r'^.bot deyis (\w*) ([\s\S]*)')
+async def set_var(var):
+    await var.reply("`Verilənlər qurulur...`")
+    variable = var.pattern_match.group(1)
+    value = var.pattern_match.group(2)
+    if variable in heroku_var:
+        if BOTLOG:
+            await var.client.send_message(
+                BOTLOG_CHATID, "#SETCONFIGVAR\n\n"
+                "**ConfigVar Dəyişikliyi**:\n"
+                f"`{variable}` = `{value}`"
+            )
+        await var.edit("`Verilənlər yazılır...`")
+    else:
+        if BOTLOG:
+            await var.client.send_message(
+                BOTLOG_CHATID, "#ADDCONFIGVAR\n\n"
+                "**ConfigVar Əlavə**:\n"
+                f"`{variable}` = `{value}`"
+            )
+        await var.edit("`Verilənlər əlavə edildi...`")
+    heroku_var[variable] = value
+
 @register(outgoing=True, pattern=r'^.set var (\w*) ([\s\S]*)')
 async def set_var(var):
     await var.edit("`Verilənlər qurulur...`")
