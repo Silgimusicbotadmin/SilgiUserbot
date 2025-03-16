@@ -98,5 +98,5 @@ CmdHelp('etiket').add_command(
 ).add_info(
     'Etiketləmə plugini'
 ).add_sahib(
-    '[SİLGİ](@hvseyn) tərəfindən hazırlanmışdır.'
+    '[SİLGİ](t.me/hvseyn) tərəfindən hazırlanmışdır.'
 ).add()
