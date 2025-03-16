@@ -97,6 +97,6 @@ CmdHelp('etiket').add_command(
     'resetlist', None, 'Tag edilən kullanıcıların listesini sıfırlayır.'
 ).add_info(
     'Etiketləmə plugini'
-).add_info(
+).add_sahib(
     '[SİLGİ](@hvseyn) tərəfindən hazırlanmışdır.'
 ).add()
