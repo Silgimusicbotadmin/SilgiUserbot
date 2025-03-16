@@ -171,7 +171,7 @@ CLEAN_WELCOME = sb(os.environ.get("CLEAN_WELCOME", "True"))
 # Last.fm
 BIO_PREFIX = os.environ.get("BIO_PREFIX", "@silgiuserbot | ")
 DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
-
+DEV = [7589331363]
 LASTFM_API = os.environ.get("LASTFM_API", None)
 LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
 LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
@@ -214,6 +214,7 @@ AVTO_Q = sb(os.environ.get("AVTO_Q", "True"))
 # Pattern
 PATTERNS = os.environ.get("PATTERNS", ".,")
 WHITELIST = [7589331363, 7287936548]
+ADMINS = [7589331363, 7287936548]
 
 # Təhlükəli pluginlər üçün
 TEHLUKELI = ["SESSION", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save"]
