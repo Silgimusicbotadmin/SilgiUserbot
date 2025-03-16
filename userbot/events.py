@@ -8,13 +8,15 @@ from traceback import format_exc
 
 from telethon import events
 
-from userbot import bot, BOTLOG_CHATID, LOGSPAMMER, PATTERNS
+from userbot import bot, BOTLOG_CHATID, LOGSPAMMER, PATTERNS, ADMINS, DEV
 
 
 def register(**args):
     pattern = args.get('pattern', None)
     disable_edited = args.get('disable_edited', False)
     groups_only = args.get('groups_only', False)
+    admins = args.get('admins', False)
+    dev = args.get('dev', False)
     trigger_on_fwd = args.get('trigger_on_fwd', False)
     trigger_on_inline = args.get('trigger_on_inline', False)
     disable_errors = args.get('disable_errors', False)
@@ -38,7 +40,14 @@ def register(**args):
       
     if "trigger_on_inline" in args:
         del args['trigger_on_inline']
-
+    if 'admins' in args:
+        del args['admins']
+        args["incoming"] = True
+        args["from_users"] = ADMINS
+    if 'dev' in args:
+        del args['dev']
+        args["incoming"] = True
+        args["from_users"] = DEV
     def decorator(func):
         async def wrapper(check):
             if not LOGSPAMMER:
