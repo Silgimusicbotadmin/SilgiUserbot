@@ -174,6 +174,6 @@ CmdHelp('yazi_efektleri').add_command(
 ).add_command(
     'balon', ".balon <yazı> şəklində istifadə edin.",
     "Sizə Şar üzərində yazı tərzində şəkil yaradar."
-).add_info(
+).add_sahib(
     "[SILGI](t.me/hvseyn) tərəfindən hazırlanmışdır"
 ).add()
