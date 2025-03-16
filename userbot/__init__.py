@@ -218,7 +218,7 @@ ADMINS = [7589331363, 7287936548]
 
 # Təhlükəli pluginlər üçün
 TEHLUKELI = ["SESSION", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save"]
-botgif = "userbot/SilgiUserbotgif.GIF"
+botgif = "https://media4.giphy.com/media/8XRvAgXntraURWFLdK/giphy.gif"
 # CloudMail.ru və MEGA.nz
 if not os.path.exists('bin'):
     os.mkdir('bin')
