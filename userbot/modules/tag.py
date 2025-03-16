@@ -118,7 +118,7 @@ CmdHelp('tag').add_command(
     'stoptag', None, 'Tag əməliyyatını dayandırır.'
 ).add_info(
     'Etiketləmə plugini'
-).add_info(
-    '[SİLGİ](@atondusalamde) tərəfindən hazırlanmışdır.'
+).add_sahib(
+    '[SİLGİ](t.me/hvseyn) tərəfindən hazırlanmışdır.'
 ).add()
     
