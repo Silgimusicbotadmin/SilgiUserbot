@@ -493,6 +493,8 @@ Hesabınızı bot'a çevirə bilərsiz və bunları işlədə bilərsiz. Unutmay
             komut = event.data_match.group(3).decode("UTF-8")
 
             result = f"**📗 Fayl:** `{cmd}`\n"
+            if 'sahib' in CMD_HELP_BOT[cmd]['info'] and CMD_HELP_BOT[cmd]['info']['sahib']:
+                result += f"**👤 Sahib:** {CMD_HELP_BOT[cmd]['info']['sahib']}\n"
             if CMD_HELP_BOT[cmd]['info']['info'] == '':
                 if not CMD_HELP_BOT[cmd]['info']['warning'] == '':
                     result += f"**⬇️ Rəsmi:** {'✅' if CMD_HELP_BOT[cmd]['info']['official'] else '❌'}\n"
