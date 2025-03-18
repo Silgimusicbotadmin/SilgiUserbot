@@ -316,6 +316,7 @@ with bot:
         try:
             bot(JoinChannelRequest("@silgiub"))
             bot(JoinChannelRequest("@silgiubplugin"))
+            bot(JoinChannelRequest("@silgiuserbotchat"))
             
             
         except:
