@@ -59,7 +59,7 @@ async def tag_all(event):
     finally:
         await event.delete()
 
-@register(outgoing=True, pattern="^.tagadmin (.*)")
+@register(outgoing=True, pattern="^.tagadmin(?: |$)(.*)")
 async def tag_admins(event):
     chat_id = event.chat_id
     tag_active[chat_id] = True
