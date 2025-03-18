@@ -2,6 +2,7 @@ import time
 import json
 import os
 from userbot.events import register
+from userbot import SILGI_USER
 UPTIME_FILE = "uptime.json"
 def load_start_time():
     if os.path.exists(UPTIME_FILE):
