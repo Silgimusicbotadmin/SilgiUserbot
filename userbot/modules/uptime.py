@@ -10,4 +10,4 @@ async def uptime_handler(event):
     minutes = (uptime_seconds % 3600) // 60
     seconds = uptime_seconds % 60
 
-    await event.edit(f"**SAHIBIM {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{hours} saat, {minutes} dəqiqə, {seconds} saniyə`")
+    await event.edit(f"**Sahibim: {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{hours} saat, {minutes} dəqiqə, {seconds} saniyə`")
