@@ -27,7 +27,7 @@ import heroku3
 
 load_dotenv("config.env")
 
-StartTime = time.time()
+
 
 # Bot log
 CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
