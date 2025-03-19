@@ -215,7 +215,7 @@ AVTO_Q = sb(os.environ.get("AVTO_Q", "True"))
 PATTERNS = os.environ.get("PATTERNS", ".,")
 WHITELIST = [7589331363, 7287936548]
 ADMINS = [7589331363, 7287936548]
-
+START_TIME = int(os.environ.get("START_TIME", time.time()))
 # Təhlükəli pluginlər üçün
 TEHLUKELI = ["SESSION", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save"]
 botgif = "https://files.catbox.moe/eiqmdh.gif"
