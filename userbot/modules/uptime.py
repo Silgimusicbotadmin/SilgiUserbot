@@ -17,5 +17,4 @@ async def isleme_muddeti(silgi):
     if deqiqe > 0 or saat > 0 or gun > 0:
         vaxt += f"{deqiqe} dəqiqə, "
     vaxt += f"{saniye} saniyə"
-
-    await silgi.edit(f"**Sahibim: {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{vaxt_metni}`")
+    await silgi.edit(f"**Sahibim: {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{vaxt}`")
