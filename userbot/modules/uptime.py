@@ -1,7 +1,7 @@
 import time
 from userbot.events import register
 from userbot import SILGI_USER, START_TIME
-@register(outgoing=True, pattern="^.isleme$")
+@register(outgoing=True, pattern="^.uptime$")
 async def isleme_muddeti(silgi):
     indi = time.time()
     kecen_saniye = int(indi - START_TIME)
