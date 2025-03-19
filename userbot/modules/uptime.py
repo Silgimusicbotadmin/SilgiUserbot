@@ -1,7 +1,6 @@
 import time
 from userbot.events import register
-from userbot import SILGI_USER
-from userbot.vaxt import START_TIME
+from userbot import SILGI_USER, START_TIME
 @register(outgoing=True, pattern="^.uptime$")
 async def uptime_handler(event):
     current_time = time.time()
