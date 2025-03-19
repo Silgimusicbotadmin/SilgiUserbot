@@ -1,3 +1,4 @@
+import time
 import importlib
 import asyncio
 from importlib import import_module
@@ -13,14 +14,13 @@ import userbot.modules.sql_helper.mesaj_sql as MSJ_SQL
 import userbot.modules.sql_helper.galeri_sql as GALERI_SQL
 from pySmartDL import SmartDL
 from telethon.tl import functions
-
 from random import choice
 import chromedriver_autoinstaller
 from json import loads, JSONDecodeError
 import re
 import userbot.cmdhelp
 from userbot.modules.sql_helper.silgiuserbot.assistantbot import silgiassistantbot, heroku_qurulum
-
+StartTime = time.time()
 
 DIZCILIK_STR = [
     "SStikeri fırladıram...",
