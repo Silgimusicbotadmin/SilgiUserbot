@@ -1,13 +1,21 @@
 import time
 from userbot.events import register
 from userbot import SILGI_USER, START_TIME
-@register(outgoing=True, pattern="^.uptime$")
-async def uptime_handler(event):
-    current_time = time.time()
-    uptime_seconds = int(current_time - START_TIME)
-    
-    hours = uptime_seconds // 3600
-    minutes = (uptime_seconds % 3600) // 60
-    seconds = uptime_seconds % 60
+@register(outgoing=True, pattern="^.isleme$")
+async def isleme_muddeti(silgi):
+    indi = time.time()
+    kecen_saniye = int(indi - START_TIME)
+    gun = kecen_saniye // 86400
+    saat = (kecen_saniye % 86400) // 3600
+    deqiqe = (kecen_saniye % 3600) // 60
+    saniye = kecen_saniye % 60
+    vaxt = ""
+    if gun > 0:
+        vaxt += f"{gun} gün, "
+    if saat > 0 or gun > 0:
+        vaxt += f"{saat} saat, "
+    if deqiqe > 0 or saat > 0 or gun > 0:
+        vaxt += f"{deqiqe} dəqiqə, "
+    vaxt += f"{saniye} saniyə"
 
-    await event.edit(f"**Sahibim: {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{hours} saat, {minutes} dəqiqə, {seconds} saniyə`")
+    await silgi.edit(f"**Sahibim: {SILGI_USER}\nSilgiUserbot'un işləmə müddəti:**\n `{vaxt_metni}`")
