@@ -282,16 +282,18 @@ async def promote(event):
         
         user, user_rank = result
 
-        
+
         if args == "spromote":
-            rank = "SPAM"  
-        elif not user_rank:  
-            rank = "Admin"  
+            rank = "SPAM"
+        elif user_rank:
+            rank = user_rank
         else:
-            rank = user_ran
+            rank = "Admin"
+
+
         if args == "promote":
             new_rights = ChatAdminRights(
-                add_admins=True,
+                add_admins=True,  
                 invite_users=True,
                 change_info=True,
                 ban_users=True,
@@ -315,7 +317,7 @@ async def promote(event):
 
         elif args == "apromote":
             new_rights = ChatAdminRights(
-                add_admins=False,
+                add_admins=False,  
                 invite_users=True,
                 change_info=False,
                 ban_users=False,
@@ -325,6 +327,7 @@ async def promote(event):
             )
             role = "Admin"
 
+        
         await event.client(EditAdminRequest(event.chat_id, user.id, new_rights, rank))
         await event.edit(f"✅ **{role}** verildi: [{user.first_name}](tg://user?id={user.id})\n🎖 Rütbə: **{rank}**")
 
@@ -336,8 +339,8 @@ async def promote(event):
 
     except ValueError as e:
         await event.edit(f"❌ {str(e)}")
-    except Exception:
-        await event.edit(NO_PERM)
+    except Exception as e:
+        await event.edit(f"❌ Xəta baş verdi: {str(e)}")  # Xəta mesajını göstər
 
 
 @register(outgoing=True, pattern="^.demote(?: |$)(.*)")
