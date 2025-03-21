@@ -282,7 +282,7 @@ async def promote(event):
         
         user, rank = result
 
-        # `.spromote` üçün default rütbə "SPAM" olsun
+        
         if args == "spromote" and not rank:
             rank = "SPAM"
         elif not rank:
@@ -321,7 +321,7 @@ async def promote(event):
                 ban_users=False,
                 delete_messages=True,
                 pin_messages=True,
-                add_admins=False
+                add_admins=False,
                 manage_call=True
             )
             role = "Admin"
