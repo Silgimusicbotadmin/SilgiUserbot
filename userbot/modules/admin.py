@@ -280,13 +280,15 @@ async def promote(event):
         if result is None:
             raise ValueError("İstifadəçi tapılmadı və ya xəta baş verdi.")
         
-        user, rank = result
+        user, user_rank = result
 
         
-     
+        if args == "spromote":
+            rank = "SPAM"  
+        else:
+            rank = user_rank if user_rank else "Admin"
+
         if args == "promote":
-            if not rank:
-                rank = "Admin"
             new_rights = ChatAdminRights(
                 add_admins=True,
                 invite_users=True,
@@ -301,8 +303,6 @@ async def promote(event):
             role = "Tam Yetkili Admin"
 
         elif args == "spromote":
-            if not rank:
-                rank = "SPAM"
             new_rights = ChatAdminRights(
                 invite_users=True,
                 change_info=False,
@@ -315,8 +315,6 @@ async def promote(event):
             role = "SPAM Admin"
 
         elif args == "apromote":
-            if not rank:
-                rank = "Admin"
             new_rights = ChatAdminRights(
                 invite_users=True,
                 change_info=False,
