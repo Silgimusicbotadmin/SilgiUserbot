@@ -297,9 +297,7 @@ async def promote(event):
                 ban_users=True,
                 delete_messages=True,
                 pin_messages=True,
-                manage_call=True,
-                anonymous=False,
-                other=True
+                manage_call=True
             )
             role = "Tam Yetkili Admin"
 
@@ -317,12 +315,12 @@ async def promote(event):
 
         elif args == "apromote":
             new_rights = ChatAdminRights(
+                add_admins=False,
                 invite_users=True,
                 change_info=False,
                 ban_users=False,
                 delete_messages=True,
                 pin_messages=True,
-                add_admins=False,
                 manage_call=True
             )
             role = "Admin"
