@@ -283,12 +283,10 @@ async def promote(event):
         user, rank = result
 
         
-        if args == "spromote" and not rank:
-            rank = "SPAM"
-        elif not rank:
-            rank = "Admin"
-
+     
         if args == "promote":
+            if not rank:
+                rank = "Admin"
             new_rights = ChatAdminRights(
                 add_admins=True,
                 invite_users=True,
@@ -303,6 +301,8 @@ async def promote(event):
             role = "Tam Yetkili Admin"
 
         elif args == "spromote":
+            if not rank:
+                rank = "SPAM"
             new_rights = ChatAdminRights(
                 invite_users=True,
                 change_info=False,
@@ -315,6 +315,8 @@ async def promote(event):
             role = "SPAM Admin"
 
         elif args == "apromote":
+            if not rank:
+                rank = "Admin"
             new_rights = ChatAdminRights(
                 invite_users=True,
                 change_info=False,
