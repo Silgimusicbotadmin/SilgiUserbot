@@ -104,7 +104,6 @@ async def elave(event):
                 await event.edit(f'`{user_id} qrupa əlavə edildi!`')
 
 @register(outgoing=True, pattern="^.gban(?: |$)(.*)")
-@register(incoming=True, from_users=SUDO_ID, pattern="^.gban(?: |$)(.*)")
 async def gbanspider(gspdr):
     """ .gban  """
     # 
@@ -262,65 +261,84 @@ async def set_group_photo(gpic):
         except ImageProcessFailedError:
             await gpic.edit(PP_ERROR)
 
-
-@register(outgoing=True, pattern="^.promote(?: |$)(.*)")
-@register(incoming=True, from_users=SUDO_ID, pattern="^.promote(?: |$)(.*)")
-async def promote(promt):
-    """ .promote """
-    # 
-    chat = await promt.get_chat()
-    # 
+@register(outgoing=True, pattern=r"^.(promote|spromote|apromote)(?: |$)(.*)")
+@register(incoming=True, from_users=SUDO_ID, pattern=r"^.(promote|spromote|apromote)(?: |$)(.*)")
+async def promote(event):
+    """ .promote | .spromote | .apromote """
+    
+    args = event.pattern_match.group(1)
+    chat = await event.get_chat()
     admin = chat.admin_rights
     creator = chat.creator
 
-    # 
     if not admin and not creator:
-        await promt.edit(NO_ADMIN)
+        await event.edit(NO_ADMIN)
         return
 
-    new_rights = ChatAdminRights(add_admins=True,
-                                 invite_users=True,
-                                 change_info=True,
-                                 ban_users=True,
-                                 delete_messages=True,
-                                 pin_messages=True)
-
-    await promt.edit(LANG['PROMOTING'])
     try:
-        result = await get_user_from_event(promt)
-    except Exception as e:
-        await promt.edit(f"⚠️ Xəta baş verdi: {str(e)}")
-        return
+        result = await get_user_from_event(event)
+        if result is None:
+            raise ValueError("İstifadəçi tapılmadı və ya xəta baş verdi.")
+        
+        user, rank = result
 
-    if result is None:
-        await promt.edit("❌ İstifadəçi tapılmadı və ya xəta baş verdi.")
-        return
+        # `.spromote` üçün default rütbə "SPAM" olsun
+        if args == "spromote" and not rank:
+            rank = "SPAM"
+        elif not rank:
+            rank = "Admin"
 
-    user, rank = result  
+        if args == "promote":
+            new_rights = ChatAdminRights(
+                add_admins=True,
+                invite_users=True,
+                change_info=True,
+                ban_users=True,
+                delete_messages=True,
+                pin_messages=True,
+                manage_call=True,
+                anonymous=False,
+                other=True
+            )
+            role = "Tam Yetkili Admin"
 
-    if not rank:
-        rank = "Admin"
+        elif args == "spromote":
+            new_rights = ChatAdminRights(
+                invite_users=True,
+                change_info=False,
+                ban_users=False,
+                delete_messages=False,
+                pin_messages=False,
+                add_admins=False,
+                 pin_messages=True,
+                 manage_call=True
+            )
+            role = "SPAM Admin"
 
-    if user is None:
-        await promt.edit("❌ İstifadəçi məlumatları əldə edilə bilmədi.")
-        return
-    try:
-        await promt.client(
-            EditAdminRequest(promt.chat_id, user.id, new_rights, rank))
-        await promt.edit(LANG['SUCCESS_PROMOTE'])
+        elif args == "apromote":
+            new_rights = ChatAdminRights(
+                invite_users=True,
+                change_info=False,
+                ban_users=False,
+                delete_messages=True,
+                pin_messages=True,
+                add_admins=False
+            )
+            role = "Admin"
 
-    # 
-    # 
-    except:
-        await promt.edit(NO_PERM)
-        return
+        await event.client(EditAdminRequest(event.chat_id, user.id, new_rights, rank))
+        await event.edit(f"✅ **{role}** verildi: [{user.first_name}](tg://user?id={user.id})\n🎖 Rütbə: **{rank}**")
 
-    # 
-    if BOTLOG:
-        await promt.client.send_message(
-            BOTLOG_CHATID, "#ADMİNLİK\n"
-            f"İSTİFADECİ: [{user.first_name}](tg://user?id={user.id})\n"
-            f"QRUP: {promt.chat.title}(`{promt.chat_id}`)")
+        if BOTLOG:
+            await event.client.send_message(
+                BOTLOG_CHATID, 
+                f"#ADMİNLİK\nİSTİFADECİ: [{user.first_name}](tg://user?id={user.id})\nQRUP: {event.chat.title}(`{event.chat_id}`)\nVERİLƏN ROL: {role}\nRÜTBƏ: {rank}"
+            )
+
+    except ValueError as e:
+        await event.edit(f"❌ {str(e)}")
+    except Exception:
+        await event.edit(NO_PERM)
 
 
 @register(outgoing=True, pattern="^.demote(?: |$)(.*)")
