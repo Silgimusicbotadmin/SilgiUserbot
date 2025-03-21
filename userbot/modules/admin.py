@@ -310,8 +310,7 @@ async def promote(event):
                 delete_messages=False,
                 pin_messages=False,
                 add_admins=False,
-                 pin_messages=True,
-                 manage_call=True
+                manage_call=False
             )
             role = "SPAM Admin"
 
@@ -323,6 +322,7 @@ async def promote(event):
                 delete_messages=True,
                 pin_messages=True,
                 add_admins=False
+                manage_call=True
             )
             role = "Admin"
 
