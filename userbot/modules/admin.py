@@ -266,7 +266,9 @@ async def set_group_photo(gpic):
 async def promote(event):
     """ .promote | .spromote | .apromote """
     
-    args = event.pattern_match.group(1)
+    args = event.pattern_match.group(1) 
+    input_text = event.pattern_match.group(2)  
+
     chat = await event.get_chat()
     admin = chat.admin_rights
     creator = chat.creator
@@ -276,23 +278,22 @@ async def promote(event):
         return
 
     try:
-        result = await get_user_from_event(event)
-        if result is None:
-            raise ValueError("İstifadəçi tapılmadı və ya xəta baş verdi.")
-        
-        user, user_rank = result
 
+        user, user_rank = await get_user_from_event(event, input_text)
+
+        if user is None:
+            await event.edit("❌ İstifadəçi tapılmadı və ya xəta baş verdi.")
+            return
+
+
+        rank_text = input_text.split(maxsplit=1)[1] if input_text and " " in input_text else None
 
         if args == "spromote":
-            rank = "SPAM"
-        elif args == "promote":
-            rank = "Admin"
-        elif args == "apromote":
-            rank = "Admin"
-        elif not user_rank:  
-            rank = "Admin"
+            rank = "SPAM"  
+        elif rank_text:  
+            rank = rank_text
         else:
-            rank = user_rank
+            rank = "Admin" 
 
 
         if args == "apromote":
