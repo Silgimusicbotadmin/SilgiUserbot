@@ -17,6 +17,8 @@
             "PLIST": "**Here Are The Installed Plugins:**",
             "TEMP_PLUGIN": "'Your plugins don't load permanently so I can't bring a list.`",
             "REPLY_TO_FILE": "`Reply to the module file to be installed.'",
+            "PY_FAYL_CAVAB": "❌ Please reply to a `.py` file.",
+            "PY_DEYIL": "❌ You can only upload files in `.py` format.",
             "NOT_FOUND_PLUGIN_CHANNEL": "`You have not set an Id for the plugins to be permanent. Your plugins can be deleted after restarting! '",
             "PLUGIN_BUGGED": "`Upload failed! Plugin is wrong.\n\nError: `",
             "PLUGIN_DESC": "This plugin is externally installed for your bot. Use:\n",
