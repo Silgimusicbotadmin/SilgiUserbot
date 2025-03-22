@@ -19,7 +19,7 @@
             "TEMP_PLUGIN": "`Pluginleriniz Həmişəlik olaraq yüklənmir, buna görə bir siyahı gətirə bilmirəm.`",
             "REPLY_TO_FILE": "`Yüklənəcək modul faylına cavab yazın.`",
             "PY_FAYL_CAVAB": "❌ Zəhmət olmasa bir `.py` faylına cavab verin.",
-            "PY_DEYIL": Yalnız `.py` formatında olan faylları yükləyə bilərsiniz.",
+            "PY_DEYIL": "❌Yalnız `.py` formatında olan faylları yükləyə bilərsiniz.",
             "NOT_FOUND_PLUGIN_CHANNEL": "`Pluginlərin həmişəlik olması üçün Id nizamlamamısınız. Pluginləriniz yenidən başladılan zaman silinə bilər!`",
             "PLUGIN_BUGGED": "`Yükləmə uğurlu deyil! Plugində xəta aşkar edildi.\n\nXəta: `",
             "PLUGIN_DESC": "Bu plugin qırağdan botunuz üçün yüklənmişdir. İstifadəsi:",
