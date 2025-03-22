@@ -17,6 +17,8 @@
             "PLIST": "**İşte Yüklenen Pluginler:**",
             "TEMP_PLUGIN": "`Pluginleriniz kalıcı yüklenmiyor bu yüzden liste getiremem.`",
             "REPLY_TO_FILE": "`Yüklenecek modül dosyasına yanıt verin.`",
+            "PY_FAYL_CAVAB": "❌ Lütfen bir `.py` dosyasına yanıt verin.",
+            "PY_DEYIL": "❌ Yalnız `.py` formatında dosyalar yükleyebilirsiniz.",
             "NOT_FOUND_PLUGIN_CHANNEL": "`Pluginlerin kalıcı olması için Id ayarlamamışsınız. Pluginleriniz yeniden başlatınca silinebilir!`",
             "PLUGIN_BUGGED": "`Yükleme başarısız! Plugin hatalı.\n\nHata: `",
             "PLUGIN_DESC": "Bu plugin dışarıdan botunuz için yüklenmiştir. Kullanım:",
