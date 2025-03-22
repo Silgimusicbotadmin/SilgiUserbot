@@ -325,7 +325,7 @@ async def promote(event):
                 add_admins=False,  
                 invite_users=True,
                 change_info=False,
-                ban_users=True,
+                ban_users=False,
                 delete_messages=True,
                 pin_messages=True,
                 manage_call=True
