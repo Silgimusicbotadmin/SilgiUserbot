@@ -130,6 +130,17 @@ async def pinstall(event):
     else:
         await event.edit(LANG["REPLY_TO_FILE"])
         return
+    if event.is_reply:
+        plugin = await event.get_reply_message()
+        if not plugin.media or not plugin.file:
+            await event.edit("❌ Zəhmət olmasa bir `.py` faylına cavab verin.")
+            return
+        if not plugin.file.name.endswith(".py"):
+            await event.edit("❌ Yalnız `.py` formatında olan faylları yükləyə bilərsiniz.")
+            return
+    else:
+        await event.edit("❌ Zəhmət olmasa bir `.py` faylına cavab verin.")
+        return
     await event.edit(LANG["DOWNLOADING"])
 
     list = f'./userbot/modules/{plugin.file.name}'
