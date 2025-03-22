@@ -133,13 +133,13 @@ async def pinstall(event):
     if event.is_reply:
         plugin = await event.get_reply_message()
         if not plugin.media or not plugin.file:
-            await event.edit("❌ Zəhmət olmasa bir `.py` faylına cavab verin.")
+            await event.edit(LANG["PY_FAYL_CAVAB"])
             return
         if not plugin.file.name.endswith(".py"):
-            await event.edit("❌ Yalnız `.py` formatında olan faylları yükləyə bilərsiniz.")
+            await event.edit(LANG["PY_DEYIL"])
             return
     else:
-        await event.edit("❌ Zəhmət olmasa bir `.py` faylına cavab verin.")
+        await event.edit(LANG["PY_FAYL_CAVAB"])
         return
     await event.edit(LANG["DOWNLOADING"])
 
