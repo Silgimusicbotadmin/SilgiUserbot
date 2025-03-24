@@ -3,7 +3,7 @@ import sys
 from asyncio import create_subprocess_shell as asyncsubshell
 from asyncio import subprocess as asyncsub
 from os import remove
-from time import gmtime, strftime
+from time import gmtime, strftime, localtime
 from traceback import format_exc
 
 from telethon import events
@@ -75,7 +75,7 @@ def register(**args):
                 pass
             except BaseException:
                 if not disable_errors:
-                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                    date = strftime("%Y-%m-%d %H:%M:%S", localtime())
 
                     dtotext = str(check.text)
                     text = "**✥ ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ ΣRROR ✥**\n\n"
