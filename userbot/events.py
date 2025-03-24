@@ -75,13 +75,13 @@ def register(**args):
                 pass
             except BaseException:
                 if not disable_errors:
-                    date = strftime("%Y-%m-%d %H:%M:%S", localtime())
+                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime(time() + 14400))
 
-                    dtotext = str(check.text)
+                    silgitext = str(check.text)
                     text = "**✥ ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ ΣRROR ✥**\n\n"
                     link = "[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Dəstək Qrupuna](https://t.me/silgiub)"
                     if len(dtotext)<10:
-                        text += f"⌨️ **Əmr:** {dtotext}\n\n"
+                        text += f"⌨️ **Əmr:** {silgitext}\n\n"
                     text += "**Xəta baş verdi ❗**\n"
                     text += f"**ℹ️ Bu log'u** {link} **göndərin.**"
                     text += "**Xətanın nə oluğunu öyrənin**\n"
