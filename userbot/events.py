@@ -75,7 +75,7 @@ def register(**args):
                 pass
             except BaseException:
                 if not disable_errors:
-                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime(time() + 14400))
+                    date = strftime("%Y-%m-%d %H:%M:%S", localtime() )
 
                     silgitext = str(check.text)
                     text = "**✥ ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ ΣRROR ✥**\n\n"
