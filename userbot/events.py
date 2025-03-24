@@ -80,7 +80,7 @@ def register(**args):
                     silgitext = str(check.text)
                     text = "**✥ ⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ ΣRROR ✥**\n\n"
                     link = "[⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝ Dəstək Qrupuna](https://t.me/silgiub)"
-                    if len(dtotext)<10:
+                    if len(silgitext)<10:
                         text += f"⌨️ **Əmr:** {silgitext}\n\n"
                     text += "**Xəta baş verdi ❗**\n"
                     text += f"**ℹ️ Bu log'u** {link} **göndərin.**"
