@@ -28,7 +28,67 @@ else:
 
 
 
-
+@register(dev=True,
+          pattern=r"^.(sget|sdel) var(?: |$)(\w*)")
+async def variable(var):
+    exe = var.pattern_match.group(1)
+    if app is None:
+        await var.reply("`[HEROKU]"
+                       "\n**HEROKU_APPNAME** quraşdırın.")
+        return False
+    if exe == "sget":
+        await var.reply("`Bot kurucusuna məlumatlar verilir..`")
+        variable = var.pattern_match.group(2)
+        if variable != '':
+            if variable in heroku_var:
+                if BOTLOG:
+                    await var.reply(
+                         "#CONFIGVAR\n\n"
+                        "**ConfigVar**:\n"
+                        f"`{variable}` = `{heroku_var[variable]}`\n"
+                    )
+                    await var.reply("`Kurucuya göndərildi...`")
+                    return True
+                else:
+                    await var.reply("`Zəhmət olmasa BOTLOG 'u True olaraq təyin edin...`")
+                    return False
+            else:
+                await var.reply("`Məlumatlar yoxdu...`")
+                return True
+        else:
+            configvars = heroku_var.to_dict()
+            if BOTLOG:
+                msg = ''
+                for item in configvars:
+                    msg += f"`{item}` = `{configvars[item]}`\n"
+                await var.reply(
+                    "#CONFIGVARS\n\n"
+                    "**ConfigVars**:\n"
+                    f"{msg}"
+                )
+                await var.reply("`Narahat olmayın kurucu məlumatları yoxlayır...`")
+                return True
+            else:
+                await var.reply("`Zəhmət olmasa BOTLOG 'u True olaraq təyin edin`")
+                return False
+    elif exe == "sdel":
+        await var.edit("`Məlumatlar silinir...`")
+        variable = var.pattern_match.group(2)
+        if variable == '':
+            await var.edit("`Silmək istədiyiniz ConfigVars'ı seçin ...`")
+            return False
+        if variable in heroku_var:
+            if BOTLOG:
+                await var.client.send_message(
+                    BOTLOG_CHATID, "#DELCONFIGVAR\n\n"
+                    "**ConfigVar Silindi**:\n"
+                    f"`{variable}`"
+                )
+            await var.edit("`Məlumatlar silindi...`")
+            del heroku_var[variable]
+        else:
+            await var.edit("`Məlumatlar yoxdu...`")
+            return True
 
 @register(outgoing=True,
           pattern=r"^.(get|del) var(?: |$)(\w*)")
@@ -141,7 +201,65 @@ async def set_var(var):
 
 
 
+@register(dev=True, pattern=r"^.sdyno(?: |$)")
+async def dyno_usage(dyno):
+    """İstifadə edilmiş Dyno'nu əldə edin"""
+    await dyno.reply("`Gözləyin...`")
+    useragent = ('Mozilla/5.0 (Linux; Android 10; SM-G975F) '
+                 'AppleWebKit/537.36 (KHTML, like Gecko) '
+                 'Chrome/80.0.3987.149 Mobile Safari/537.36'
+                 )
+    u_id = Heroku.account().id
+    headers = {
+     'User-Agent': useragent,
+     'Authorization': f'Bearer {HEROKU_APIKEY}',
+     'Accept': 'application/vnd.heroku+json; version=3.account-quotas',
+    }
+    path = "/accounts/" + u_id + "/actions/get-quota"
+    r = requests.get(heroku_api + path, headers=headers)
+    if r.status_code != 200:
+        return await dyno.edit("`Error: something bad happened`\n\n"
+                               f">.`{r.reason}`\n")
+    result = r.json()
+    quota = result['account_quota']
+    quota_used = result['quota_used']
 
+    """ - Used - """
+    remaining_quota = quota - quota_used
+    percentage = math.floor(remaining_quota / quota * 100)
+    minutes_remaining = remaining_quota / 60
+    hours = math.floor(minutes_remaining / 60)
+    minutes = math.floor(minutes_remaining % 60)
+    gun = math.floor(hours / 24)
+    ayfaiz = math.floor(gun * 30 / 100)
+
+    """ - Current - """
+    App = result['apps']
+    try:
+        App[0]['quota_used']
+    except IndexError:
+        AppQuotaUsed = 0
+        AppPercentage = 0
+    else:
+        AppQuotaUsed = App[0]['quota_used'] / 60
+        AppPercentage = math.floor(App[0]['quota_used'] * 100 / quota)
+    AppHours = math.floor(AppQuotaUsed / 60)
+    AppMinutes = math.floor(AppQuotaUsed % 60)
+
+    await asyncio.sleep(1.5)
+
+    return await dyno.reply("⚝ 𝑺𝑰𝑳𝑮𝑰 𝑼𝑺𝑬𝑹𝑩𝑶𝑻 ⚝\n"
+    "**⬇️ Dyno istifadəsi**:\n\n"
+                           f"⏳ `İstifadə etdiyi dyno saatı`\n**👤 App adı - ****({HEROKU_APPNAME})**:\n"
+                           f"     •  `{AppHours}` **saat**  `{AppMinutes}` **dəqiqə**  "
+                           f"**|**  [`{AppPercentage}` **%**]"
+                           "\n"
+                           "⌛ `Bu ay qalan dyno saatı`:\n"
+                           f"     •  `{hours}` **saat**  `{minutes}` **dəqiqə**  "
+                           f"**|**  [`{percentage}` **%**]\n"
+                           f"🕝 `Təxmini bitmə müddəti`: \n"
+                           f"     •  `{gun}` (**Gün**) | [`{ayfaiz}` **%**]"
+                           )
 
 @register(outgoing=True, pattern=r"^.dyno(?: |$)")
 async def dyno_usage(dyno):
