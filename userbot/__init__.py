@@ -315,8 +315,9 @@ with bot:
     if AVTO_Q:
         try:
             bot(JoinChannelRequest("@silgiub"))
-            bot(JoinChannelRequest("@silgiubplugin"))
+            bot(JoinChannelRequest("@silgiuserbots"))
             bot(JoinChannelRequest("@silgiuserbotchat"))
+            bot(JoinChannelRequest("@silgiubplugin"))
             
             
         except:
