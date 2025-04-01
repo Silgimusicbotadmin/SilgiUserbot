@@ -10,19 +10,17 @@ LANG = get_value("lyrics")
 
 @register(outgoing=True, pattern="^.lyrics(?: |$)(.*)")
 async def lyrics(event):
-    if not LANG:
-        await event.edit("⚠️ Dil faylı tapılmadı!")
-        return
-
     args = event.pattern_match.group(1)
     if not args or "-" not in args:
         await event.edit(LANG['WRONG_TYPE'])
         return
 
     if not GENIUS:
-        genius = lyricsgenius.Genius("Hk9poq6xO0-XKnoCzxJ64ht9mTNgSfgZyOJTqCzavhf4L4oJ3QE_osJkB2A1kiuk")
+        genius = lyricsgenius.Genius("FdiG8NMlpEVOW3fJnaJqW7Vom-8p9lUauP_jNuA5PLbX3L-kDznZlIghV2Opiooz")
     else:
         genius = lyricsgenius.Genius(GENIUS)
+
+    genius.verbose = True  
 
     try:
         artist, song = [x.strip() for x in args.split('-', 1)]
@@ -34,11 +32,16 @@ async def lyrics(event):
 
     try:
         song_data = genius.search_song(song, artist)
+        
+        
+        if not song_data:
+            song_data = genius.search_song(song)
+
     except Exception as e:
         await event.edit(f"⚠️ Xəta baş verdi: `{str(e)}`")
         return
 
-    if not song_data:
+    if not song_data or not hasattr(song_data, 'lyrics'):
         await event.edit(LANG['NOT_FOUND'].format(artist, song))
         return
 
