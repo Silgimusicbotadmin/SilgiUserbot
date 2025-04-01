@@ -7,8 +7,37 @@ from userbot.cmdhelp import CmdHelp
 from userbot.language import get_value
 
 LANG = get_value("lyrics")
+GENIUS_API_KEY = "7JWO79mydLFN2DatQv94mIyulpYH_1Mnw4jZ7e8OViyJpmUs75gEpRwVCZ30EsEA"
 
-@register(outgoing=True, pattern="^.lyrics(?: |$)(.*)")
+
+genius = lyricsgenius.Genius(GENIUS_API_KEY)
+
+@register(outgoing=True, pattern=r"^\.lyrics (.+)")
+async def lyrics(event):
+    song_name = event.pattern_match.group(1)
+    await event.edit("🔍 Mahnı axtarılır...")
+
+    try:
+        song = genius.search_song(song_name)
+        if song:
+            lyrics_text = f"🎵 **{song.title}** - {song.artist}\n\n{song.lyrics}"
+            
+            
+            if len(lyrics_text) > 4000:
+                file_path = f"{song.title}.txt"
+                with open(file_path, "w", encoding="utf-8") as file:
+                    file.write(lyrics_text)
+                
+                await event.edit("📄 Mahnı sözləri çox uzundur, fayl kimi göndərilir...")
+                await event.client.send_file(event.chat_id, file_path, caption=f"📄 **{song.title} - {song.artist}** mahnısının sözləri:")
+                os.remove(file_path)  
+            else:
+                await event.edit(lyrics_text)
+        else:
+            await event.edit("🚫 Mahnı tapılmadı!")
+    except Exception as e:
+        await event.edit(f"❌ Xəta baş verdi:\n`{str(e)}`")
+@register(outgoing=True, pattern="^.genius(?: |$)(.*)")
 async def lyrics(event):
     args = event.pattern_match.group(1)
     if not args or "-" not in args:
