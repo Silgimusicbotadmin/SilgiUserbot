@@ -1,11 +1,6 @@
-FROM python:latest
-RUN apt-get update && apt-get install -y \
-    libxml2-dev \
-    libxslt-dev \
-    zlib1g-dev \
-    git
+FROM silgi/silgiuserbot:silgiteam
+ENV PYTHON_VERSION=3.13.2
 RUN python3 --version
-RUN pip3 install --only-binary :all: lxml
 RUN git clone https://github.com/Silgimusicbot/SilgiUserbot /root/SilgiUserbot
 WORKDIR /root/SilgiUserbot/
 RUN pip3 install --upgrade pip
