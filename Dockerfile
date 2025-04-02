@@ -1,12 +1,10 @@
-FROM python:3.10
+FROM python:latest
 RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt-dev \
     zlib1g-dev \
     gcc \
     && apt-get clean
-
-# Python kitabxanalarını quraşdır
 RUN pip install --upgrade pip
 RUN pip install lxml
 RUN python3 --version
