@@ -1,4 +1,5 @@
 FROM silgi/silgiuserbot:silgiteam
+RUN apk update && apk add --no-cache ca-certificates
 RUN apk update && apk add --no-cache \
     gcc \
     musl-dev \
