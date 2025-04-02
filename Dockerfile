@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     git
 RUN python3 --version
+RUN pip3 install --only-binary :all: lxml
 RUN git clone https://github.com/Silgimusicbot/SilgiUserbot /root/SilgiUserbot
 WORKDIR /root/SilgiUserbot/
 RUN pip3 install --upgrade pip
