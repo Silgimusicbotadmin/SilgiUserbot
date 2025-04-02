@@ -1,5 +1,7 @@
 FROM silgi/silgiuserbot:silgiteam
-RUN apk update && apk add --no-cache python3 py3-pip
+RUN apk update --no-cache && \
+    apk add --no-cache ca-certificates
+RUN apk add --no-cache python3 py3-pip
 RUN python3 --version && pip3 --version
 RUN git clone https://github.com/Silgimusicbot/SilgiUserbot /root/SilgiUserbot
 WORKDIR /root/SilgiUserbot/
