@@ -3,7 +3,8 @@ aiohttp
 aiofiles
 pyautogui
 aria2p
-
+git+https://github.com/johnwmillr/LyricsGenius.git
+lyricsgenius
 async_generator
 bs4
 beautifulsoup4>=4.8.1
