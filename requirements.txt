@@ -3,6 +3,7 @@ aiohttp
 aiofiles
 pyautogui
 aria2p
+lxml>=4.6.3
 async_generator
 bs4
 beautifulsoup4>=4.8.1
