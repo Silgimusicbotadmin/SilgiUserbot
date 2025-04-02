@@ -1,4 +1,4 @@
-FROM silgi/silgiuserbot:silgiteam
+FROM python/latest:
 RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache alpine-keys
 
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
